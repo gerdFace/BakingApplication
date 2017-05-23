@@ -16,13 +16,28 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class EspressoTest {
+public class UIDisplaysCorrectRecipeDetailsTest {
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void checkDessertNameOnStart() {
+    public void checkDessertNameFirstRecipe() {
         onView(withId(R.id.dessert_name)).check(matches(withText("Nutella Pie")));
+    }
+
+    @Test
+    public void checkNumberOfStepsFirstRecipe() {
+        onView(withId(R.id.number_of_steps)).check(matches(withText("6 Steps")));
+    }
+
+    @Test
+    public void checkNumberOfIngredientsFirstRecipe() {
+        onView(withId(R.id.number_of_ingredients)).check(matches(withText("8 Ingredients")));
+    }
+
+    @Test
+    public void checkNumberOfServingsFirstRecipe() {
+        onView(withId(R.id.number_of_servings)).check(matches(withText("8 Servings")));
     }
 }
