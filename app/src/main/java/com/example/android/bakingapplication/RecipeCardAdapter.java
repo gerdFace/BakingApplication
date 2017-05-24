@@ -16,7 +16,7 @@ import java.util.List;
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.RecipeViewHolder> {
 
     public static final String TAG = RecipeCardAdapter.class.getSimpleName();
-    private Context mContext;
+    private Context context;
     private List<Recipe> recipeList;
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
@@ -37,7 +37,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     }
 
     public RecipeCardAdapter(Context mContext, List<Recipe> recipeList) {
-        this.mContext = mContext;
+        this.context = mContext;
         this.recipeList = recipeList;
     }
 
@@ -51,12 +51,12 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public void onBindViewHolder(final RecipeViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
         holder.dessertName.setText(recipe.getDessertName());
-        holder.numberOfSteps.setText(recipe.getNumberOfSteps());
-        holder.numberOfIngredients.setText(recipe.getNumberOfIngredients());
-        holder.numberOfServings.setText(recipe.getNumberOfServings());
+        holder.numberOfSteps.setText(String.format("%s %s", context.getResources().getString(R.string.steps), recipe.getNumberOfSteps()));
+        holder.numberOfIngredients.setText(String.format("%s %s", context.getResources().getString(R.string.ingredients), recipe.getNumberOfIngredients()));
+        holder.numberOfServings.setText(String.format("%s %s", context.getResources().getString(R.string.servings), recipe.getNumberOfServings()));
 
-        Glide.with(mContext).load(recipe.getThumbnail()).into(holder.thumbnail);
-        Log.d(TAG, "Image loaded: " + holder.thumbnail);
+        Log.d(TAG, "Glide fetching thumbnail from: " + recipe.getThumbnail());
+        Glide.with(context).load(recipe.getThumbnail()).into(holder.thumbnail);
     }
 
     @Override

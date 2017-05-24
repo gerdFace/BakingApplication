@@ -1,19 +1,17 @@
 package com.example.android.bakingapplication;
 
+import android.util.Log;
 
 public class Recipe {
 
+    public static final String TAG = Recipe.class.getSimpleName();
     private String DessertName;
     private String numberOfSteps;
     private String numberOfIngredients;
     private String numberOfServings;
-    private String thumbnail;
+    private int thumbnail;
 
-    public Recipe() {
-    }
-
-
-    public Recipe(String dessertName, String numberOfSteps, String numberOfIngredients, String numberOfServings, String thumbnail) {
+    public Recipe(String dessertName, String numberOfSteps, String numberOfIngredients, String numberOfServings, int thumbnail) {
         DessertName = dessertName;
         this.numberOfSteps = numberOfSteps;
         this.numberOfIngredients = numberOfIngredients;
@@ -53,11 +51,12 @@ public class Recipe {
         this.numberOfServings = numberOfServings;
     }
 
-    public String getThumbnail() {
+    public int getThumbnail() {
+        Log.d(TAG, "Thumbnail URL: " + thumbnail);
         return thumbnail;
     }
 
-    public void setThumbnail(String thumbnail) {
+    public void setThumbnail(int thumbnail) {
         this.thumbnail = thumbnail;
     }
 }
