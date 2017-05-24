@@ -3,18 +3,19 @@ package com.example.android.bakingapplication;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
-
 import java.util.List;
+
 
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.RecipeViewHolder> {
 
+    public static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private Context mContext;
     private List<Recipe> recipeList;
 
@@ -55,6 +56,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         holder.numberOfServings.setText(recipe.getNumberOfServings());
 
         Glide.with(mContext).load(recipe.getThumbnail()).into(holder.thumbnail);
+        Log.d(TAG, "Image loaded: " + holder.thumbnail);
     }
 
     @Override

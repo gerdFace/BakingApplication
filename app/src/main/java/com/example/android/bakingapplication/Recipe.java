@@ -4,16 +4,16 @@ package com.example.android.bakingapplication;
 public class Recipe {
 
     private String DessertName;
-    private int numberOfSteps;
-    private int numberOfIngredients;
-    private int numberOfServings;
+    private String numberOfSteps;
+    private String numberOfIngredients;
+    private String numberOfServings;
     private String thumbnail;
 
     public Recipe() {
     }
 
 
-    public Recipe(String dessertName, int numberOfSteps, int numberOfIngredients, int numberOfServings, String thumbnail) {
+    public Recipe(String dessertName, String numberOfSteps, String numberOfIngredients, String numberOfServings, String thumbnail) {
         DessertName = dessertName;
         this.numberOfSteps = numberOfSteps;
         this.numberOfIngredients = numberOfIngredients;
@@ -29,27 +29,27 @@ public class Recipe {
         DessertName = dessertName;
     }
 
-    public int getNumberOfSteps() {
+    public String getNumberOfSteps() {
         return numberOfSteps;
     }
 
-    public void setNumberOfSteps(int numberOfSteps) {
+    public void setNumberOfSteps(String numberOfSteps) {
         this.numberOfSteps = numberOfSteps;
     }
 
-    public int getNumberOfIngredients() {
+    public String getNumberOfIngredients() {
         return numberOfIngredients;
     }
 
-    public void setNumberOfIngredients(int numberOfIngredients) {
+    public void setNumberOfIngredients(String numberOfIngredients) {
         this.numberOfIngredients = numberOfIngredients;
     }
 
-    public int getNumberOfServings() {
+    public String getNumberOfServings() {
         return numberOfServings;
     }
 
-    public void setNumberOfServings(int numberOfServings) {
+    public void setNumberOfServings(String numberOfServings) {
         this.numberOfServings = numberOfServings;
     }
 
