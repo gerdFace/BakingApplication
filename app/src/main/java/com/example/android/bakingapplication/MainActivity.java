@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView recyclerView;
     private RecipeCardAdapter recipeCardAdapter;
-    private List<Recipe> recipeList;
+    private List<KRecipe> recipeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +38,17 @@ public class MainActivity extends AppCompatActivity {
                 R.mipmap.yellow_cake,
                 R.mipmap.cheesecake};
 
-        Recipe testRecipe = new Recipe("Nutella Pie", "6", "8", "8", thumbnails[0]);
+        KRecipe testRecipe = new KRecipe("Nutella Pie", "6", "8", "8", thumbnails[0]);
         Log.d(TAG, "Image URL: " + thumbnails[0]);
         recipeList.add(testRecipe);
 
-        testRecipe = new Recipe("Brownies", "6", "10", "10", thumbnails[1]);
+        testRecipe = new KRecipe("Brownies", "6", "10", "10", thumbnails[1]);
         recipeList.add(testRecipe);
 
-        testRecipe = new Recipe("Yellow Cake", "3", "10", "15", thumbnails[2]);
+        testRecipe = new KRecipe("Yellow Cake", "3", "10", "15", thumbnails[2]);
         recipeList.add(testRecipe);
 
-        testRecipe = new Recipe("Cheesecake", "10", "4", "6", thumbnails[3]);
+        testRecipe = new KRecipe("Cheesecake", "10", "4", "6", thumbnails[3]);
         recipeList.add(testRecipe);
 
         recipeCardAdapter.notifyDataSetChanged();

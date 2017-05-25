@@ -17,7 +17,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     public static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private Context context;
-    private List<Recipe> recipeList;
+    private List<KRecipe> recipeList;
 
     public class RecipeViewHolder extends RecyclerView.ViewHolder {
         public TextView dessertName;
@@ -36,7 +36,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         }
     }
 
-    public RecipeCardAdapter(Context mContext, List<Recipe> recipeList) {
+    public RecipeCardAdapter(Context mContext, List<KRecipe> recipeList) {
         this.context = mContext;
         this.recipeList = recipeList;
     }
@@ -49,7 +49,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public void onBindViewHolder(final RecipeViewHolder holder, int position) {
-        Recipe recipe = recipeList.get(position);
+        KRecipe recipe = recipeList.get(position);
         holder.dessertName.setText(recipe.getDessertName());
         holder.numberOfSteps.setText(String.format("%s %s", context.getResources().getString(R.string.steps), recipe.getNumberOfSteps()));
         holder.numberOfIngredients.setText(String.format("%s %s", context.getResources().getString(R.string.ingredients), recipe.getNumberOfIngredients()));
