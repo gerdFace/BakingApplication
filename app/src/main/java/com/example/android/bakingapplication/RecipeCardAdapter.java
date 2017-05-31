@@ -18,8 +18,14 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private Context context;
     private List<KRecipe> recipeList;
+    private final RecipeCardAdapterOnClickHandler recipeClickHandler;
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public interface RecipeCardAdapterOnClickHandler {
+        void onRecipeSelected(KRecipe selectedRecipe);
+    }
+
+
+    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView dessertName;
         public TextView numberOfSteps;
         public TextView numberOfIngredients;
@@ -33,12 +39,22 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
             numberOfIngredients = (TextView) view.findViewById(R.id.number_of_ingredients);
             numberOfServings = (TextView) view.findViewById(R.id.number_of_servings);
             thumbnail = (ImageView) view.findViewById(R.id.recipe_image);
+            view.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            int positionOfRecipeSelected = getAdapterPosition();
+            KRecipe selectedRecipe = recipeList.get(positionOfRecipeSelected);
+            recipeClickHandler.onRecipeSelected(selectedRecipe);
         }
     }
 
-    public RecipeCardAdapter(Context mContext, List<KRecipe> recipeList) {
+    public RecipeCardAdapter(Context mContext, List<KRecipe> recipeList, RecipeCardAdapterOnClickHandler recipeClickHandler) {
         this.context = mContext;
         this.recipeList = recipeList;
+        this.recipeClickHandler = recipeClickHandler;
     }
 
     @Override
@@ -63,7 +79,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     public int getItemCount() {
         return recipeList.size();
     }
-
 
 }
 
