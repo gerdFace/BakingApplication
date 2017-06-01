@@ -11,16 +11,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler{
 
-    public static final String TAG = MainActivity.class.getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        ButterKnife.bind(this);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe);
-
-
 
         List<KRecipe> recipeList = new ArrayList<>();
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
@@ -39,9 +34,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         Context context = this;
         Class recipeDetailActivityDestination = RecipeDetailActivity.class;
         Intent openRecipeDetailActivity = new Intent(context, recipeDetailActivityDestination);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("selected_recipe", selectedRecipe);
-        openRecipeDetailActivity.putExtras(bundle);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable("selected_recipe", selectedRecipe);
+        openRecipeDetailActivity.putExtra("selected_recipe", selectedRecipe);
         startActivity(openRecipeDetailActivity);
     }
 }
