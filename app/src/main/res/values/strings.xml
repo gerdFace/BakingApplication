@@ -5,4 +5,7 @@
     <string name="steps">Steps:</string>
     <string name="pastry_name">Nutella Pie</string>
     <string name="detail_fragment_ingredients_title">Ingredients</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

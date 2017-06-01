@@ -1,17 +1,19 @@
-package com.example.android.bakingapplication
+package com.example.android.bakingapplication.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.lang.reflect.Array
 
 data class KRecipe(val dessertName: String = "",
                    val numberOfSteps: String = "0",
                    val numberOfIngredients: String = "0",
                    val numberOfServings: String = "",
+                   val ingredientList: List<String>,
                    val thumbnail: Int = 0) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<KRecipe> = object : Parcelable.Creator<KRecipe> {
             override fun createFromParcel(source: Parcel): KRecipe = KRecipe(source)
-            override fun newArray(size: Int): Array<KRecipe?> = arrayOfNulls(size)
+            override fun newArray(size: Int): kotlin.Array<KRecipe?> = arrayOfNulls(size)
         }
     }
 
@@ -20,6 +22,7 @@ data class KRecipe(val dessertName: String = "",
     source.readString(),
     source.readString(),
     source.readString(),
+    source.createStringArrayList(),
     source.readInt()
     )
 
@@ -30,6 +33,7 @@ data class KRecipe(val dessertName: String = "",
         dest.writeString(numberOfSteps)
         dest.writeString(numberOfIngredients)
         dest.writeString(numberOfServings)
+        dest.writeStringList(ingredientList)
         dest.writeInt(thumbnail)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication;
+package com.example.android.bakingapplication.adapter;
 
 
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
+import com.example.android.bakingapplication.R;
+import com.example.android.bakingapplication.model.KRecipe;
+
 import java.util.List;
 
 
