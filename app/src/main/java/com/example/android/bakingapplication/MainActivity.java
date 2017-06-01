@@ -2,9 +2,6 @@ package com.example.android.bakingapplication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.TextView;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,21 +10,6 @@ public class MainActivity extends AppCompatActivity {
      *   Unless you're actually doing something with the View/Resource/Asset/whatever that you specify by ID in the annotation,
      *   you don't even need lines #17-30. Not hurting anything and the next story will probably utilize them.
      */
-
-    @BindView(R.id.recipe_image)
-    ImageView recipeImage;
-
-    @BindView(R.id.dessert_name)
-    TextView dessertName;
-
-    @BindView(R.id.number_of_steps)
-    TextView numberOfSteps;
-
-    @BindView(R.id.number_of_ingredients)
-    TextView numberOfIngredients;
-
-    @BindView(R.id.number_of_servings)
-    TextView numberOfServings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

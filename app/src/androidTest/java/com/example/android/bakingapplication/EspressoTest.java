@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
@@ -25,32 +26,23 @@ public class EspressoTest {
     /* REVIEW: QUESTION--
      * Do you even need this activity test rule?
      */
+
+//    Isn't the activity test rule necessary for starting the activity that holds the views being tested?
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(MainActivity.class);
-
     /* REVIEW: FIX ME--
      *  With the changes I made, all four of these tests should all fail.
      *  Instead, all four are reporting false positives.
      *  What's the dealio?
      */
 
+//
     @Test
-    public void checkDessertNameFirstRecipe() {
-        onView(withId(R.id.dessert_name)).check(matches(withText("Nutella Pie")));
+    public void whenMainActivityLaunchesTextViewsAreDisplayed() {
+        onView(withText("Nutella Pie")).check(matches(isDisplayed()));
+        onView(withText("6 Steps")).check(matches(isDisplayed()));
+        onView(withText("8 Ingredients")).check(matches(isDisplayed()));
+        onView(withText("8 Servings")).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void checkNumberOfStepsFirstRecipe() {
-        onView(withId(R.id.number_of_steps)).check(matches(withText("6 Steps")));
-    }
-
-    @Test
-    public void checkNumberOfIngredientsFirstRecipe() {
-        onView(withId(R.id.number_of_ingredients)).check(matches(withText("8 Ingredients")));
-    }
-
-    @Test
-    public void checkNumberOfServingsFirstRecipe() {
-        onView(withId(R.id.number_of_servings)).check(matches(withText("8 Servings")));
-    }
 }

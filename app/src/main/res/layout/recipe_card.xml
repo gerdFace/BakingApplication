@@ -12,13 +12,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         tools:context="com.example.android.bakingapplication.MainActivity">
 
-        <!--<android.support.constraint.Guideline-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/horizontal_guideline_top_third"-->
-            <!--app:layout_constraintGuide_percent="0.33"-->
-            <!--android:orientation="horizontal"/>-->
-
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,7 +40,6 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="@string/pastry_name"
-            android:visibility="invisible"
             app:layout_constraintRight_toLeftOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/vertical_guideline_center"
             app:layout_constraintTop_toTopOf="parent"
@@ -61,7 +53,6 @@
             android:text="@string/steps"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/dessert_name"
             app:layout_constraintTop_toTopOf="@+id/number_of_ingredients"
             app:layout_constraintRight_toLeftOf="@+id/dessert_name"
@@ -75,7 +66,6 @@
             android:textColor="@android:color/black"
             android:textSize="12sp"
             android:text="@string/ingredients"
-            android:visibility="invisible"
             app:layout_constraintLeft_toRightOf="@+id/dessert_name"
             app:layout_constraintRight_toLeftOf="@+id/dessert_name"
             app:layout_constraintTop_toBottomOf="@+id/number_of_steps"/>
@@ -88,7 +78,6 @@
             android:textColor="@android:color/black"
             android:textSize="12sp"
             android:text="@string/servings"
-            android:visibility="invisible"
             app:layout_constraintLeft_toRightOf="@+id/dessert_name"
             app:layout_constraintRight_toLeftOf="@+id/dessert_name"
             app:layout_constraintTop_toBottomOf="@+id/number_of_ingredients"/>
