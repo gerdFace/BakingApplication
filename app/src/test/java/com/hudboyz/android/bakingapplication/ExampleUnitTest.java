@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication;
+package com.hudboyz.android.bakingapplication;
 
 import org.junit.Test;
 

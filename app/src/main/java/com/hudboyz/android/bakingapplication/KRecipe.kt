@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication
+package com.hudboyz.android.bakingapplication
 
 data class KRecipe(val dessertName: String = "",
                    val numberOfSteps: String = "0",

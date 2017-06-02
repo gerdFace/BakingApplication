@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:context="com.example.android.bakingapplication.MainActivity">
+        tools:context="com.hudboyz.android.bakingapplication.MainActivity">
 
         <android.support.constraint.Guideline
             android:layout_width="wrap_content"

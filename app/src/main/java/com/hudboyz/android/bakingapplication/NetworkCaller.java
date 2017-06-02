@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication;
+package com.hudboyz.android.bakingapplication;
 
 import java.io.IOException;
 import java.io.InputStream;
