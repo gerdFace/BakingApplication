@@ -1,9 +1,9 @@
 package com.example.android.bakingapplication;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.os.Bundle;
 import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        ButterKnife.bind(this);
+        //        ButterKnife.bind(this);
         recyclerView = (RecyclerView) findViewById(R.id.rv_recipe);
 
         recipeList = new ArrayList<>();
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void addFakeRecipes() {
         int[] thumbnails = new int[] {
-                R.mipmap.nutella_pie,
-                R.mipmap.brownies,
-                R.mipmap.yellow_cake,
-                R.mipmap.cheesecake};
+            R.mipmap.nutella_pie,
+            R.mipmap.brownies,
+            R.mipmap.yellow_cake,
+            R.mipmap.cheesecake};
 
         KRecipe testRecipe = new KRecipe("Nutella Pie", "6", "8", "8", thumbnails[0]);
         Log.d(TAG, "Image URL: " + thumbnails[0]);
@@ -54,25 +54,3 @@ public class MainActivity extends AppCompatActivity {
         recipeCardAdapter.notifyDataSetChanged();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
