@@ -19,13 +19,10 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class IngredientsFragment extends Fragment {
 
-    @BindView(R.id.rv_ingredients)
-    RecyclerView ingredientsRecyclerView;
+//    @BindView(R.id.rv_ingredients)
+//    RecyclerView ingredientsRecyclerView;
 
     public List<String> ingredientList;
 
@@ -38,13 +35,13 @@ public class IngredientsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
 
-        ButterKnife.bind(this, view);
-
+//        ButterKnife.bind(this, view);
+        RecyclerView ingredientsRecyclerView = (RecyclerView) view.findViewById(R.id.rv_ingredients);
         ingredientList = ((RecipeDetailActivity) this.getActivity()).getRecipe().getIngredientList();
 
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientList);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayout.VERTICAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayout.VERTICAL, false);
 
         ingredientsRecyclerView.setLayoutManager(layoutManager);
 

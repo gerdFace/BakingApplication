@@ -12,7 +12,7 @@ import java.util.List;
 public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.IngredientsViewHolder> {
 
     private static final String TAG = IngredientsAdapter.class.getSimpleName();
-        private List<String> ingredientList;
+    private List<String> ingredientList;
 
         public class IngredientsViewHolder extends RecyclerView.ViewHolder {
             public TextView ingredients;
@@ -37,6 +37,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         public void onBindViewHolder(final IngredientsViewHolder holder, int position) {
             String ingredient = ingredientList.get(position);
             Log.d(TAG, "Ingredient loaded from list: " + ingredient);
+            Log.d(TAG, "ingredients include: " + ingredientList.get(1) + ingredientList.get(2));
             holder.ingredients.setText(ingredient);
         }
 
