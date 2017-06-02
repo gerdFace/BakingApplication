@@ -27,4 +27,10 @@ public class MainActivityTest {
         onView(withText("8 Servings")).check(matches(isDisplayed()));
     }
 
+    /* REVIEW: QUESTION--
+     * Why no test for multiple cards???
+     *
+     * Baggable offense! :-)
+     */
+
 }

@@ -6,6 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+/* REVIEW: TIGHTEN UP COMMENT--
+ * Not being used? What's it doing here?
+ */
 public class NetworkCaller {
 
     public static final String RECIPE_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
