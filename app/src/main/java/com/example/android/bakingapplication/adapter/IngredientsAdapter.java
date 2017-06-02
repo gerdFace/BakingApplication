@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.android.bakingapplication.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.IngredientsViewHolder> {
 
-    private static final String TAG = IngredientsAdapter.class.getSimpleName();
-    private List<String> ingredientList;
+    public static final String TAG = IngredientsAdapter.class.getSimpleName();
+    public List<String> ingredientsList;
 
         public class IngredientsViewHolder extends RecyclerView.ViewHolder {
             public TextView ingredients;
@@ -24,7 +26,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         }
 
         public IngredientsAdapter(List<String> ingredientList) {
-            this.ingredientList = ingredientList;
+            this.ingredientsList = ingredientList;
         }
 
         @Override
@@ -35,14 +37,14 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
         @Override
         public void onBindViewHolder(final IngredientsViewHolder holder, int position) {
-            String ingredient = ingredientList.get(position);
-            Log.d(TAG, "Ingredient loaded from list: " + ingredient);
-            Log.d(TAG, "ingredients include: " + ingredientList.get(1) + ingredientList.get(2));
+            String ingredient = ingredientsList.get(position);
+            Log.d(TAG, "Ingredient loaded from list: " + ingredientsList.get(position));
+            Log.d(TAG, "ingredients include: " + ingredientsList.get(1) + ingredientsList.get(2));
             holder.ingredients.setText(ingredient);
         }
 
         @Override
         public int getItemCount() {
-            return ingredientList.size();
+            return ingredientsList.size();
         }
 }

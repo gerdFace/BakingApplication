@@ -37,7 +37,6 @@ public class IngredientsFragment extends Fragment {
 
 //        ButterKnife.bind(this, view);
         RecyclerView ingredientsRecyclerView = (RecyclerView) view.findViewById(R.id.rv_ingredients);
-        ingredientList = ((RecipeDetailActivity) this.getActivity()).getRecipe().getIngredientList();
 
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientList);
 
@@ -47,6 +46,8 @@ public class IngredientsFragment extends Fragment {
 
         ingredientsRecyclerView.setAdapter(ingredientsAdapter);
 
+        ingredientList = ((RecipeDetailActivity) this.getActivity()).getRecipe().getIngredientList();
+        ingredientsAdapter.notifyDataSetChanged();
         return view;
     }
 

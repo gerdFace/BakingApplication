@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         Context context = this;
         Class recipeDetailActivityDestination = RecipeDetailActivity.class;
         Intent openRecipeDetailActivity = new Intent(context, recipeDetailActivityDestination);
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelable("selected_recipe", selectedRecipe);
         openRecipeDetailActivity.putExtra("selected_recipe", selectedRecipe);
         startActivity(openRecipeDetailActivity);
     }
