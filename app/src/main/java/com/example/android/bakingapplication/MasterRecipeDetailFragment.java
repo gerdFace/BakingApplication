@@ -1,20 +1,16 @@
 package com.example.android.bakingapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.example.android.bakingapplication.activity.RecipeDetailActivity;
+import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.model.KRecipe;
 
 import butterknife.BindView;
@@ -29,7 +25,7 @@ public class MasterRecipeDetailFragment extends Fragment {
         void onRecipeDetailButtonClicked(int buttonPressed);
     }
 
-    public static final String TAG = RecipeDetailActivity.class.getClass().getSimpleName();
+    public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
 
     @BindView(R.id.ingredients)
     Button bIngredients;
@@ -45,7 +41,7 @@ public class MasterRecipeDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recipe = ((RecipeDetailActivity) this.getActivity()).getRecipe();
+        recipe = ((DetailListActivity) this.getActivity()).getRecipe();
         Log.d(TAG, "onActivityCreated: " + recipe.getDessertName());
     }
 

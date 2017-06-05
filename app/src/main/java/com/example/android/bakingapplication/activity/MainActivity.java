@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Override
     public void onRecipeSelected(KRecipe selectedRecipe) {
         Context context = this;
-        Class recipeDetailActivityDestination = RecipeDetailActivity.class;
+        Class recipeDetailActivityDestination = DetailListActivity.class;
         Intent openRecipeDetailActivity = new Intent(context, recipeDetailActivityDestination);
         openRecipeDetailActivity.putExtra("selected_recipe", selectedRecipe);
         startActivity(openRecipeDetailActivity);

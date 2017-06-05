@@ -21,7 +21,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
             public IngredientsViewHolder(View view) {
                 super(view);
-                ingredients = (TextView) view.findViewById(R.id.textview_ingredients);
+                ingredients = (TextView) view.findViewById(R.id.textview_single_ingredient);
             }
         }
 

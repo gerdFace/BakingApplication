@@ -1,5 +1,7 @@
 package com.example.android.bakingapplication.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,14 +11,14 @@ import com.example.android.bakingapplication.MasterRecipeDetailFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
 
-public class RecipeDetailActivity extends AppCompatActivity implements MasterRecipeDetailFragment.onRecipeDetailItemSelected {
+public class DetailListActivity extends AppCompatActivity implements MasterRecipeDetailFragment.onRecipeDetailItemSelected {
 
     public KRecipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_detail);
+        setContentView(R.layout.activity_detail_list);
 
         recipe = getIntent().getParcelableExtra("selected_recipe");
 
@@ -29,11 +31,10 @@ public class RecipeDetailActivity extends AppCompatActivity implements MasterRec
 
     @Override
     public void onRecipeDetailButtonClicked(int buttonPressed) {
-        IngredientsFragment ingredientsFragment = new IngredientsFragment();
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.ingredients_container, ingredientsFragment)
-                .commit();
+        Class selectedDetailDestination = SelectedDetail.class;
+        Context context = this;
+        Intent intentToStartSelectedDetailActivity = new Intent(context, selectedDetailDestination);
+        intentToStartSelectedDetailActivity.putExtra("selected_recipe", recipe);
+        startActivity(intentToStartSelectedDetailActivity);
     }
 }

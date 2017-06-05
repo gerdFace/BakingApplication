@@ -9,20 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import com.example.android.bakingapplication.activity.RecipeDetailActivity;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
-
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
 
-//    @BindView(R.id.rv_ingredients)
-//    RecyclerView ingredientsRecyclerView;
+    @BindView(R.id.rv_ingredients)
+    RecyclerView ingredientsRecyclerView;
 
     public List<String> ingredientList;
 
@@ -35,8 +30,7 @@ public class IngredientsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
 
-//        ButterKnife.bind(this, view);
-        RecyclerView ingredientsRecyclerView = (RecyclerView) view.findViewById(R.id.rv_ingredients);
+        ButterKnife.bind(this, view);
 
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientList);
 
@@ -46,9 +40,11 @@ public class IngredientsFragment extends Fragment {
 
         ingredientsRecyclerView.setAdapter(ingredientsAdapter);
 
-        ingredientList = ((RecipeDetailActivity) this.getActivity()).getRecipe().getIngredientList();
-        ingredientsAdapter.notifyDataSetChanged();
         return view;
+    }
+
+    public void setIngredientList(List<String> ingredientList) {
+        this.ingredientList = ingredientList;
     }
 
 }
