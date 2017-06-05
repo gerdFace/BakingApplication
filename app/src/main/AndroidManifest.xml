@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".activity.DetailListActivity">
         </activity>
-        <activity android:name=".activity.SelectedDetail">
+        <activity android:name=".activity.SelectedDetailActivity">
         </activity>
     </application>
 

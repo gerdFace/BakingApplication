@@ -8,7 +8,7 @@ import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
 
-public class SelectedDetail extends AppCompatActivity {
+public class SelectedDetailActivity extends AppCompatActivity {
 
     public KRecipe recipe;
 

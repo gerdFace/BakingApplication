@@ -9,16 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.model.KRecipe;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MasterRecipeDetailFragment extends Fragment {
 
     public interface onRecipeDetailItemSelected {
@@ -41,7 +36,9 @@ public class MasterRecipeDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         recipe = ((DetailListActivity) this.getActivity()).getRecipe();
+
         Log.d(TAG, "onActivityCreated: " + recipe.getDessertName());
     }
 

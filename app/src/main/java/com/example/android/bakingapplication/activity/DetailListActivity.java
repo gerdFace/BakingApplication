@@ -2,16 +2,16 @@ package com.example.android.bakingapplication.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.MasterRecipeDetailFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
 
 public class DetailListActivity extends AppCompatActivity implements MasterRecipeDetailFragment.onRecipeDetailItemSelected {
+
+    public static final String SELECTED_RECIPE_KEY = "selected_recipe";
 
     public KRecipe recipe;
 
@@ -20,7 +20,7 @@ public class DetailListActivity extends AppCompatActivity implements MasterRecip
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_list);
 
-        recipe = getIntent().getParcelableExtra("selected_recipe");
+        recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
 
         setTitle(recipe.getDessertName());
     }
@@ -31,10 +31,10 @@ public class DetailListActivity extends AppCompatActivity implements MasterRecip
 
     @Override
     public void onRecipeDetailButtonClicked(int buttonPressed) {
-        Class selectedDetailDestination = SelectedDetail.class;
+        Class selectedDetailDestination = SelectedDetailActivity.class;
         Context context = this;
         Intent intentToStartSelectedDetailActivity = new Intent(context, selectedDetailDestination);
-        intentToStartSelectedDetailActivity.putExtra("selected_recipe", recipe);
+        intentToStartSelectedDetailActivity.putExtra(SELECTED_RECIPE_KEY, recipe);
         startActivity(intentToStartSelectedDetailActivity);
     }
 }
