@@ -1,6 +1,5 @@
 package com.example.android.bakingapplication;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,8 +15,8 @@ import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
 
-    @BindView(R.id.rv_ingredients)
-    RecyclerView ingredientsRecyclerView;
+    @BindView(R.id.rv_ingredient_list)
+    RecyclerView rvIngredientList;
 
     public List<String> ingredientList;
 
@@ -28,7 +27,7 @@ public class IngredientsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_ingredients, container, false);
+        View view = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -36,9 +35,9 @@ public class IngredientsFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayout.VERTICAL, false);
 
-        ingredientsRecyclerView.setLayoutManager(layoutManager);
+        rvIngredientList.setLayoutManager(layoutManager);
 
-        ingredientsRecyclerView.setAdapter(ingredientsAdapter);
+        rvIngredientList.setAdapter(ingredientsAdapter);
 
         return view;
     }

@@ -38,6 +38,8 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
                     .commit();
 
             twoPane = true;
+        } else {
+            twoPane = false;
         }
     }
 

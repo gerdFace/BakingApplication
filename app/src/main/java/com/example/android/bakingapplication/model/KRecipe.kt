@@ -8,6 +8,7 @@ data class KRecipe(val dessertName: String = "",
                    val numberOfSteps: String = "0",
                    val numberOfIngredients: String = "0",
                    val numberOfServings: String = "",
+                   val detailList: List<String>,
                    val ingredientList: List<String>,
                    val thumbnail: Int = 0) : Parcelable {
     companion object {
@@ -23,6 +24,7 @@ data class KRecipe(val dessertName: String = "",
     source.readString(),
     source.readString(),
     source.createStringArrayList(),
+    source.createStringArrayList(),
     source.readInt()
     )
 
@@ -33,6 +35,7 @@ data class KRecipe(val dessertName: String = "",
         dest.writeString(numberOfSteps)
         dest.writeString(numberOfIngredients)
         dest.writeString(numberOfServings)
+        dest.writeStringList(detailList)
         dest.writeStringList(ingredientList)
         dest.writeInt(thumbnail)
     }

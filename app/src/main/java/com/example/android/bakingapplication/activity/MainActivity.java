@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
@@ -17,11 +18,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler {
 
+    public static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
         List<KRecipe> recipeList = new ArrayList<>();
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         FakeRecipeData fakeRecipeData = new FakeRecipeData(recipeList);
         fakeRecipeData.addFakeRecipes();
         recipeCardAdapter.notifyDataSetChanged();
+
+        Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getDetailList().get(0) + recipeList.get(1).getDetailList().get(1));
     }
 
     @Override
