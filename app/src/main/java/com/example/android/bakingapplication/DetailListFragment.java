@@ -14,11 +14,7 @@ import com.example.android.bakingapplication.model.KRecipe;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MasterRecipeDetailFragment extends Fragment {
-
-    public interface onRecipeDetailItemSelected {
-        void onRecipeDetailButtonClicked(int buttonPressed);
-    }
+public class DetailListFragment extends Fragment {
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
 
@@ -29,8 +25,11 @@ public class MasterRecipeDetailFragment extends Fragment {
 
     public onRecipeDetailItemSelected listener;
 
+    public DetailListFragment() {
+    }
 
-    public MasterRecipeDetailFragment() {
+    public interface onRecipeDetailItemSelected {
+        void onRecipeDetailButtonClicked(int buttonPressed);
     }
 
     @Override
@@ -45,7 +44,7 @@ public class MasterRecipeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_master_recipe_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
         ButterKnife.bind(this, view);
         bIngredients.setText(R.string.detail_fragment_ingredients_title);
         bIngredients.setOnClickListener(new View.OnClickListener() {

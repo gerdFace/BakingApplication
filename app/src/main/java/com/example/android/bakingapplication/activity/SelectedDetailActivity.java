@@ -19,6 +19,8 @@ public class SelectedDetailActivity extends AppCompatActivity {
 
         recipe = getIntent().getParcelableExtra("selected_recipe");
 
+        setTitle(recipe.getDessertName());
+
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
 
         ingredientsFragment.setIngredientList(recipe.getIngredientList());
