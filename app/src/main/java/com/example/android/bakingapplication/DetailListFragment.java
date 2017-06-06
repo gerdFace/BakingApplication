@@ -20,12 +20,12 @@ public class DetailListFragment extends Fragment {
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
 
-    @BindView(R.id.rv_detail_list)
-    RecyclerView rvDetailList;
-
     public KRecipe recipe;
 
     public onRecipeDetailItemSelected listener;
+
+    @BindView(R.id.rv_detail_list)
+    RecyclerView rvDetailList;
 
     public DetailListFragment() {
     }
@@ -63,6 +63,7 @@ public class DetailListFragment extends Fragment {
                 listener.onRecipeDetailButtonClicked(v.getId());
             }
         });
+
         return view;
     }
 
