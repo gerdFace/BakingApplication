@@ -4,5 +4,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_detail_list"
-    android:="com.example.android.bakingapplication.DetailListFragment"
+    android:name="com.example.android.bakingapplication.DetailListFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"/>
