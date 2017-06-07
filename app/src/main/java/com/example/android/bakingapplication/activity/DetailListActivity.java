@@ -23,9 +23,9 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
         setContentView(R.layout.activity_master_detail);
 
-        recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
 
         setTitle(recipe.getDessertName());
 

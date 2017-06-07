@@ -35,12 +35,11 @@ public class DetailListFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         recipe = ((DetailListActivity) this.getActivity()).getRecipe();
-
-        Log.d(TAG, "onActivityCreated: " + recipe.getDessertName());
+        Log.d(TAG, "DetailListFragment onCreate: " + recipe.getDessertName());
     }
 
     @Override
@@ -48,6 +47,8 @@ public class DetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
         ButterKnife.bind(this, view);
+
+        recipe = ((DetailListActivity) this.getActivity()).getRecipe();
 
         DetailListAdapter detailListAdapter = new DetailListAdapter(recipe.getDetailList());
 
@@ -70,6 +71,7 @@ public class DetailListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         try {
             listener = (onRecipeDetailItemSelected) context;
         } catch (ClassCastException e) {
