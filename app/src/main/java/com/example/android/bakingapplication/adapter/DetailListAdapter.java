@@ -6,30 +6,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.example.android.bakingapplication.DetailListFragment;
 import com.example.android.bakingapplication.R;
 import java.util.List;
 
 public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.DetailListViewHolder>{
 
-    public static final String TAG = DetailListAdapter.class.getSimpleName();
+    private static final String TAG = DetailListAdapter.class.getSimpleName();
 
-    public List<String> detailList;
+    private final DetailListFragment.DetailItemCallbacks callback;
 
-    public DetailListAdapter(List<String> detailList) {
+    private List<String> detailList;
+
+    public DetailListAdapter(List<String> detailList, DetailListFragment.DetailItemCallbacks callback) {
         this.detailList = detailList;
+        this.callback = callback;
     }
 
     @Override
     public DetailListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail_button, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.detail, parent, false);
         return new DetailListViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(DetailListViewHolder holder, int position) {
-        String detailButtonText = detailList.get(position);
+    public void onBindViewHolder(final DetailListViewHolder holder, int position) {
+        final String detailButtonText = detailList.get(position);
         Log.d(TAG, "DetailList onBindViewHolder: " + detailList.get(position));
         holder.detailButton.setText(detailButtonText);
+        holder.detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check validity of the callback
+                if (callback != null) {
+                    callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -37,7 +50,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
         return detailList.size();
     }
 
-    public class DetailListViewHolder extends RecyclerView.ViewHolder {
+    public class DetailListViewHolder extends RecyclerView.ViewHolder{
         public Button detailButton;
 
         public DetailListViewHolder(View itemView) {

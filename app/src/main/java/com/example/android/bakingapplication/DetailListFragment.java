@@ -20,9 +20,9 @@ public class DetailListFragment extends Fragment {
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
 
-    public KRecipe recipe;
+    private KRecipe recipe;
 
-    public onRecipeDetailItemSelected listener;
+    private DetailItemCallbacks callbacks;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -30,8 +30,9 @@ public class DetailListFragment extends Fragment {
     public DetailListFragment() {
     }
 
-    public interface onRecipeDetailItemSelected {
-        void onRecipeDetailButtonClicked(int buttonPressed);
+//    Interface that enables fragment to communicate with host activity
+    public interface DetailItemCallbacks {
+        void onRecipeDetailButtonClicked(int position);
     }
 
     @Override
@@ -50,7 +51,7 @@ public class DetailListFragment extends Fragment {
 
         recipe = ((DetailListActivity) this.getActivity()).getRecipe();
 
-        DetailListAdapter detailListAdapter = new DetailListAdapter(recipe.getDetailList());
+        DetailListAdapter detailListAdapter = new DetailListAdapter(recipe.getDetailList(), callbacks);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
@@ -58,26 +59,27 @@ public class DetailListFragment extends Fragment {
 
         rvDetailList.setAdapter(detailListAdapter);
 
-        rvDetailList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onRecipeDetailButtonClicked(v.getId());
-            }
-        });
-
         return view;
     }
 
+//    Ensure that host activity implements the callback interface
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         try {
-            listener = (onRecipeDetailItemSelected) context;
+            callbacks = (DetailItemCallbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                                                  + " must implement OnImageClickListener");
         }
+    }
+
+//    Reset callback when fragment detaches from host activity
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
     }
 }
 

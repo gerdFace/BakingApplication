@@ -12,13 +12,13 @@ import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
 
-public class DetailListActivity extends AppCompatActivity implements DetailListFragment.onRecipeDetailItemSelected {
+public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
-    public static final String SELECTED_RECIPE_KEY = "selected_recipe";
+    private static final String SELECTED_RECIPE_KEY = "selected_recipe";
 
-    public KRecipe recipe;
+    private KRecipe recipe;
 
-    public boolean twoPane;
+    private boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     }
 
     @Override
-    public void onRecipeDetailButtonClicked(int buttonPressed) {
+    public void onRecipeDetailButtonClicked(int position) {
 
         if (!twoPane) {
 
