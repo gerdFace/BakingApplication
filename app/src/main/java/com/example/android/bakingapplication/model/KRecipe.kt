@@ -10,6 +10,7 @@ data class KRecipe(val dessertName: String = "",
                    val numberOfServings: String = "",
                    val detailList: List<String>,
                    val ingredientList: List<String>,
+                   val stepDescriptionList: List<String>,
                    val thumbnail: Int = 0) : Parcelable {
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<KRecipe> = object : Parcelable.Creator<KRecipe> {
@@ -25,6 +26,7 @@ data class KRecipe(val dessertName: String = "",
     source.readString(),
     source.createStringArrayList(),
     source.createStringArrayList(),
+    source.createStringArrayList(),
     source.readInt()
     )
 
@@ -37,6 +39,7 @@ data class KRecipe(val dessertName: String = "",
         dest.writeString(numberOfServings)
         dest.writeStringList(detailList)
         dest.writeStringList(ingredientList)
+        dest.writeStringList(stepDescriptionList)
         dest.writeInt(thumbnail)
     }
 }

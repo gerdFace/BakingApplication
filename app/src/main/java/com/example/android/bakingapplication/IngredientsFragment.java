@@ -45,5 +45,4 @@ public class IngredientsFragment extends Fragment {
     public void setIngredientList(List<String> ingredientList) {
         this.ingredientList = ingredientList;
     }
-
 }

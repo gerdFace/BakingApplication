@@ -5,7 +5,6 @@
     <string name="steps">Steps:</string>
     <string name="pastry_name">Nutella Pie</string>
     <string name="detail_fragment_ingredients_title">Ingredients</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="short_step_description">Prep the cookie crust.</string>
+    <string name="long_step_description">Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.</string>
 </resources>

@@ -7,7 +7,7 @@
     tools:context="com.example.android.bakingapplication.activity.SelectedDetailActivity">
 
     <FrameLayout
-        android:id="@+id/ingredients_container"
+        android:id="@+id/ingredient_and_instruction_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
