@@ -70,7 +70,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
             intentToStartSelectedDetailActivity.putExtras(bundle);
             startActivity(intentToStartSelectedDetailActivity);
         } else {
-
+//TODO include position in getStepDescriptionList look-up
             if (position > 0) {
 
                 InstructionFragment instructionFragment = new InstructionFragment();
