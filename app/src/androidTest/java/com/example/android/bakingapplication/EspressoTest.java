@@ -21,7 +21,7 @@ public class EspressoTest {
 
     @Test
     public void whenMainActivityLaunchesTextViewsAreDisplayed() {
-        onView(withText("Nutella Pizza")).check(matches(isDisplayed()));
+        onView(withText("Nutella Pie")).check(matches(isDisplayed()));
         onView(withText("6 Steps")).check(matches(isDisplayed()));
         onView(withText("8 Ingredients")).check(matches(isDisplayed()));
         onView(withText("8 Servings")).check(matches(isDisplayed()));
