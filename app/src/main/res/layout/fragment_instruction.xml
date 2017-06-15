@@ -6,6 +6,12 @@
     tools:context="com.example.android.bakingapplication.InstructionFragment"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/media_player_exoplayer"
+        layout="@layout/media_player_exoplayer"
+        android:layout_height="250dp"
+        android:layout_width="wrap_content"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
