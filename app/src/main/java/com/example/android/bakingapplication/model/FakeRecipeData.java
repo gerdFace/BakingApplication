@@ -40,6 +40,7 @@ public class FakeRecipeData {
 
         stepDescriptionList.add("Prep the cookie crust.");
         stepDescriptionList.add("Whisk the graham cracker crumbs, 50 grams (1/4 cup) of sugar, and 1/2 teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.");
+        stepDescriptionList.add("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9a6_2-mix-sugar-crackers-creampie/2-mix-sugar-crackers-creampie.mp4");
 
         KRecipe testRecipe = new KRecipe("Nutella Pie", "6", "8", "8", detailList, ingredientList, stepDescriptionList, thumbnails[0]);
         Log.d(TAG, "Image URL: " + thumbnails[0]);

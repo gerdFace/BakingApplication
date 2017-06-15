@@ -1,21 +1,28 @@
 package com.example.android.bakingapplication;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +36,13 @@ public class InstructionFragment extends Fragment {
 
     @BindView(R.id.long_step_description)
     TextView longDescription;
+	
+	@BindView(R.id.player_view)
+	SimpleExoPlayerView simpleExoPlayerView;
 
-    public List<String> stepDescriptionList;
+    private List<String> stepDescriptionList;
+    private SimpleExoPlayer player;
+    private Context applicationContext;
 
     public InstructionFragment() {
         // Required empty public constructor
@@ -48,6 +60,8 @@ public class InstructionFragment extends Fragment {
 
         longDescription.setText(stepDescriptionList.get(1));
 
+        initializeMediaPlayer();
+
         return view;
     }
 
@@ -56,11 +70,39 @@ public class InstructionFragment extends Fragment {
     }
 
     private void initializeMediaPlayer() {
-        Handler mainHandler = new Handler();
-        TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(null);
-        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        applicationContext = this.getActivity();
 
-        SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(getActivity().getApplicationContext(), trackSelector);
+        TrackSelector trackSelector = new DefaultTrackSelector();
 
+        LoadControl loadControl = new DefaultLoadControl();
+
+        player = ExoPlayerFactory.newSimpleInstance(applicationContext, trackSelector, loadControl);
+
+        simpleExoPlayerView.setPlayer(player);
+
+        player.prepare(prepareMediaSource());
+    }
+
+    private MediaSource prepareMediaSource() {
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
+                                                                            Util.getUserAgent(applicationContext, "BakingApplication"),
+                                                                            null);
+
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+        return new ExtractorMediaSource(Uri.parse(stepDescriptionList.get(2)),
+                                        dataSourceFactory, extractorsFactory, null, null);
+    }
+
+    private void releasePlayer() {
+        player.stop();
+        player.release();
+        player = null;
+    }
+    
+    @Override
+    public void onPause() {
+        super.onPause();
+        releasePlayer();
     }
 }
