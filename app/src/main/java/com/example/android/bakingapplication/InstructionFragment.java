@@ -3,6 +3,7 @@ package com.example.android.bakingapplication;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +33,7 @@ import butterknife.ButterKnife;
 public class InstructionFragment extends Fragment {
 
     private static final String TAG = InstructionFragment.class.getSimpleName();
+	private static final String ARG_STEP_DESCRIPTION_LIST = "step_description";
 
     @BindView(R.id.short_step_description)
     TextView shortDescription;
@@ -47,8 +51,24 @@ public class InstructionFragment extends Fragment {
     public InstructionFragment() {
         // Required empty public constructor
     }
-
-    @Override
+	
+	public static InstructionFragment newInstance(ArrayList<String> stepDescriptionList) {
+		Bundle args = new Bundle();
+		args.putStringArrayList(ARG_STEP_DESCRIPTION_LIST, stepDescriptionList);
+		
+		InstructionFragment instructionFragment = new InstructionFragment();
+		instructionFragment.setArguments(args);
+		return instructionFragment;
+	}
+	
+	
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		stepDescriptionList = getArguments().getStringArrayList(ARG_STEP_DESCRIPTION_LIST);
+	}
+	
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instruction, container, false);

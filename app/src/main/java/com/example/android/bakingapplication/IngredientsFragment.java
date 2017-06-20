@@ -1,6 +1,7 @@
 package com.example.android.bakingapplication;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,21 +10,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
-
-    @BindView(R.id.rv_ingredient_list)
+	
+	private static final String ARG_INGREDIENT_LIST = "ingredient_list";
+	
+	@BindView(R.id.rv_ingredient_list)
     RecyclerView rvIngredientList;
 
-    public List<String> ingredientList;
+    public ArrayList<String> ingredientList;
 
     public IngredientsFragment() {
     }
-
-    @Override
+    
+    public static IngredientsFragment newInstance(ArrayList<String> stepDescriptionList) {
+        Bundle args = new Bundle();
+        args.putStringArrayList(ARG_INGREDIENT_LIST, stepDescriptionList);
+        
+        IngredientsFragment ingredientsFragment = new IngredientsFragment();
+        ingredientsFragment.setArguments(args);
+        return ingredientsFragment;
+    }
+	
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		ingredientList = getArguments().getStringArrayList(ARG_INGREDIENT_LIST);
+	}
+	
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -42,7 +62,7 @@ public class IngredientsFragment extends Fragment {
         return view;
     }
 
-    public void setIngredientList(List<String> ingredientList) {
+    public void setIngredientList(ArrayList<String> ingredientList) {
         this.ingredientList = ingredientList;
     }
 }

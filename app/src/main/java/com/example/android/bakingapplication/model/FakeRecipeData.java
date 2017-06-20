@@ -10,9 +10,9 @@ public class FakeRecipeData {
 
     private static final String TAG = FakeRecipeData.class.getSimpleName();
     private List<KRecipe> recipeList;
-    private List<String> ingredientList = new ArrayList<>();
-    private List<String> detailList = new ArrayList<>();
-    private List<String> stepDescriptionList = new ArrayList<>();
+    private ArrayList<String> ingredientList = new ArrayList<>();
+    private ArrayList<String> detailList = new ArrayList<>();
+    private ArrayList<String> stepDescriptionList = new ArrayList<>();
 
     public FakeRecipeData(List<KRecipe> recipeList) {
         this.recipeList = recipeList;
