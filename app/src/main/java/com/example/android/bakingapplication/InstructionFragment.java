@@ -24,7 +24,6 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
 import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
@@ -85,10 +84,6 @@ public class InstructionFragment extends Fragment {
         return view;
     }
 
-    public void setStepDescriptionList(List<String> stepDescriptionList) {
-        this.stepDescriptionList = stepDescriptionList;
-    }
-
     private void initializeMediaPlayer() {
         applicationContext = this.getActivity();
 
@@ -104,9 +99,9 @@ public class InstructionFragment extends Fragment {
     }
 
     private MediaSource prepareMediaSource() {
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
-                                                                            Util.getUserAgent(applicationContext, "BakingApplication"),
-                                                                            null);
+	    DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
+	                                                                        Util.getUserAgent(applicationContext, "BakingApplication"),
+	                                                                        null);
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 

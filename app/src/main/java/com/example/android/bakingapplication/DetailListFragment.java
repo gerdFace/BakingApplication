@@ -19,8 +19,10 @@ import butterknife.ButterKnife;
 public class DetailListFragment extends Fragment {
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
-
-    private KRecipe recipe;
+	
+	private static final String RECIPE_KEY = "recipe_key";
+	
+	private KRecipe recipe;
 
     private DetailItemCallbacks callbacks;
 
@@ -34,13 +36,26 @@ public class DetailListFragment extends Fragment {
     public interface DetailItemCallbacks {
         void onRecipeDetailButtonClicked(int position);
     }
+	
+	
+	public static DetailListFragment newInstance(KRecipe recipe) {
+		Bundle args = new Bundle();
+		args.putParcelable(RECIPE_KEY, recipe);
+		
+		DetailListFragment detailListFragment = new DetailListFragment();
+		detailListFragment.setArguments(args);
+		return detailListFragment;
+	}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        recipe = ((DetailListActivity) this.getActivity()).getRecipe();
-        Log.d(TAG, "DetailListFragment onCreate: " + recipe.getDessertName());
+	
+	    recipe = getArguments().getParcelable(RECIPE_KEY);
+	
+	    if (recipe != null) {
+		    Log.d(TAG, "DetailListFragment onCreate: " + recipe.getDessertName());
+	    }
     }
 
     @Override
@@ -48,8 +63,6 @@ public class DetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
         ButterKnife.bind(this, view);
-
-        recipe = ((DetailListActivity) this.getActivity()).getRecipe();
 
         DetailListAdapter detailListAdapter = new DetailListAdapter(recipe.getDetailList(), callbacks);
 

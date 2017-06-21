@@ -6,38 +6,32 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.android.bakingapplication.activity.DetailListActivity.POSITION_OF_DETAIL_BUTTON_CLICKED;
+import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_CLICKED;
 import static com.example.android.bakingapplication.activity.DetailListActivity.SELECTED_RECIPE_KEY;
 
-public class SelectedDetailActivity extends AppCompatActivity {
+public class DetailPagerActivity extends AppCompatActivity {
 
-	static final int NUM_ITEMS = 10;
+	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 	
-    private ViewPager viewPager;
 	private ArrayList<String> stepDetailList;
 	private ArrayList<String> ingredientList;
 	private ArrayList<String> stepDescriptionList;
-    public KRecipe recipe;
-    public int positionOfButtonClicked;
-
-    @Override
+	
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_detail);
-
-        recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
-
-        positionOfButtonClicked = getIntent().getIntExtra(POSITION_OF_DETAIL_BUTTON_CLICKED, 0);
+	
+	    KRecipe recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
+		
+		String nameOfButtonClicked = getIntent().getStringExtra(NAME_OF_DETAIL_BUTTON_CLICKED);
 	    
 	    stepDetailList = recipe.getDetailList();
 	    
@@ -46,35 +40,21 @@ public class SelectedDetailActivity extends AppCompatActivity {
 	    ingredientList = recipe.getIngredientList();
 
         setTitle(recipe.getDessertName());
+	
+	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
 	    
-	    viewPager = (ViewPager) findViewById(R.id.step_view_pager);
-	    
-	    final FragmentManager fragmentManager = getSupportFragmentManager();
+	    FragmentManager fragmentManager = getSupportFragmentManager();
 	
 	    viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 		    @Override
 		    public Fragment getItem(int position) {
-			    if (positionOfButtonClicked > 0) {
-				    return InstructionFragment
-						    .newInstance(stepDescriptionList);
-//
-//				    fragmentManager.beginTransaction()
-//				                   .add(R.id.ingredient_and_instruction_container, instructionFragment)
-//				                   .commit();
-				
-//				    return instructionFragment;
-				
-			    } else {
+			    if (position == 0) {
 				    return IngredientsFragment
 						    .newInstance(ingredientList);
-				
-//				    fragmentManager.beginTransaction()
-//				                   .add(R.id.ingredient_and_instruction_container, ingredientsFragment)
-//				                   .commit();
-				
-//				    return ingredientsFragment;
+			    } else {
+				    return InstructionFragment
+						    .newInstance(stepDescriptionList);
 			    }
-			
 		    }
 		
 		    @Override
@@ -82,5 +62,13 @@ public class SelectedDetailActivity extends AppCompatActivity {
 			    return stepDetailList.size();
 		    }
 	    });
+	    
+	    for (int i = 0; i < stepDetailList.size(); i ++) {
+		    Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "nameOfButtonClicked: " + nameOfButtonClicked);
+		    if (stepDetailList.get(i).equals(nameOfButtonClicked)) {
+			    viewPager.setCurrentItem(i);
+			    break;
+		    }
+	    }
     }
 }

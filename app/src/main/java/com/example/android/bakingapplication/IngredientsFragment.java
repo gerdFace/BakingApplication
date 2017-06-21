@@ -10,9 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
-
 import java.util.ArrayList;
-import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -60,9 +58,5 @@ public class IngredientsFragment extends Fragment {
         rvIngredientList.setAdapter(ingredientsAdapter);
 
         return view;
-    }
-
-    public void setIngredientList(ArrayList<String> ingredientList) {
-        this.ingredientList = ingredientList;
     }
 }
