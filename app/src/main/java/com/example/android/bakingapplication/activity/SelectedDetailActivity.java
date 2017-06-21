@@ -12,6 +12,7 @@ import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class SelectedDetailActivity extends AppCompatActivity {
     private ViewPager viewPager;
 	private ArrayList<String> stepDetailList;
 	private ArrayList<String> ingredientList;
+	private ArrayList<String> stepDescriptionList;
     public KRecipe recipe;
     public int positionOfButtonClicked;
 
@@ -39,6 +41,8 @@ public class SelectedDetailActivity extends AppCompatActivity {
 	    
 	    stepDetailList = recipe.getDetailList();
 	    
+	    stepDescriptionList = recipe.getStepDescriptionList();
+	    
 	    ingredientList = recipe.getIngredientList();
 
         setTitle(recipe.getDessertName());
@@ -50,9 +54,9 @@ public class SelectedDetailActivity extends AppCompatActivity {
 	    viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 		    @Override
 		    public Fragment getItem(int position) {
-			    if (position > 0) {
+			    if (positionOfButtonClicked > 0) {
 				    return InstructionFragment
-						    .newInstance(stepDetailList);
+						    .newInstance(stepDescriptionList);
 //
 //				    fragmentManager.beginTransaction()
 //				                   .add(R.id.ingredient_and_instruction_container, instructionFragment)
