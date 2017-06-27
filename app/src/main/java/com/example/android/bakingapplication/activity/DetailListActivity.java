@@ -38,16 +38,15 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.detail_list_container, detailListFragment)
-                    .addToBackStack(null)
+                    .replace(R.id.detail_list_container, detailListFragment)
                     .commit();
         }
 		
 	    twoPane = findViewById(R.id.ingredient_and_instruction_container) != null;
 		
-		if (getSupportActionBar() == null) {
+//		if (getSupportActionBar() == null) {
 			setTitle(nameOfFoodItem);
-		}
+//		}
     }
 
     @Override

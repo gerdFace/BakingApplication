@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.android.bakingapplication.activity.DetailListActivity;
@@ -70,7 +71,6 @@ public class DetailListFragment extends Fragment {
         rvDetailList.setLayoutManager(layoutManager);
 
         if (savedInstanceState == null) {
-//    TODO Fix NP on up arrow pressed -- addToBackStack didn't work on detailActivity
             detailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
         } else {
             detailList = FakeRecipeData.get().getKRecipe(savedInstanceState.getString(DetailListActivity.SAVED_RECIPE)).getDetailList();
