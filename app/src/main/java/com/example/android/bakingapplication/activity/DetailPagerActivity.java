@@ -7,39 +7,33 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.KRecipe;
+import com.example.android.bakingapplication.model.FakeRecipeData;
 import java.util.ArrayList;
-import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_CLICKED;
-import static com.example.android.bakingapplication.activity.DetailListActivity.SELECTED_RECIPE_KEY;
+import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_SELECTED_KEY;
+import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_ITEM_SELECTED_KEY;
 
 public class DetailPagerActivity extends AppCompatActivity {
 
 	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 	
 	private ArrayList<String> stepDetailList;
-	private ArrayList<String> ingredientList;
-	private ArrayList<String> stepDescriptionList;
+	private String nameOfFoodItem;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_detail);
-	
-	    KRecipe recipe = getIntent().getParcelableExtra(SELECTED_RECIPE_KEY);
 		
-		String nameOfButtonClicked = getIntent().getStringExtra(NAME_OF_DETAIL_BUTTON_CLICKED);
-	    
-	    stepDetailList = recipe.getDetailList();
-	    
-	    stepDescriptionList = recipe.getStepDescriptionList();
-	    
-	    ingredientList = recipe.getIngredientList();
-
-        setTitle(recipe.getDessertName());
+		String nameOfButtonClicked = getIntent().getStringExtra(NAME_OF_DETAIL_BUTTON_SELECTED_KEY);
+		
+		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_ITEM_SELECTED_KEY);
+		
+        setTitle(nameOfFoodItem);
+		
+		stepDetailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
 	
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
 	    
@@ -50,10 +44,10 @@ public class DetailPagerActivity extends AppCompatActivity {
 		    public Fragment getItem(int position) {
 			    if (position == 0) {
 				    return IngredientsFragment
-						    .newInstance(ingredientList);
+						    .newInstance(nameOfFoodItem);
 			    } else {
 				    return InstructionFragment
-						    .newInstance(stepDescriptionList);
+						    .newInstance(nameOfFoodItem);
 			    }
 		    }
 		

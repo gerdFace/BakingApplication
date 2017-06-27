@@ -26,22 +26,19 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
-        List<KRecipe> recipeList = new ArrayList<>();
+        FakeRecipeData fakeRecipeData = FakeRecipeData.get();
+        List<KRecipe> recipeList = fakeRecipeData.getRecipeList();
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recipeCardAdapter);
 
-        FakeRecipeData fakeRecipeData = new FakeRecipeData(recipeList);
-        fakeRecipeData.addFakeRecipes();
-        recipeCardAdapter.notifyDataSetChanged();
-
         Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getDetailList().get(0) + recipeList.get(1).getDetailList().get(1));
     }
 
     @Override
-    public void onRecipeSelected(KRecipe selectedRecipe) {
+    public void onRecipeSelected(String selectedRecipe) {
         Context context = this;
         Class recipeDetailActivityDestination = DetailListActivity.class;
         Intent openRecipeDetailActivity = new Intent(context, recipeDetailActivityDestination);

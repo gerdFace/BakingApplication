@@ -12,19 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
-import com.example.android.bakingapplication.model.KRecipe;
+import com.example.android.bakingapplication.model.FakeRecipeData;
+import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailListFragment extends Fragment {
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
+	private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
 	
-	private static final String RECIPE_KEY = "recipe_key";
-	
-	private KRecipe recipe;
-
+	private String nameOfFoodItem;
     private DetailItemCallbacks callbacks;
+	private DetailListAdapter detailListAdapter;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -38,9 +38,9 @@ public class DetailListFragment extends Fragment {
     }
 	
 	
-	public static DetailListFragment newInstance(KRecipe recipe) {
+	public static DetailListFragment newInstance(String nameOfFoodItem) {
 		Bundle args = new Bundle();
-		args.putParcelable(RECIPE_KEY, recipe);
+		args.putString(NAME_OF_FOOD_ITEM_KEY, nameOfFoodItem);
 		
 		DetailListFragment detailListFragment = new DetailListFragment();
 		detailListFragment.setArguments(args);
@@ -51,10 +51,10 @@ public class DetailListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 	
-	    recipe = getArguments().getParcelable(RECIPE_KEY);
+	    nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY);
 	
-	    if (recipe != null) {
-		    Log.d(TAG, "DetailListFragment onCreate: " + recipe.getDessertName());
+	    if (nameOfFoodItem != null) {
+		    Log.d(TAG, "DetailListFragment onCreate: " + nameOfFoodItem);
 	    }
     }
 
@@ -63,17 +63,27 @@ public class DetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
         ButterKnife.bind(this, view);
-
-        DetailListAdapter detailListAdapter = new DetailListAdapter(recipe.getDetailList(), callbacks);
-
+	    
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
         rvDetailList.setLayoutManager(layoutManager);
-
-        rvDetailList.setAdapter(detailListAdapter);
+	    
+	    updateUI();
 
         return view;
     }
+	
+	private void updateUI() {
+		ArrayList<String> detailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
+		
+		if (detailListAdapter == null) {
+			detailListAdapter = new DetailListAdapter(detailList, callbacks);
+			
+			rvDetailList.setAdapter(detailListAdapter);
+		} else {
+			detailListAdapter.notifyDataSetChanged();
+		}
+	}
 
 //    Ensure that host activity implements the callback interface
     @Override
@@ -94,6 +104,18 @@ public class DetailListFragment extends Fragment {
         super.onDetach();
         callbacks = null;
     }
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateUI();
+	}
+	
+	//	@Override
+//	public void onSaveInstanceState(Bundle outState) {
+//		super.onSaveInstanceState(outState);
+//		outState.putParcelable(DetailListActivity.SAVED_RECIPE, recipe);
+//	}
 }
 
 

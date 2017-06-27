@@ -18,13 +18,13 @@ import java.util.List;
 
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.RecipeViewHolder> {
 
-    public static final String TAG = RecipeCardAdapter.class.getSimpleName();
+    private static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private Context context;
     private List<KRecipe> recipeList;
     private final RecipeCardAdapterOnClickHandler recipeClickHandler;
 
     public interface RecipeCardAdapterOnClickHandler {
-        void onRecipeSelected(KRecipe selectedRecipe);
+        void onRecipeSelected(String selectedRecipe);
     }
 
 
@@ -49,8 +49,8 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         @Override
         public void onClick(View v) {
             int positionOfRecipeSelected = getAdapterPosition();
-            KRecipe selectedRecipe = recipeList.get(positionOfRecipeSelected);
-            recipeClickHandler.onRecipeSelected(selectedRecipe);
+            String nameOfFoodItemSelected = recipeList.get(positionOfRecipeSelected).getDessertName();
+            recipeClickHandler.onRecipeSelected(nameOfFoodItemSelected);
         }
     }
 

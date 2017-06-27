@@ -9,17 +9,41 @@ import java.util.List;
 public class FakeRecipeData {
 
     private static final String TAG = FakeRecipeData.class.getSimpleName();
+    private static FakeRecipeData sFakeRecipeData;
     private List<KRecipe> recipeList;
-    private ArrayList<String> ingredientList = new ArrayList<>();
-    private ArrayList<String> detailList = new ArrayList<>();
-    private ArrayList<String> stepDescriptionList = new ArrayList<>();
+    private ArrayList<String> ingredientList;
+    private ArrayList<String> detailList;
+    private ArrayList<String> stepDescriptionList;
 
-    public FakeRecipeData(List<KRecipe> recipeList) {
-        this.recipeList = recipeList;
+    private FakeRecipeData() {
+	    recipeList = new ArrayList<>();
+	    ingredientList = new ArrayList<>();
+	    detailList = new ArrayList<>();
+	    stepDescriptionList = new ArrayList<>();
+	    addFakeRecipes();
     }
-
-
-    public void addFakeRecipes() {
+	
+	public static FakeRecipeData get() {
+		if (sFakeRecipeData == null) {
+			sFakeRecipeData = new FakeRecipeData();
+		}
+		return sFakeRecipeData;
+	}
+	
+	public List<KRecipe> getRecipeList() {
+		return recipeList;
+	}
+	
+	public KRecipe getKRecipe(String foodItemName) {
+		for (KRecipe kRecipe : recipeList) {
+			if (kRecipe.getDessertName().equals(foodItemName)) {
+				return kRecipe;
+			}
+		}
+		return null;
+	}
+	
+	public void addFakeRecipes() {
         int[] thumbnails = new int[] {
                 R.mipmap.nutella_pie,
                 R.mipmap.brownies,

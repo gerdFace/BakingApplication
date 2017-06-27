@@ -10,25 +10,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
+import com.example.android.bakingapplication.model.FakeRecipeData;
+
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
 	
-	private static final String ARG_INGREDIENT_LIST = "ingredient_list";
+	private static final String ARG_FOOD_ITEM_KEY= "food_item_key";
+	
+	private String nameOfFoodItem;
+	private IngredientsAdapter ingredientsAdapter;
 	
 	@BindView(R.id.rv_ingredient_list)
     RecyclerView rvIngredientList;
-
-    public ArrayList<String> ingredientList;
-
-    public IngredientsFragment() {
+	
+	public IngredientsFragment() {
     }
     
-    public static IngredientsFragment newInstance(ArrayList<String> stepDescriptionList) {
+    public static IngredientsFragment newInstance(String nameOfFoodItem) {
         Bundle args = new Bundle();
-        args.putStringArrayList(ARG_INGREDIENT_LIST, stepDescriptionList);
+        args.putString(ARG_FOOD_ITEM_KEY, nameOfFoodItem);
         
         IngredientsFragment ingredientsFragment = new IngredientsFragment();
         ingredientsFragment.setArguments(args);
@@ -38,7 +41,7 @@ public class IngredientsFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ingredientList = getArguments().getStringArrayList(ARG_INGREDIENT_LIST);
+		nameOfFoodItem = getArguments().getString(ARG_FOOD_ITEM_KEY);
 	}
 	
 	@Override
@@ -49,14 +52,30 @@ public class IngredientsFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientList);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayout.VERTICAL, false);
+        
+		rvIngredientList.setLayoutManager(layoutManager);
 
-        rvIngredientList.setLayoutManager(layoutManager);
-
-        rvIngredientList.setAdapter(ingredientsAdapter);
-
+		updateUI();
+		
         return view;
     }
+    
+    private void updateUI() {
+	    ArrayList<String> ingredientList = FakeRecipeData.get().getKRecipe(nameOfFoodItem)
+	                                                     .getIngredientList();
+	
+	    if (ingredientsAdapter == null) {
+		    ingredientsAdapter = new IngredientsAdapter(ingredientList);
+		    rvIngredientList.setAdapter(ingredientsAdapter);
+	    } else {
+		    ingredientsAdapter.notifyDataSetChanged();
+	    }
+    }
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateUI();
+	}
 }
