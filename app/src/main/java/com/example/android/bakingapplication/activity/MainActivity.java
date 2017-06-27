@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recipeCardAdapter);
 
-        Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getDetailList().get(0) + recipeList.get(1).getDetailList().get(1));
+        Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getDetailList().get(0) + recipeList.get(1).getDetailList().get(0));
     }
 
     @Override
@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         Context context = this;
         Class recipeDetailActivityDestination = DetailListActivity.class;
         Intent openRecipeDetailActivity = new Intent(context, recipeDetailActivityDestination);
-        openRecipeDetailActivity.putExtra("selected_recipe", selectedRecipe);
+        openRecipeDetailActivity.putExtra("name_of_food_item_selected", selectedRecipe);
+        Log.d(TAG, "onRecipeSelected: " + selectedRecipe);
         startActivity(openRecipeDetailActivity);
     }
 }

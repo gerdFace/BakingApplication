@@ -28,6 +28,7 @@ public class DetailListFragment extends Fragment {
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
+    private ArrayList<String> detailList;
 
     public DetailListFragment() {
     }
@@ -51,7 +52,7 @@ public class DetailListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 	
-	    nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY);
+	    nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY, "");
 	
 	    if (nameOfFoodItem != null) {
 		    Log.d(TAG, "DetailListFragment onCreate: " + nameOfFoodItem);
@@ -67,15 +68,20 @@ public class DetailListFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
         rvDetailList.setLayoutManager(layoutManager);
-	    
-	    updateUI();
+
+        if (savedInstanceState == null) {
+//    TODO Fix NP on up arrow pressed -- addToBackStack didn't work on detailActivity
+            detailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
+        } else {
+            detailList = FakeRecipeData.get().getKRecipe(savedInstanceState.getString(DetailListActivity.SAVED_RECIPE)).getDetailList();
+        }
+        updateUI();
 
         return view;
     }
-	
+
 	private void updateUI() {
-		ArrayList<String> detailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
-		
+
 		if (detailListAdapter == null) {
 			detailListAdapter = new DetailListAdapter(detailList, callbacks);
 			
@@ -111,11 +117,11 @@ public class DetailListFragment extends Fragment {
 		updateUI();
 	}
 	
-	//	@Override
-//	public void onSaveInstanceState(Bundle outState) {
-//		super.onSaveInstanceState(outState);
-//		outState.putParcelable(DetailListActivity.SAVED_RECIPE, recipe);
-//	}
+		@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(DetailListActivity.SAVED_RECIPE, nameOfFoodItem);
+	}
 }
 
 

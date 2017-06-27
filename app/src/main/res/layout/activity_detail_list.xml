@@ -5,4 +5,5 @@
     android:layout_height="match_parent"
     android:id="@+id/detail_list_container"
     android:name="com.example.android.bakingapplication.DetailListFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android"/>
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</FrameLayout>

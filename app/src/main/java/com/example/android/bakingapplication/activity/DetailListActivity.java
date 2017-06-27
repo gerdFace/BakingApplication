@@ -27,18 +27,21 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_detail);
-	
+
 	    if (savedInstanceState != null) {
 		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE);
 	    } else {
 	        nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_ITEM_SELECTED_KEY);
-		    
-		    Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem);
-		
-		    getSupportFragmentManager().beginTransaction()
-		                               .add(R.id.detail_list_container, detailListFragment)
-		                               .commit();
-	    }
+
+        Log.d(TAG, "onCreate: " + nameOfFoodItem);
+
+        Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.detail_list_container, detailListFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
 		
 	    twoPane = findViewById(R.id.ingredient_and_instruction_container) != null;
 		
