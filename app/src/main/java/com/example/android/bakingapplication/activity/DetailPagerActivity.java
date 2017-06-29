@@ -36,6 +36,8 @@ public class DetailPagerActivity extends AppCompatActivity {
 		stepDetailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
 	
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
+		
+		viewPager.setOffscreenPageLimit(0);
 	    
 	    FragmentManager fragmentManager = getSupportFragmentManager();
 	

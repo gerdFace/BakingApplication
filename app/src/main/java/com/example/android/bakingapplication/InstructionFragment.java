@@ -124,10 +124,12 @@ public class InstructionFragment extends Fragment {
         player = null;
     }
     
+//    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
     @Override
     public void onPause() {
         super.onPause();
         releasePlayer();
+	    Log.d(TAG, "onPause: player paused");
     }
 	
 	@Override
