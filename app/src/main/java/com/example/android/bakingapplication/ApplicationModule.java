@@ -8,22 +8,21 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ApplicationModule {
+abstract class ApplicationModule {
 	
-	public Application application;
+	private Application application;
 	
 	public ApplicationModule(Application application) {
 		this.application = application;
 	}
 	
 	@Provides
-	@Singleton
 	public Context provideContext() {
 		return application;
 	}
 	
 	@Provides
-	@Singleton
+	// @Singleton
 	public FakeRecipeData provideFakeRecipeData() {
 		return FakeRecipeData.get();
 	}

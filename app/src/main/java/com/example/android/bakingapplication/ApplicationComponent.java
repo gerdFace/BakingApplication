@@ -5,9 +5,18 @@ import com.example.android.bakingapplication.activity.MainActivity;
 
 import javax.inject.Singleton;
 import dagger.Component;
+import dagger.android.AndroidInjector;
+import dagger.android.support.AndroidSupportInjectionModule;
 
-@Singleton @Component(modules = {ApplicationModule.class})
-public interface ApplicationComponent {
-	void inject(BakingApplication target);
-	void inject(MainActivity target);
+@Component(modules = {ApplicationModule.class, ApplicationBindingModule.class, AndroidSupportInjectionModule.class})
+
+@ApplicationScope
+public interface ApplicationComponent extends AndroidInjector<BakingApplication> {
+	
+	@Component.Builder
+	abstract class Builder extends AndroidInjector.Builder<BakingApplication> {
+		
+	}
+	// void inject(BakingApplication target);
+	// void inject(MainActivity target);
 }

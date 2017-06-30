@@ -17,7 +17,10 @@ import com.example.android.bakingapplication.model.KRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.Component;
+import dagger.android.AndroidInjection;
 import dagger.android.DaggerActivity;
 import dagger.android.DaggerActivity_MembersInjector;
 import dagger.android.DaggerApplication;
@@ -27,16 +30,17 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     public static final String TAG = MainActivity.class.getSimpleName();
 	
-	private ApplicationComponent component;
-	
+	@Inject FakeRecipeData fakeRecipeData;
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // AndroidInjection.inject(this);
 		
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
-        FakeRecipeData fakeRecipeData = FakeRecipeData.get();
+        // FakeRecipeData fakeRecipeData = FakeRecipeData.get();
         List<KRecipe> recipeList = fakeRecipeData.getRecipeList();
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
 
