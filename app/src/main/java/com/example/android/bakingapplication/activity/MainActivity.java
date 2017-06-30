@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.android.bakingapplication.ApplicationComponent;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.FakeRecipeData;
@@ -16,13 +17,20 @@ import com.example.android.bakingapplication.model.KRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.Component;
+import dagger.android.DaggerActivity;
+import dagger.android.DaggerActivity_MembersInjector;
+import dagger.android.DaggerApplication;
+import dagger.android.DaggerApplication_MembersInjector;
+
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	    
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
