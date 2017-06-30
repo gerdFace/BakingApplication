@@ -27,10 +27,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     public static final String TAG = MainActivity.class.getSimpleName();
 	
-    @Override
+	private ApplicationComponent component;
+	
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	    
+		
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
