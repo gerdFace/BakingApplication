@@ -8,35 +8,26 @@ import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.example.android.bakingapplication.ApplicationComponent;
+import com.example.android.bakingapplication.Dagger.AppComponent;
+import com.example.android.bakingapplication.Dagger.AppModule;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import com.example.android.bakingapplication.model.KRecipe;
-
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
-import dagger.Component;
-import dagger.android.AndroidInjection;
-import dagger.android.DaggerActivity;
-import dagger.android.DaggerActivity_MembersInjector;
-import dagger.android.DaggerApplication;
-import dagger.android.DaggerApplication_MembersInjector;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-	
-	@Inject FakeRecipeData fakeRecipeData;
+    
+    @Inject
+    FakeRecipeData fakeRecipeData;
+    
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // AndroidInjection.inject(this);
-		
         setContentView(R.layout.activity_main);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
@@ -50,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getDetailList().get(0) + recipeList.get(1).getDetailList().get(0));
     }
-
+    
     @Override
     public void onRecipeSelected(String selectedRecipe) {
         Context context = this;
