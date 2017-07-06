@@ -12,7 +12,12 @@ import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 
+import javax.inject.Inject;
+
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
+
+    @Inject
+    FakeRecipeData fakeRecipeData;
 
     public static final String NAME_OF_FOOD_ITEM_SELECTED_KEY = "name_of_food_item_selected";
     public static final String NAME_OF_DETAIL_BUTTON_SELECTED_KEY = "name_of_button";
@@ -28,7 +33,9 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_detail);
 
-	    if (savedInstanceState != null) {
+        ((BakingApplication)getApplication()).getAppComponent().inject(this);
+
+        if (savedInstanceState != null) {
 		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE);
 	    } else {
 	        nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_ITEM_SELECTED_KEY);
@@ -60,7 +67,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
             Context context = this;
 
-            String nameOfButtonSelected = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList().get(position);
+            String nameOfButtonSelected = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList().get(position);
 	
 	        Bundle bundle = new Bundle();
 	        bundle.putString(NAME_OF_DETAIL_BUTTON_SELECTED_KEY, nameOfButtonSelected);

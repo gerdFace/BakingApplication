@@ -9,26 +9,26 @@ import java.util.List;
 public class FakeRecipeData {
 
     private static final String TAG = FakeRecipeData.class.getSimpleName();
-    private static FakeRecipeData sFakeRecipeData;
+//    private static FakeRecipeData sFakeRecipeData;
     private List<KRecipe> recipeList;
     private ArrayList<String> ingredientList;
     private ArrayList<String> detailList;
     private ArrayList<String> stepDescriptionList;
 
-    private FakeRecipeData() {
+    public FakeRecipeData() {
 	    recipeList = new ArrayList<>();
 	    ingredientList = new ArrayList<>();
 	    detailList = new ArrayList<>();
 	    stepDescriptionList = new ArrayList<>();
 	    addFakeRecipes();
     }
-	
-	public static FakeRecipeData get() {
-		if (sFakeRecipeData == null) {
-			sFakeRecipeData = new FakeRecipeData();
-		}
-		return sFakeRecipeData;
-	}
+//
+//	public static FakeRecipeData get() {
+//		if (sFakeRecipeData == null) {
+//			sFakeRecipeData = new FakeRecipeData();
+//		}
+//		return sFakeRecipeData;
+//	}
 	
 	public List<KRecipe> getRecipeList() {
 		return recipeList;

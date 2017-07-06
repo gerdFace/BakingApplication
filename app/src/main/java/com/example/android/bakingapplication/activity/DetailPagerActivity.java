@@ -12,10 +12,16 @@ import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
+
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_SELECTED_KEY;
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_ITEM_SELECTED_KEY;
 
 public class DetailPagerActivity extends AppCompatActivity {
+
+	@Inject
+	FakeRecipeData fakeRecipeData;
 
 	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 	
@@ -26,14 +32,16 @@ public class DetailPagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_detail);
-		
+
+		((BakingApplication)getApplication()).getAppComponent().inject(this);
+
 		String nameOfButtonClicked = getIntent().getStringExtra(NAME_OF_DETAIL_BUTTON_SELECTED_KEY);
 		
 		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_ITEM_SELECTED_KEY);
 		
         setTitle(nameOfFoodItem);
 		
-		stepDetailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
+		stepDetailList = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList();
 	
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
 		

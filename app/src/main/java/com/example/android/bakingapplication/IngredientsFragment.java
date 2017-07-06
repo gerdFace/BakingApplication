@@ -9,14 +9,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
+
+	@Inject
+	FakeRecipeData fakeRecipeData;
 	
 	private static final String ARG_FOOD_ITEM_KEY= "food_item_key";
 	
@@ -50,7 +58,9 @@ public class IngredientsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
-        ButterKnife.bind(this, view);
+		((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
+
+		ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayout.VERTICAL, false);
         
@@ -62,7 +72,7 @@ public class IngredientsFragment extends Fragment {
     }
     
     private void updateUI() {
-	    ArrayList<String> ingredientList = FakeRecipeData.get().getKRecipe(nameOfFoodItem)
+	    ArrayList<String> ingredientList = fakeRecipeData.getKRecipe(nameOfFoodItem)
 	                                                     .getIngredientList();
 	
 	    if (ingredientsAdapter == null) {

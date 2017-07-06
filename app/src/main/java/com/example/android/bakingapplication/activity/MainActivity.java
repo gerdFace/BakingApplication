@@ -27,8 +27,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
         setContentView(R.layout.activity_main);
+
+        ((BakingApplication)getApplication()).getAppComponent().inject(this);
+
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
         // FakeRecipeData fakeRecipeData = FakeRecipeData.get();

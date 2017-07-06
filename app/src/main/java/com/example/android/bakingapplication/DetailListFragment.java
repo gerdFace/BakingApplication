@@ -8,28 +8,36 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailListFragment extends Fragment {
 
+    @Inject
+    FakeRecipeData fakeRecipeData;
+
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
-	private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
-	
-	private String nameOfFoodItem;
+
+    private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
+
+    private String nameOfFoodItem;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
+    private ArrayList<String> detailList;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
-    private ArrayList<String> detailList;
 
     public DetailListFragment() {
     }
@@ -64,16 +72,19 @@ public class DetailListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
+
+        ((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
+
         ButterKnife.bind(this, view);
-	    
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
         rvDetailList.setLayoutManager(layoutManager);
 
         if (savedInstanceState == null) {
-            detailList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getDetailList();
+            detailList = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList();
         } else {
-            detailList = FakeRecipeData.get().getKRecipe(savedInstanceState.getString(DetailListActivity.SAVED_RECIPE)).getDetailList();
+            detailList = fakeRecipeData.getKRecipe(savedInstanceState.getString(DetailListActivity.SAVED_RECIPE)).getDetailList();
         }
         updateUI();
 

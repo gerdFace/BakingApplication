@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,11 +29,17 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.util.List;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InstructionFragment extends Fragment {
-	
+
+    @Inject
+    FakeRecipeData fakeRecipeData;
+
 	private static final String TAG = InstructionFragment.class.getSimpleName();
 	private static final String ARG_FOOD_ITEM_KEY = "food_item_key";
 	
@@ -74,6 +81,9 @@ public class InstructionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instruction, container, false);
+
+        ((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
+
         ButterKnife.bind(this, view);
 
 		updateUI();
@@ -82,7 +92,7 @@ public class InstructionFragment extends Fragment {
     }
 	
 	private void updateUI() {
-		stepDescriptionList = FakeRecipeData.get().getKRecipe(nameOfFoodItem).getStepDescriptionList();
+		stepDescriptionList = fakeRecipeData.getKRecipe(nameOfFoodItem).getStepDescriptionList();
 
         shortDescription.setText(stepDescriptionList.get(0));
 
