@@ -3,8 +3,13 @@ package com.example.android.bakingapplication;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +40,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InstructionFragment extends Fragment {
+public class InstructionFragment extends Fragment implements LoaderManager.LoaderCallbacks<MediaSource> {
 
     @Inject
     FakeRecipeData fakeRecipeData;
@@ -47,6 +52,8 @@ public class InstructionFragment extends Fragment {
 	private String nameOfFoodItem;
     private SimpleExoPlayer player;
     private Context applicationContext;
+    private static final int INSTRUCTION_VIDEO_LOADER = 11;
+    private MediaSource mediaSource;
 	
 	@BindView(R.id.short_step_description)
 	TextView shortDescription;
@@ -114,24 +121,31 @@ public class InstructionFragment extends Fragment {
 
         simpleExoPlayerView.setPlayer(player);
 
-        player.prepare(prepareMediaSource());
+        fetchMediaSource(stepDescriptionList.get(2));
+
+//        player.prepare(mediaSource);
     }
 
-    private MediaSource prepareMediaSource() {
-	    DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
-	                                                                        Util.getUserAgent(applicationContext, "BakingApplication"),
-	                                                                        null);
+    private void fetchMediaSource(String uri) {
+        Bundle uriBundle = new Bundle();
+        uriBundle.putString("media_uri", uri);
 
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+        Loader<MediaSource> mediaSourceLoader = loaderManager.getLoader(INSTRUCTION_VIDEO_LOADER);
 
-        return new ExtractorMediaSource(Uri.parse(stepDescriptionList.get(2)),
-                                        dataSourceFactory, extractorsFactory, null, null);
+        if (mediaSourceLoader == null) {
+            loaderManager.initLoader(INSTRUCTION_VIDEO_LOADER, uriBundle, this);
+        } else {
+            loaderManager.restartLoader(INSTRUCTION_VIDEO_LOADER, uriBundle, this);
+        }
     }
 
     private void releasePlayer() {
-        player.stop();
-        player.release();
-        player = null;
+        if (player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
     
 //    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
@@ -141,10 +155,72 @@ public class InstructionFragment extends Fragment {
         releasePlayer();
 	    Log.d(TAG, "onPause: player paused");
     }
-	
-	@Override
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        releasePlayer();
+        Log.d(TAG, "onStop: player stopped");
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		updateUI();
 	}
+
+    @Override
+    public Loader<MediaSource> onCreateLoader(int id, final Bundle args) {
+        return new AsyncTaskLoader<MediaSource>(getActivity()) {
+
+            MediaSource mediaSource;
+
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+                if (args == null) {
+                    return;
+                }
+
+                if (mediaSource != null) {
+                    deliverResult(mediaSource);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public MediaSource loadInBackground() {
+                String uriFromBundle = args.getString("media_uri");
+                if (uriFromBundle == null || TextUtils.isEmpty(uriFromBundle)) {
+                    return null;
+                }
+
+                DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
+                        Util.getUserAgent(applicationContext, "BakingApplication"),
+                        null);
+
+                ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+                return new ExtractorMediaSource(Uri.parse(uriFromBundle),
+                        dataSourceFactory, extractorsFactory, null, null);
+            }
+
+            @Override
+            public void deliverResult(MediaSource data) {
+                mediaSource = data;
+                super.deliverResult(data);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<MediaSource> loader, MediaSource mediaSource) {
+        player.prepare(mediaSource);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<MediaSource> loader) {
+        Log.d(TAG, "onLoaderReset: loader restarting");
+    }
 }
