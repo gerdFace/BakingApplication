@@ -23,17 +23,17 @@ import butterknife.ButterKnife;
 
 public class IngredientsFragment extends Fragment {
 
-	@Inject
-	FakeRecipeData fakeRecipeData;
-	
 	private static final String ARG_FOOD_ITEM_KEY= "food_item_key";
-	
 	private String nameOfFoodItem;
 	private IngredientsAdapter ingredientsAdapter;
-	
+
+	@Inject
+	FakeRecipeData fakeRecipeData;
+
 	@BindView(R.id.rv_ingredient_list)
     RecyclerView rvIngredientList;
-	
+
+
 	public IngredientsFragment() {
     }
     

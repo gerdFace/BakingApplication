@@ -9,7 +9,6 @@ import java.util.List;
 public class FakeRecipeData {
 
     private static final String TAG = FakeRecipeData.class.getSimpleName();
-//    private static FakeRecipeData sFakeRecipeData;
     private List<KRecipe> recipeList;
     private ArrayList<String> ingredientList;
     private ArrayList<String> detailList;
@@ -22,13 +21,6 @@ public class FakeRecipeData {
 	    stepDescriptionList = new ArrayList<>();
 	    addFakeRecipes();
     }
-//
-//	public static FakeRecipeData get() {
-//		if (sFakeRecipeData == null) {
-//			sFakeRecipeData = new FakeRecipeData();
-//		}
-//		return sFakeRecipeData;
-//	}
 	
 	public List<KRecipe> getRecipeList() {
 		return recipeList;
