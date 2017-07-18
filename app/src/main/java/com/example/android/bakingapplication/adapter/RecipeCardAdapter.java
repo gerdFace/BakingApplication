@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.KRecipe;
+import com.example.android.bakingapplication.model.RecipeDatum;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     private static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private Context context;
-    private List<KRecipe> recipeList;
+    private List<RecipeDatum> recipeList;
     private final RecipeCardAdapterOnClickHandler recipeClickHandler;
 
     public interface RecipeCardAdapterOnClickHandler {
@@ -49,12 +50,12 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         @Override
         public void onClick(View v) {
             int positionOfRecipeSelected = getAdapterPosition();
-            String nameOfFoodItemSelected = recipeList.get(positionOfRecipeSelected).getDessertName();
+            String nameOfFoodItemSelected = recipeList.get(positionOfRecipeSelected).getName();
             recipeClickHandler.onRecipeSelected(nameOfFoodItemSelected);
         }
     }
 
-    public RecipeCardAdapter(Context mContext, List<KRecipe> recipeList, RecipeCardAdapterOnClickHandler recipeClickHandler) {
+    public RecipeCardAdapter(Context mContext, List<RecipeDatum> recipeList, RecipeCardAdapterOnClickHandler recipeClickHandler) {
         this.context = mContext;
         this.recipeList = recipeList;
         this.recipeClickHandler = recipeClickHandler;
@@ -68,14 +69,14 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public void onBindViewHolder(final RecipeViewHolder holder, int position) {
-        KRecipe recipe = recipeList.get(position);
-        holder.dessertName.setText(recipe.getDessertName());
-        holder.numberOfSteps.setText(String.format("%s %s", context.getResources().getString(R.string.steps), recipe.getNumberOfSteps()));
-        holder.numberOfIngredients.setText(String.format("%s %s", context.getResources().getString(R.string.ingredients), recipe.getNumberOfIngredients()));
-        holder.numberOfServings.setText(String.format("%s %s", context.getResources().getString(R.string.servings), recipe.getNumberOfServings()));
+        RecipeDatum recipe = recipeList.get(position);
+        holder.dessertName.setText(recipe.getName());
+        holder.numberOfSteps.setText(String.format("%s %s", context.getResources().getString(R.string.steps), recipe.getSteps().size()));
+        holder.numberOfIngredients.setText(String.format("%s %s", context.getResources().getString(R.string.ingredients), recipe.getIngredients().size()));
+        holder.numberOfServings.setText(String.format("%s %s", context.getResources().getString(R.string.servings), recipe.getServings().toString()));
 
-        Log.d(TAG, "Glide fetching thumbnail from: " + recipe.getThumbnail());
-        Glide.with(context).load(recipe.getThumbnail()).into(holder.thumbnail);
+        Log.d(TAG, "Glide fetching thumbnail from: " + recipe.getImage());
+        Glide.with(context).load(recipe.getImage()).into(holder.thumbnail);
     }
 
     @Override
