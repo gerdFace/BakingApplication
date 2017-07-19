@@ -143,10 +143,12 @@ public class InstructionFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        releasePlayer();
-        Log.d(TAG, "onDestroy: player destroyed");
+    public void onStop() {
+        super.onStop();
+        if (player != null) {
+            releasePlayer();
+            Log.d(TAG, "onDestroy: player destroyed");
+        }
     }
 
     @Override
