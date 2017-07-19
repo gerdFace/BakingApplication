@@ -141,8 +141,15 @@ public class InstructionFragment extends Fragment {
         releasePlayer();
 	    Log.d(TAG, "onPause: player paused");
     }
-	
-	@Override
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
+        Log.d(TAG, "onDestroy: player destroyed");
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		updateUI();

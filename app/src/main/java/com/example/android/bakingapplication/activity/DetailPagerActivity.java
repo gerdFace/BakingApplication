@@ -12,22 +12,20 @@ import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import java.util.ArrayList;
-
 import javax.inject.Inject;
-
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_SELECTED_KEY;
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_ITEM_SELECTED_KEY;
 
 public class DetailPagerActivity extends AppCompatActivity {
 
+	private static final String TAG = DetailPagerActivity.class.getSimpleName();
+
+	private ArrayList<String> stepDetailList;
+	private String nameOfFoodItem;
+
 	@Inject
 	FakeRecipeData fakeRecipeData;
 
-	private static final String TAG = DetailPagerActivity.class.getSimpleName();
-	
-	private ArrayList<String> stepDetailList;
-	private String nameOfFoodItem;
-	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

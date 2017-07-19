@@ -1,6 +1,5 @@
 package com.example.android.bakingapplication.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,14 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
-import com.example.android.bakingapplication.model.FakeRecipeData;
-import com.example.android.bakingapplication.model.KRecipe;
 import com.example.android.bakingapplication.model.RecipeDatum;
 import com.example.android.bakingapplication.retrofit.RecipeService;
-
 import java.util.List;
 import javax.inject.Inject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,16 +21,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-//    @Inject
-//    FakeRecipeData fakeRecipeData;
+    private List<RecipeDatum> recipeList;
 
     @Inject
     Retrofit retrofit;
 
-    private List<RecipeDatum> recipeList;
-
-
-    
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,10 +60,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
-        // FakeRecipeData fakeRecipeData = FakeRecipeData.get();
-//        List<KRecipe> recipeList = fakeRecipeData.getRecipeList();
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
+
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recipeCardAdapter);
     }
