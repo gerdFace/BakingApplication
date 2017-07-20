@@ -16,7 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetworkModule {
-    String baseUrl;
+    private String baseUrl;
+
     public static String TAG = NetworkModule.class.getSimpleName();
 
     public NetworkModule(String baseUrl) {

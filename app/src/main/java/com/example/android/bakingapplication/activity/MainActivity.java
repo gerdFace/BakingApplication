@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                 Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
             }
         });
-
-//        Log.d(TAG, "onCreate: detail list contains: " + recipeList.get(0).getIngredients().get(0) + recipeList.get(1).getSteps().get(0));
     }
 
     private void configureUI() {

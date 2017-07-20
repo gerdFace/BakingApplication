@@ -20,9 +20,14 @@ import java.util.List;
 public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.RecipeViewHolder> {
 
     private static final String TAG = RecipeCardAdapter.class.getSimpleName();
+    private final RecipeCardAdapterOnClickHandler recipeClickHandler;
     private Context context;
     private List<RecipeDatum> recipeList;
-    private final RecipeCardAdapterOnClickHandler recipeClickHandler;
+    private int[] thumbnails = new int[] {
+            R.mipmap.nutella_pie,
+            R.mipmap.brownies,
+            R.mipmap.yellow_cake,
+            R.mipmap.cheesecake};
 
     public interface RecipeCardAdapterOnClickHandler {
         void onRecipeSelected(String selectedRecipe);
@@ -76,7 +81,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         holder.numberOfServings.setText(String.format("%s %s", context.getResources().getString(R.string.servings), recipe.getServings().toString()));
 
         Log.d(TAG, "Glide fetching thumbnail from: " + recipe.getImage());
-        Glide.with(context).load(recipe.getImage()).into(holder.thumbnail);
+        Glide.with(context).load(thumbnails[position]).into(holder.thumbnail);
     }
 
     @Override

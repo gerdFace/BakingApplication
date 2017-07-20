@@ -11,6 +11,7 @@ import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.FakeRecipeData;
+import com.squareup.leakcanary.RefWatcher;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_SELECTED_KEY;
@@ -25,6 +26,13 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 	@Inject
 	FakeRecipeData fakeRecipeData;
+
+//	@Override
+//	protected void onDestroy() {
+//		super.onDestroy();
+//		RefWatcher refWatcher = BakingApplication.getRefWatcher(this);
+//		refWatcher.watch(this);
+//	}
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,5 +80,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 			    break;
 		    }
 	    }
+
+
     }
 }
