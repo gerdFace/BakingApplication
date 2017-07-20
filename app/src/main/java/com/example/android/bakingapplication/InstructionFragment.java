@@ -84,6 +84,8 @@ public class InstructionFragment extends Fragment {
 
         ((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
 
+        Log.d(TAG, "onCreateView: how many times is this fragment instantiated???");
+
         ButterKnife.bind(this, view);
 
 		updateUI();
@@ -114,6 +116,8 @@ public class InstructionFragment extends Fragment {
 
         simpleExoPlayerView.setPlayer(player);
 
+        player.setPlayWhenReady(false);
+
         player.prepare(prepareMediaSource());
     }
 
@@ -129,15 +133,18 @@ public class InstructionFragment extends Fragment {
     }
 
     private void releasePlayer() {
-        player.stop();
-        player.release();
-        player = null;
+        if (player != null) {
+//            player.stop();
+            player.release();
+            player = null;
+        }
     }
     
 //    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
     @Override
     public void onPause() {
         super.onPause();
+        player.setPlayWhenReady(false);
         releasePlayer();
 	    Log.d(TAG, "onPause: player paused");
     }
@@ -145,15 +152,13 @@ public class InstructionFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (player != null) {
-            releasePlayer();
-            Log.d(TAG, "onDestroy: player destroyed");
-        }
+        releasePlayer();
+        Log.d(TAG, "onStop: player stopped");
     }
 
-    @Override
-	public void onResume() {
-		super.onResume();
-		updateUI();
-	}
+//    @Override
+//	public void onResume() {
+//		super.onResume();
+//		updateUI();
+//	}
 }

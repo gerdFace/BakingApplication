@@ -2,7 +2,6 @@ package com.example.android.bakingapplication.Dagger;
 
 import android.app.Application;
 import android.util.Log;
-
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private List<RecipeDatum> recipeList;
+//    private List<RecipeDatum> recipeList;
 
     @Inject
-    Retrofit retrofit;
+    List<RecipeDatum> recipeDatumList;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,31 +33,13 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getAppComponent().inject(this);
 
-        Call<List<RecipeDatum>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
-
-        recipeCall.enqueue(new Callback<List<RecipeDatum>>() {
-
-            @Override
-            public void onResponse(Call<List<RecipeDatum>> call, Response<List<RecipeDatum>> response) {
-                Log.d(TAG, "onResponse: " + response.code());
-                if (response.isSuccessful()) {
-                    recipeList = response.body();
-                    Log.d(TAG, "Recipe data was loaded from website");
-                    configureUI();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RecipeDatum>> call, Throwable t) {
-                Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
-            }
-        });
+        configureUI();
     }
 
     private void configureUI() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
 
-        RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
+        RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeDatumList, this);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
 
