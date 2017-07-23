@@ -3,6 +3,7 @@ package com.example.android.bakingapplication.activity;
 import android.app.Application;
 import com.example.android.bakingapplication.Dagger.AppComponent;
 import com.example.android.bakingapplication.Dagger.AppModule;
+import com.example.android.bakingapplication.Dagger.DaggerAppComponent;
 import com.example.android.bakingapplication.Dagger.NetworkModule;
 
 public class BakingApplication extends Application {
