@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+// realm plugin positioned between app-kotlin fixed dagger 2/realm conflict (annotationProcessors?)
 apply plugin: 'realm-android'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 25
