@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
-import com.example.android.bakingapplication.model.RecipeDatum;
+import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.retrofit.RecipeService;
 import java.util.List;
 import javax.inject.Inject;
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private List<RecipeDatum> recipeList;
+    private List<RecipeData> recipeList;
 
     @Inject
     Retrofit retrofit;
@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getAppComponent().inject(this);
 
-        Call<List<RecipeDatum>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
+        Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
 
-        recipeCall.enqueue(new Callback<List<RecipeDatum>>() {
+        recipeCall.enqueue(new Callback<List<RecipeData>>() {
 
             @Override
-            public void onResponse(Call<List<RecipeDatum>> call, Response<List<RecipeDatum>> response) {
+            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
                 Log.d(TAG, "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     recipeList = response.body();
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
             }
 
             @Override
-            public void onFailure(Call<List<RecipeDatum>> call, Throwable t) {
+            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
                 Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
             }
         });

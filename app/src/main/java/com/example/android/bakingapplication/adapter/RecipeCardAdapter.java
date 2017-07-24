@@ -11,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.KRecipe;
-import com.example.android.bakingapplication.model.RecipeDatum;
+import com.example.android.bakingapplication.model.RecipeData;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     private static final String TAG = RecipeCardAdapter.class.getSimpleName();
     private final RecipeCardAdapterOnClickHandler recipeClickHandler;
     private Context context;
-    private List<RecipeDatum> recipeList;
+    private List<RecipeData> recipeList;
     private int[] thumbnails = new int[] {
             R.mipmap.nutella_pie,
             R.mipmap.brownies,
@@ -60,7 +59,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         }
     }
 
-    public RecipeCardAdapter(Context mContext, List<RecipeDatum> recipeList, RecipeCardAdapterOnClickHandler recipeClickHandler) {
+    public RecipeCardAdapter(Context mContext, List<RecipeData> recipeList, RecipeCardAdapterOnClickHandler recipeClickHandler) {
         this.context = mContext;
         this.recipeList = recipeList;
         this.recipeClickHandler = recipeClickHandler;
@@ -74,7 +73,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
 
     @Override
     public void onBindViewHolder(final RecipeViewHolder holder, int position) {
-        RecipeDatum recipe = recipeList.get(position);
+        RecipeData recipe = recipeList.get(position);
         holder.dessertName.setText(recipe.getName());
         holder.numberOfSteps.setText(String.format("%s %s", context.getResources().getString(R.string.steps), recipe.getSteps().size()));
         holder.numberOfIngredients.setText(String.format("%s %s", context.getResources().getString(R.string.ingredients), recipe.getIngredients().size()));

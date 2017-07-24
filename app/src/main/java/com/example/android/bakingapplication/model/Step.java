@@ -1,14 +1,14 @@
-
 package com.example.android.bakingapplication.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import io.realm.RealmModel;
+import io.realm.annotations.RealmClass;
 
-public class Step implements Parcelable
-{
+@RealmClass
+public class Step implements Parcelable, RealmModel {
 
     @SerializedName("id")
     @Expose
