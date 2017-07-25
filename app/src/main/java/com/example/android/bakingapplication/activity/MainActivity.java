@@ -1,17 +1,22 @@
 package com.example.android.bakingapplication.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.os.Bundle;
 import android.util.Log;
+
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.retrofit.RecipeService;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Inject
     Retrofit retrofit;
 
+    @Inject
+    Realm realm;
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,25 +41,27 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getAppComponent().inject(this);
 
-        Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
+        if (recipeList == null) {
+            Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
 
-        recipeCall.enqueue(new Callback<List<RecipeData>>() {
+            recipeCall.enqueue(new Callback<List<RecipeData>>() {
 
-            @Override
-            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
-                Log.d(TAG, "onResponse: " + response.code());
-                if (response.isSuccessful()) {
-                    recipeList = response.body();
-                    Log.d(TAG, "Recipe data was loaded from website");
-                    configureUI();
+                @Override
+                public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
+                    Log.d(TAG, "onResponse: " + response.code());
+                    if (response.isSuccessful()) {
+                        recipeList = response.body();
+                        Log.d(TAG, "Recipe data was loaded from website");
+                        configureUI();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
-                Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<List<RecipeData>> call, Throwable t) {
+                    Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
+                }
+            });
+        }
     }
 
     private void configureUI() {
