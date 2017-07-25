@@ -14,27 +14,32 @@ import android.view.ViewGroup;
 import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
-import com.example.android.bakingapplication.model.FakeRecipeData;
-import java.util.ArrayList;
+import com.example.android.bakingapplication.model.RecipeData;
+import com.example.android.bakingapplication.model.Step;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class DetailListFragment extends Fragment {
 
     @Inject
-    FakeRecipeData fakeRecipeData;
+    Realm realm;
 
     public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
 
     private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
+    private static final String ID_OF_FOOD_ITEM_KEY = "id_of_food_item_key";
 
     private String nameOfFoodItem;
+    private int foodID;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
-    private ArrayList<String> detailList;
+    private List<Step> detailList;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -44,14 +49,15 @@ public class DetailListFragment extends Fragment {
 
 //    Interface that enables fragment to communicate with host activity
     public interface DetailItemCallbacks {
-        void onRecipeDetailButtonClicked(int position);
+        void onRecipeDetailButtonClicked(String nameOfStep);
     }
 	
 	
-	public static DetailListFragment newInstance(String nameOfFoodItem) {
+	public static DetailListFragment newInstance(String nameOfFoodItem, int foodID) {
 		Bundle args = new Bundle();
 		args.putString(NAME_OF_FOOD_ITEM_KEY, nameOfFoodItem);
-		
+		args.putInt(ID_OF_FOOD_ITEM_KEY, foodID);
+
 		DetailListFragment detailListFragment = new DetailListFragment();
 		detailListFragment.setArguments(args);
 		return detailListFragment;
@@ -62,8 +68,10 @@ public class DetailListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 	
 	    nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY, "");
-	
-	    if (nameOfFoodItem != null) {
+
+        foodID = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
+
+        if (nameOfFoodItem != null) {
 		    Log.d(TAG, "DetailListFragment onCreate: " + nameOfFoodItem);
 	    }
     }
@@ -82,9 +90,11 @@ public class DetailListFragment extends Fragment {
         rvDetailList.setLayoutManager(layoutManager);
 
         if (savedInstanceState == null) {
-            detailList = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList();
+            detailList = realm.where(RecipeData.class)
+                    .equalTo("id", foodID)
+                    .findFirst().getSteps();
+
         } else {
-            detailList = fakeRecipeData.getKRecipe(savedInstanceState.getString(DetailListActivity.SAVED_RECIPE)).getDetailList();
         }
         updateUI();
 
@@ -131,7 +141,7 @@ public class DetailListFragment extends Fragment {
 		@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(DetailListActivity.SAVED_RECIPE, nameOfFoodItem);
+		outState.putString(DetailListActivity.SAVED_RECIPE_NAME, nameOfFoodItem);
 	}
 }
 

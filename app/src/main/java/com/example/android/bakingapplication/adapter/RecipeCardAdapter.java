@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.RecipeData;
-
 import java.util.List;
 
 
@@ -29,7 +28,7 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
             R.mipmap.cheesecake};
 
     public interface RecipeCardAdapterOnClickHandler {
-        void onRecipeSelected(String selectedRecipe);
+        void onRecipeSelected(String nameOfFoodSelected, int foodID);
     }
 
 
@@ -54,8 +53,9 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         @Override
         public void onClick(View v) {
             int positionOfRecipeSelected = getAdapterPosition();
-            String nameOfFoodItemSelected = recipeList.get(positionOfRecipeSelected).getName();
-            recipeClickHandler.onRecipeSelected(nameOfFoodItemSelected);
+            int foodID = recipeList.get(positionOfRecipeSelected).getId();
+            String nameOfFoodSelected = recipeList.get(positionOfRecipeSelected).getName();
+            recipeClickHandler.onRecipeSelected(nameOfFoodSelected, foodID);
         }
     }
 

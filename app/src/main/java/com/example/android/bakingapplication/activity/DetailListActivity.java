@@ -2,30 +2,31 @@ package com.example.android.bakingapplication.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+
 import com.example.android.bakingapplication.DetailListFragment;
 import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.FakeRecipeData;
-
-import javax.inject.Inject;
 
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
-    @Inject
-    FakeRecipeData fakeRecipeData;
+//    @Inject
+//    FakeRecipeData fakeRecipeData;
 
-    public static final String NAME_OF_FOOD_ITEM_SELECTED_KEY = "name_of_food_item_selected";
+    public static final String NAME_OF_FOOD_SELECTED_KEY = "name_of_food_selected";
+    public static final String ID_OF_FOOD_SELECTED_KEY = "id_of_food_selected";
     public static final String NAME_OF_DETAIL_BUTTON_SELECTED_KEY = "name_of_button";
-	public static final String SAVED_RECIPE = "saved_recipe";
-    
+	public static final String SAVED_RECIPE_NAME = "saved_recipe_name";
+	public static final String SAVED_RECIPE_ID = "saved_recipe_id";
+
 	private static final String TAG = DetailListActivity.class.getSimpleName();
 	
 	private String nameOfFoodItem;
+    private int foodID;
     private boolean twoPane;
 	
 	@Override
@@ -36,30 +37,30 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         ((BakingApplication)getApplication()).getAppComponent().inject(this);
 
         if (savedInstanceState != null) {
-		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE);
-	    } else {
-	        nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_ITEM_SELECTED_KEY);
+		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE_NAME);
+            foodID = savedInstanceState.getInt(SAVED_RECIPE_ID, 0);
+        } else {
+            nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED_KEY);
+            foodID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED_KEY, 0);
+        }
 
-        Log.d(TAG, "onCreate: " + nameOfFoodItem);
+        Log.d(TAG, "onCreate: " + nameOfFoodItem + "ID: " + foodID);
 
-        Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem);
+        Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem, foodID);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_list_container, detailListFragment)
                     .commit();
-        }
-		
+
 	    twoPane = findViewById(R.id.ingredient_and_instruction_container) != null;
-		
-//		if (getSupportActionBar() == null) {
-			setTitle(nameOfFoodItem);
-//		}
+
+        setTitle(nameOfFoodItem);
     }
 
     @Override
-    public void onRecipeDetailButtonClicked(int position) {
+    public void onRecipeDetailButtonClicked(String nameOfStep) {
 
-        Log.d(TAG, "position of button clicked: " + position);
+        Log.d(TAG, "name of button clicked: " + nameOfStep);
 
         if (!twoPane) {
 
@@ -67,11 +68,11 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
             Context context = this;
 
-            String nameOfButtonSelected = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList().get(position);
+//            String nameOfButtonSelected = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList().get(position);
 	
 	        Bundle bundle = new Bundle();
-	        bundle.putString(NAME_OF_DETAIL_BUTTON_SELECTED_KEY, nameOfButtonSelected);
-	        bundle.putString(NAME_OF_FOOD_ITEM_SELECTED_KEY, nameOfFoodItem);
+	        bundle.putString(NAME_OF_DETAIL_BUTTON_SELECTED_KEY, nameOfStep);
+	        bundle.putString(NAME_OF_FOOD_SELECTED_KEY, nameOfFoodItem);
 
             Intent intentToStartSelectedDetailActivity = new Intent(context, selectedDetailDestination);
             intentToStartSelectedDetailActivity.putExtras(bundle);
@@ -79,7 +80,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	        
 		// TODO fix: orientation change on tablet causes crash
         } else {
-            if (position > 0) {
+            if (nameOfStep.equals("Ingredients")) {
 	            
                 Fragment instructionFragment = InstructionFragment.newInstance(nameOfFoodItem);
 
@@ -99,6 +100,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(SAVED_RECIPE, nameOfFoodItem);
+		outState.putString(SAVED_RECIPE_NAME, nameOfFoodItem);
+        outState.putInt(SAVED_RECIPE_ID, foodID);
 	}
 }

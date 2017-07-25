@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import com.example.android.bakingapplication.DetailListFragment;
 import com.example.android.bakingapplication.R;
+import com.example.android.bakingapplication.model.Step;
+
 import java.util.List;
 
 public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.DetailListViewHolder>{
@@ -16,9 +18,9 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     private final DetailListFragment.DetailItemCallbacks callback;
 
-    private List<String> detailList;
+    private List<Step> detailList;
 
-    public DetailListAdapter(List<String> detailList, DetailListFragment.DetailItemCallbacks callback) {
+    public DetailListAdapter(List<Step> detailList, DetailListFragment.DetailItemCallbacks callback) {
         this.detailList = detailList;
         this.callback = callback;
     }
@@ -31,7 +33,8 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     @Override
     public void onBindViewHolder(final DetailListViewHolder holder, int position) {
-        final String detailButtonText = detailList.get(position);
+        final String detailButtonText = detailList.get(position).getShortDescription();
+//        TODO add ingredients button to recipe list
         Log.d(TAG, "DetailList onBindViewHolder: " + detailList.get(position));
         holder.detailButton.setText(detailButtonText);
         holder.detailButton.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +42,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
             public void onClick(View v) {
                 // Check validity of the callback
                 if (callback != null) {
-                    callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
+                    callback.onRecipeDetailButtonClicked(detailButtonText);
                 }
             }
         });

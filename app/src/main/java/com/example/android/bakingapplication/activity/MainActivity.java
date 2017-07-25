@@ -41,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getAppComponent().inject(this);
 
-        if (recipeList == null) {
+        recipeList = realm.where(RecipeData.class).findAll();
+
+        configureUI();
+
+        if (recipeList.size() == 0) {
             Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
 
             recipeCall.enqueue(new Callback<List<RecipeData>>() {
@@ -51,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                     Log.d(TAG, "onResponse: " + response.code());
                     if (response.isSuccessful()) {
                         recipeList = response.body();
+                        realm.beginTransaction();
+                        realm.copyToRealmOrUpdate(recipeList);
+                        realm.commitTransaction();
                         Log.d(TAG, "Recipe data was loaded from website");
                         configureUI();
                     }
@@ -62,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
                 }
             });
         }
+        Log.d(TAG, "onCreate: recipe list contains: " + recipeList.toString());
     }
 
     private void configureUI() {
@@ -76,12 +84,19 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
     
     @Override
-    public void onRecipeSelected(String selectedRecipe) {
+    public void onRecipeSelected(String nameOfFoodItemSelected, int foodID) {
         Class recipeDetailActivityDestination = DetailListActivity.class;
         Intent openRecipeDetailActivity = new Intent(this, recipeDetailActivityDestination);
-        openRecipeDetailActivity.putExtra("name_of_food_item_selected", selectedRecipe);
-        Log.d(TAG, "onRecipeSelected: " + selectedRecipe);
+        openRecipeDetailActivity.putExtra("id_of_food_selected", foodID);
+        openRecipeDetailActivity.putExtra("name_of_food_selected", nameOfFoodItemSelected);
+        Log.d(TAG, "onRecipeSelected: " + nameOfFoodItemSelected + "ID: " + foodID);
         startActivity(openRecipeDetailActivity);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }
 
