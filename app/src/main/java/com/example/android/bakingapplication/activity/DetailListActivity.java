@@ -12,10 +12,9 @@ import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 
-public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
+import butterknife.ButterKnife;
 
-//    @Inject
-//    FakeRecipeData fakeRecipeData;
+public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
     public static final String NAME_OF_FOOD_SELECTED_KEY = "name_of_food_selected";
     public static final String ID_OF_FOOD_SELECTED_KEY = "id_of_food_selected";
@@ -28,11 +27,13 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	private String nameOfFoodItem;
     private int foodID;
     private boolean twoPane;
-	
+
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_detail);
+
+        ButterKnife.bind(this);
 
         ((BakingApplication)getApplication()).getAppComponent().inject(this);
 
@@ -69,7 +70,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
             Context context = this;
 
 //            String nameOfButtonSelected = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList().get(position);
-	
+
 	        Bundle bundle = new Bundle();
 	        bundle.putString(NAME_OF_DETAIL_BUTTON_SELECTED_KEY, nameOfStep);
 	        bundle.putString(NAME_OF_FOOD_SELECTED_KEY, nameOfFoodItem);
@@ -81,7 +82,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO fix: orientation change on tablet causes crash
         } else {
             if (nameOfStep.equals("Ingredients")) {
-	            
+
                 Fragment instructionFragment = InstructionFragment.newInstance(nameOfFoodItem);
 
                 getSupportFragmentManager().beginTransaction()

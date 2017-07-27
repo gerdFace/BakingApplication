@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.activity.DetailListActivity;
@@ -27,11 +28,7 @@ import io.realm.Realm;
 
 public class DetailListFragment extends Fragment {
 
-    @Inject
-    Realm realm;
-
-    public static final String TAG = DetailListActivity.class.getClass().getSimpleName();
-
+    private static final String TAG = DetailListActivity.class.getClass().getSimpleName();
     private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
     private static final String ID_OF_FOOD_ITEM_KEY = "id_of_food_item_key";
 
@@ -41,8 +38,14 @@ public class DetailListFragment extends Fragment {
 	private DetailListAdapter detailListAdapter;
     private List<Step> detailList;
 
+    @Inject
+    Realm realm;
+
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
+
+    @BindView(R.id.ingredient_button)
+    Button ingredientButton;
 
     public DetailListFragment() {
     }
@@ -85,24 +88,32 @@ public class DetailListFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        // TODO fix: recyclerview scrolls under static ingredientButton
+
+        ingredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callbacks.onRecipeDetailButtonClicked("Ingredients");
+            }
+        });
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
         rvDetailList.setLayoutManager(layoutManager);
 
+        // TODO save Instance, add else statement -- does statePager auto save instance?
         if (savedInstanceState == null) {
             detailList = realm.where(RecipeData.class)
                     .equalTo("id", foodID)
                     .findFirst().getSteps();
-
-        } else {
         }
+
         updateUI();
 
         return view;
     }
 
 	private void updateUI() {
-
 		if (detailListAdapter == null) {
 			detailListAdapter = new DetailListAdapter(detailList, callbacks);
 			
