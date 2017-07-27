@@ -1,16 +1,22 @@
 package com.example.android.bakingapplication;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.activity.DetailListActivity;
@@ -34,9 +40,11 @@ public class DetailListFragment extends Fragment {
 
     private String nameOfFoodItem;
     private int foodID;
+    private boolean isIngredientListDisplayed = false;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
     private List<Step> detailList;
+    private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
     Realm realm;
@@ -44,13 +52,19 @@ public class DetailListFragment extends Fragment {
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
 
-    @BindView(R.id.ingredient_button)
-    Button ingredientButton;
+    @BindView(R.id.ingredient_drop_toggle)
+    TextView ingredientDropToggle;
+
+    @BindView(R.id.fragment_detail_list_constraint_container)
+    ConstraintLayout constraintLayout;
+
+    @BindView(R.id.ingredient_fragment_container)
+    FrameLayout ingredientFrameLayout;
 
     public DetailListFragment() {
     }
 
-//    Interface that enables fragment to communicate with host activity
+    // Interface that enables fragment to communicate with host activity
     public interface DetailItemCallbacks {
         void onRecipeDetailButtonClicked(String nameOfStep);
     }
@@ -88,12 +102,34 @@ public class DetailListFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        // TODO fix: recyclerview scrolls under static ingredientButton
+        constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_detail_list_after);
 
-        ingredientButton.setOnClickListener(new View.OnClickListener() {
+        ingredientDropToggle.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
-                callbacks.onRecipeDetailButtonClicked("Ingredients");
+                if (!isIngredientListDisplayed) {
+                    TransitionManager.beginDelayedTransition(constraintLayout);
+                    constraintSet.setVisibility(R.id.ingredient_fragment_container, View.VISIBLE);
+                    constraintSet.applyTo(constraintLayout);
+
+                    Fragment ingredientsFragment = IngredientsFragment.newInstance(nameOfFoodItem);
+
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.ingredient_fragment_container, ingredientsFragment)
+                            .commit();
+
+                    isIngredientListDisplayed = true;
+
+                } else {
+                    // TODO check does fragment instance remain after view is gone?
+                    TransitionManager.beginDelayedTransition(constraintLayout);
+                    constraintSet.setVisibility(R.id.ingredient_fragment_container, View.GONE);
+                    constraintSet.applyTo(constraintLayout);
+
+                    isIngredientListDisplayed = false;
+
+                }
             }
         });
 
@@ -123,7 +159,7 @@ public class DetailListFragment extends Fragment {
 		}
 	}
 
-//    Ensure that host activity implements the callback interface
+    // Ensure that host activity implements the callback interface
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -136,7 +172,7 @@ public class DetailListFragment extends Fragment {
         }
     }
 
-//    Reset callback when fragment detaches from host activity
+    // Reset callback when fragment detaches from host activity
     @Override
     public void onDetach() {
         super.onDetach();

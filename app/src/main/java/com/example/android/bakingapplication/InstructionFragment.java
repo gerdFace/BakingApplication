@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapplication.activity.BakingApplication;
-import com.example.android.bakingapplication.model.FakeRecipeData;
+import com.example.android.bakingapplication.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -28,26 +28,27 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class InstructionFragment extends Fragment {
 
     @Inject
-    FakeRecipeData fakeRecipeData;
+    Realm realm;
 
 	private static final String TAG = InstructionFragment.class.getSimpleName();
-	private static final String ARG_FOOD_ITEM_KEY = "food_item_key";
+	private static final String NAME_FOOD_ITEM_KEY = "name_food_item_key";
+	private static final String SHORT_DESCRIPTION_OF_STEP_SELECTED = "short_description_of_step_selected";
 	
-    private List<String> stepDescriptionList;
+    private Step step;
 	private String nameOfFoodItem;
     private SimpleExoPlayer player;
     private Context applicationContext;
-	
+    private String stepSelected;
+
 	@BindView(R.id.short_step_description)
 	TextView shortDescription;
 	
@@ -61,10 +62,11 @@ public class InstructionFragment extends Fragment {
         // Required empty public constructor
     }
 	
-	public static InstructionFragment newInstance(String nameOfFoodItem) {
+	public static InstructionFragment newInstance(String nameOfFoodItem, String shortDescriptionOfStepSelected) {
 		Bundle args = new Bundle();
-		args.putString(ARG_FOOD_ITEM_KEY, nameOfFoodItem);
-		
+		args.putString(NAME_FOOD_ITEM_KEY, nameOfFoodItem);
+		args.putString(SHORT_DESCRIPTION_OF_STEP_SELECTED, shortDescriptionOfStepSelected);
+
 		InstructionFragment instructionFragment = new InstructionFragment();
 		instructionFragment.setArguments(args);
 		return instructionFragment;
@@ -74,8 +76,9 @@ public class InstructionFragment extends Fragment {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		nameOfFoodItem = getArguments().getString(ARG_FOOD_ITEM_KEY);
-	}
+		nameOfFoodItem = getArguments().getString(NAME_FOOD_ITEM_KEY);
+        stepSelected = getArguments().getString(SHORT_DESCRIPTION_OF_STEP_SELECTED);
+    }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,15 +93,18 @@ public class InstructionFragment extends Fragment {
 		
         return view;
     }
-	
+
 	private void updateUI() {
-		stepDescriptionList = fakeRecipeData.getKRecipe(nameOfFoodItem).getStepDescriptionList();
+        // TODO loading individual step (.7 Pour batter...) - need step list?
+        step = realm.where(Step.class)
+                .equalTo("shortDescription", stepSelected)
+                .findFirst();
 
-        shortDescription.setText(stepDescriptionList.get(0));
+//        shortDescription.setText(stepDescriptionList.g);
 
-        Log.d(TAG, "InstructionFragment shortDescription: " + stepDescriptionList.get(0));
+        Log.d(TAG, "InstructionFragment shortDescription: " + step.getShortDescription());
 
-        longDescription.setText(stepDescriptionList.get(1));
+        longDescription.setText(step.getDescription());
 
         initializeMediaPlayer();
 	}
@@ -124,7 +130,7 @@ public class InstructionFragment extends Fragment {
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
-        return new ExtractorMediaSource(Uri.parse(stepDescriptionList.get(2)),
+        return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
                                         dataSourceFactory, extractorsFactory, null, null);
     }
 

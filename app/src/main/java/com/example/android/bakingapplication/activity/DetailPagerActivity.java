@@ -8,31 +8,28 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.android.bakingapplication.IngredientsFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.FakeRecipeData;
+import com.example.android.bakingapplication.model.RecipeData;
+import com.example.android.bakingapplication.model.Step;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.realm.Realm;
 
 import static com.example.android.bakingapplication.activity.DetailListActivity.ID_OF_FOOD_SELECTED_KEY;
-import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_DETAIL_BUTTON_SELECTED_KEY;
+import static com.example.android.bakingapplication.activity.DetailListActivity.SHORT_DESCRIPTION_OF_STEP_SELECTED;
 import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_SELECTED_KEY;
 
 public class DetailPagerActivity extends AppCompatActivity {
 
 	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 
-	private ArrayList<String> stepDetailList;
+	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
 	private int foodItemID;
-
-	@Inject
-	FakeRecipeData fakeRecipeData;
 
 	@Inject
 	Realm realm;
@@ -40,20 +37,22 @@ public class DetailPagerActivity extends AppCompatActivity {
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_selected_detail);
+        setContentView(R.layout.activity_detail_pager);
 
 		((BakingApplication)getApplication()).getAppComponent().inject(this);
 
-		String nameOfButtonClicked = getIntent().getStringExtra(NAME_OF_DETAIL_BUTTON_SELECTED_KEY);
+		final String shortDescriptionOfStepSelected = getIntent().getStringExtra(SHORT_DESCRIPTION_OF_STEP_SELECTED);
 
 		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED_KEY);
 
 		foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED_KEY, 0);
 
 		setTitle(nameOfFoodItem);
-		
-//		stepDetailList = fakeRecipeData.getKRecipe(nameOfFoodItem).getDetailList();
 
+		stepDetailList = realm.where(RecipeData.class)
+				.equalTo("id", foodItemID)
+				.findFirst().getSteps();
+		
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
 		
 	    FragmentManager fragmentManager = getSupportFragmentManager();
@@ -61,13 +60,9 @@ public class DetailPagerActivity extends AppCompatActivity {
 	    viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 		    @Override
 		    public Fragment getItem(int position) {
-			    if (position == 0) {
-				    return IngredientsFragment
-						    .newInstance(nameOfFoodItem);
-			    } else {
 				    return InstructionFragment
-						    .newInstance(nameOfFoodItem);
-			    }
+						    .newInstance(nameOfFoodItem, shortDescriptionOfStepSelected);
+//			    }
 		    }
 		
 		    @Override
@@ -77,8 +72,8 @@ public class DetailPagerActivity extends AppCompatActivity {
 	    });
 	    
 	    for (int i = 0; i < stepDetailList.size(); i ++) {
-		    Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "nameOfButtonClicked: " + nameOfButtonClicked);
-		    if (stepDetailList.get(i).equals(nameOfButtonClicked)) {
+		    Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "shortDescriptionOfStepSelected: " + shortDescriptionOfStepSelected);
+		    if (stepDetailList.get(i).getShortDescription().equals(shortDescriptionOfStepSelected)) {
 			    viewPager.setCurrentItem(i);
 			    break;
 		    }
