@@ -66,7 +66,7 @@ public class DetailListFragment extends Fragment {
 
     // Interface that enables fragment to communicate with host activity
     public interface DetailItemCallbacks {
-        void onRecipeDetailButtonClicked(String nameOfStep);
+        void onRecipeDetailButtonClicked(int position);
     }
 	
 	

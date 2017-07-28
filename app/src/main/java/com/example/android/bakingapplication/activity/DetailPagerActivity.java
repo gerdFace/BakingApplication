@@ -19,16 +19,17 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 
-import static com.example.android.bakingapplication.activity.DetailListActivity.ID_OF_FOOD_SELECTED_KEY;
-import static com.example.android.bakingapplication.activity.DetailListActivity.SHORT_DESCRIPTION_OF_STEP_SELECTED;
-import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_SELECTED_KEY;
+import static com.example.android.bakingapplication.activity.DetailListActivity.ID_OF_FOOD_SELECTED;
+import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
 
 public class DetailPagerActivity extends AppCompatActivity {
 
 	private static final String TAG = DetailPagerActivity.class.getSimpleName();
+	private static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
 
 	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
+	private int positionOfStepSelected;
 	private int foodItemID;
 
 	@Inject
@@ -41,11 +42,11 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 		((BakingApplication)getApplication()).getAppComponent().inject(this);
 
-		final String shortDescriptionOfStepSelected = getIntent().getStringExtra(SHORT_DESCRIPTION_OF_STEP_SELECTED);
+		positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
 
-		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED_KEY);
+		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
 
-		foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED_KEY, 0);
+		foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED, 0);
 
 		setTitle(nameOfFoodItem);
 
@@ -61,7 +62,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 		    @Override
 		    public Fragment getItem(int position) {
 				    return InstructionFragment
-						    .newInstance(nameOfFoodItem, shortDescriptionOfStepSelected);
+						    .newInstance(stepDetailList.get(position));
 //			    }
 		    }
 		
@@ -72,13 +73,11 @@ public class DetailPagerActivity extends AppCompatActivity {
 	    });
 	    
 	    for (int i = 0; i < stepDetailList.size(); i ++) {
-		    Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "shortDescriptionOfStepSelected: " + shortDescriptionOfStepSelected);
-		    if (stepDetailList.get(i).getShortDescription().equals(shortDescriptionOfStepSelected)) {
-			    viewPager.setCurrentItem(i);
-			    break;
-		    }
-	    }
-
-
+			Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "Position of step selected: " + positionOfStepSelected);
+			if (i == positionOfStepSelected) {
+				viewPager.setCurrentItem(i);
+				break;
+			}
+		}
     }
 }

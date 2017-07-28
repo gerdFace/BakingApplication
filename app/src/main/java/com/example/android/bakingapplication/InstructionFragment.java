@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.android.bakingapplication.activity.BakingApplication;
 import com.example.android.bakingapplication.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -28,26 +27,17 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class InstructionFragment extends Fragment {
 
-    @Inject
-    Realm realm;
-
+    private static final String ARG_SELECTED_STEP = "selected_step";
 	private static final String TAG = InstructionFragment.class.getSimpleName();
-	private static final String NAME_FOOD_ITEM_KEY = "name_food_item_key";
-	private static final String SHORT_DESCRIPTION_OF_STEP_SELECTED = "short_description_of_step_selected";
-	
+
     private Step step;
-	private String nameOfFoodItem;
     private SimpleExoPlayer player;
     private Context applicationContext;
-    private String stepSelected;
 
 	@BindView(R.id.short_step_description)
 	TextView shortDescription;
@@ -62,30 +52,25 @@ public class InstructionFragment extends Fragment {
         // Required empty public constructor
     }
 	
-	public static InstructionFragment newInstance(String nameOfFoodItem, String shortDescriptionOfStepSelected) {
+	public static InstructionFragment newInstance(Step selectedStep) {
 		Bundle args = new Bundle();
-		args.putString(NAME_FOOD_ITEM_KEY, nameOfFoodItem);
-		args.putString(SHORT_DESCRIPTION_OF_STEP_SELECTED, shortDescriptionOfStepSelected);
+		args.putParcelable(ARG_SELECTED_STEP, selectedStep);
 
 		InstructionFragment instructionFragment = new InstructionFragment();
 		instructionFragment.setArguments(args);
 		return instructionFragment;
 	}
 	
-	
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		nameOfFoodItem = getArguments().getString(NAME_FOOD_ITEM_KEY);
-        stepSelected = getArguments().getString(SHORT_DESCRIPTION_OF_STEP_SELECTED);
+        step = getArguments().getParcelable(ARG_SELECTED_STEP);
     }
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instruction, container, false);
-
-        ((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
 
         ButterKnife.bind(this, view);
 
@@ -95,12 +80,7 @@ public class InstructionFragment extends Fragment {
     }
 
 	private void updateUI() {
-        // TODO loading individual step (.7 Pour batter...) - need step list?
-        step = realm.where(Step.class)
-                .equalTo("shortDescription", stepSelected)
-                .findFirst();
-
-//        shortDescription.setText(stepDescriptionList.g);
+        shortDescription.setText(step.getShortDescription());
 
         Log.d(TAG, "InstructionFragment shortDescription: " + step.getShortDescription());
 
@@ -130,14 +110,19 @@ public class InstructionFragment extends Fragment {
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
+        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(step.getVideoURL()));
+
         return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
                                         dataSourceFactory, extractorsFactory, null, null);
     }
 
     private void releasePlayer() {
-        player.stop();
-        player.release();
-        player = null;
+        if (player != null) {
+            player.setPlayWhenReady(false);
+            player.stop();
+            player.release();
+            player = null;
+        }
     }
     
 //    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
@@ -158,8 +143,10 @@ public class InstructionFragment extends Fragment {
     }
 
     @Override
-	public void onResume() {
-		super.onResume();
-		updateUI();
-	}
+    public void onResume() {
+        super.onResume();
+        if (player == null) {
+            updateUI();
+        }
+    }
 }

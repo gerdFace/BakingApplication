@@ -26,10 +26,4 @@ public class RealmModule {
         RealmConfiguration configuration = builder.build();
         return Realm.getInstance(configuration);
     }
-
-//    @Provides
-//    RealmList<RecipeData> provideRecipeList() {
-//
-//    }
-
 }

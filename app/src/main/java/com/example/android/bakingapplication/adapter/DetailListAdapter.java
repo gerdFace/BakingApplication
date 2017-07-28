@@ -12,16 +12,13 @@ import com.example.android.bakingapplication.model.Step;
 
 import java.util.List;
 
-public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.DetailListViewHolder> implements View.OnClickListener {
+public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.DetailListViewHolder> {
 
     private static final String TAG = DetailListAdapter.class.getSimpleName();
 
-    private final DetailListFragment.DetailItemCallbacks callback;
+    private DetailListFragment.DetailItemCallbacks callback;
 
     private List<Step> detailList;
-
-//    private String ingredientButtonText = "Ingredients";
-    private String detailButtonText;
 
     public DetailListAdapter(List<Step> detailList, DetailListFragment.DetailItemCallbacks callback) {
         this.detailList = detailList;
@@ -36,13 +33,19 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     @Override
     public void onBindViewHolder(final DetailListViewHolder holder, int position) {
-        detailButtonText = detailList.get(position).getShortDescription();
-//        TODO add ingredients button to recipe list
+        final String detailButtonText = detailList.get(position).getShortDescription();
+        Log.d(TAG, "DetailList short description: " + detailButtonText);
         Log.d(TAG, "DetailList onBindViewHolder: " + detailList.get(position));
-//        holder.ingredientButton.setText(ingredientButtonText);
-//        holder.ingredientButton.setOnClickListener(this);
         holder.detailButton.setText(detailButtonText);
-        holder.detailButton.setOnClickListener(this);
+        holder.detailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            // Check validity of callback
+                if (callback != null) {
+                    callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -50,28 +53,11 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
         return detailList.size();
     }
 
-    @Override
-    public void onClick(View v) {
-        // Check validity of the callback
-        if (callback != null) {
-            switch (v.getId()) {
-//                case R.id.ingredient_button:
-//                    callback.onRecipeDetailButtonClicked(ingredientButtonText);
-//                    break;
-                case R.id.detail_button:
-                    callback.onRecipeDetailButtonClicked(detailButtonText);
-                    break;
-            }
-        }
-    }
-
     public class DetailListViewHolder extends RecyclerView.ViewHolder{
         public Button detailButton;
-//        public Button ingredientButton;
 
         public DetailListViewHolder(View itemView) {
             super(itemView);
-//            ingredientButton = (Button) itemView.findViewById(R.id.ingredient_button);
             detailButton = (Button) itemView.findViewById(R.id.detail_button);
         }
     }

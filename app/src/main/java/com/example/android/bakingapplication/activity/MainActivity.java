@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Inject
     Realm realm;
 
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -43,33 +43,28 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         recipeList = realm.where(RecipeData.class).findAll();
 
+        Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
+
+        recipeCall.enqueue(new Callback<List<RecipeData>>() {
+
+            @Override
+            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
+                Log.d(TAG, "onResponse: " + response.code());
+                if (response.isSuccessful()) {
+                    recipeList = response.body();
+                    realm.beginTransaction();
+                    realm.copyToRealmOrUpdate(recipeList);
+                    realm.commitTransaction();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
+                Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
+            }
+        });
+
         configureUI();
-
-        if (recipeList.size() == 0) {
-            Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
-
-            recipeCall.enqueue(new Callback<List<RecipeData>>() {
-
-                @Override
-                public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
-                    Log.d(TAG, "onResponse: " + response.code());
-                    if (response.isSuccessful()) {
-                        recipeList = response.body();
-                        realm.beginTransaction();
-                        realm.copyToRealmOrUpdate(recipeList);
-                        realm.commitTransaction();
-                        Log.d(TAG, "Recipe data was loaded from website");
-                        configureUI();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<List<RecipeData>> call, Throwable t) {
-                    Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
-                }
-            });
-        }
-        Log.d(TAG, "onCreate: recipe list contains: " + recipeList.toString());
     }
 
     private void configureUI() {
@@ -82,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recipeCardAdapter);
     }
-    
+
     @Override
     public void onRecipeSelected(String nameOfFoodItemSelected, int foodID) {
         Class recipeDetailActivityDestination = DetailListActivity.class;
@@ -92,13 +87,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         Log.d(TAG, "onRecipeSelected: " + nameOfFoodItemSelected + "ID: " + foodID);
         startActivity(openRecipeDetailActivity);
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        realm.close();
-    }
 }
+
 
 
 
