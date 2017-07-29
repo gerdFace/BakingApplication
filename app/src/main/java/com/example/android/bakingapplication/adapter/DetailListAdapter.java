@@ -37,13 +37,10 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
         Log.d(TAG, "DetailList short description: " + detailButtonText);
         Log.d(TAG, "DetailList onBindViewHolder: " + detailList.get(position));
         holder.detailButton.setText(detailButtonText);
-        holder.detailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            // Check validity of callback
-                if (callback != null) {
-                    callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
-                }
+        holder.detailButton.setOnClickListener(v -> {
+        // Check validity of callback
+            if (callback != null) {
+                callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
             }
         });
     }

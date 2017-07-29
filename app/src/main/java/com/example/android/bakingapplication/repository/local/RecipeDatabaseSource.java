@@ -9,10 +9,9 @@ import java.util.List;
 import javax.inject.Inject;
 import io.realm.Realm;
 
-public class RecipeDatabase implements RecipeDataSource {
+public class RecipeDatabaseSource implements RecipeDataSource {
 
     @Inject
-    private
     Realm realm;
 
     @Override
@@ -39,6 +38,20 @@ public class RecipeDatabase implements RecipeDataSource {
         steps = realm.where(RecipeData.class)
                 .equalTo("id", recipeId)
                 .findFirst().getSteps();
+
+        realm.close();
+    }
+
+    @Override
+    public void refreshCache() {
+
+    }
+
+    @Override
+    public void saveRecipesToDatabase(List<RecipeData> recipes) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(recipes);
+        realm.commitTransaction();
 
         realm.close();
     }

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 // realm plugin positioned between app-kotlin fixed dagger 2/realm conflict (annotationProcessors?)
 apply plugin: 'realm-android'
+apply plugin: "me.tatarka.retrolambda"
 apply plugin: 'kotlin-android'
 
 android {
@@ -13,6 +14,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
