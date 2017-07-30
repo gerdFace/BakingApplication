@@ -23,6 +23,8 @@ import com.example.android.bakingapplication.activity.DetailListActivity;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
+import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class DetailListFragment extends Fragment {
     private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
-    Realm realm;
+    RecipeRepository recipeRepository;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -93,6 +95,7 @@ public class DetailListFragment extends Fragment {
 	    }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,32 +107,28 @@ public class DetailListFragment extends Fragment {
 
         constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_detail_list_after);
 
-        ingredientDropToggle.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View v) {
-                if (!isIngredientListDisplayed) {
-                    TransitionManager.beginDelayedTransition(constraintLayout);
-                    constraintSet.setVisibility(R.id.ingredient_fragment_container, View.VISIBLE);
-                    constraintSet.applyTo(constraintLayout);
+        ingredientDropToggle.setOnClickListener(v -> {
+            if (!isIngredientListDisplayed) {
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.setVisibility(R.id.ingredient_fragment_container, View.VISIBLE);
+                constraintSet.applyTo(constraintLayout);
 
-                    Fragment ingredientsFragment = IngredientsFragment.newInstance(nameOfFoodItem);
+                Fragment ingredientsFragment = IngredientsFragment.newInstance(nameOfFoodItem);
 
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.ingredient_fragment_container, ingredientsFragment)
-                            .commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.ingredient_fragment_container, ingredientsFragment)
+                        .commit();
 
-                    isIngredientListDisplayed = true;
+                isIngredientListDisplayed = true;
 
-                } else {
-                    // TODO check does fragment instance remain after view is gone?
-                    TransitionManager.beginDelayedTransition(constraintLayout);
-                    constraintSet.setVisibility(R.id.ingredient_fragment_container, View.GONE);
-                    constraintSet.applyTo(constraintLayout);
+            } else {
+                // TODO check does fragment instance remain after view is gone?
+                TransitionManager.beginDelayedTransition(constraintLayout);
+                constraintSet.setVisibility(R.id.ingredient_fragment_container, View.GONE);
+                constraintSet.applyTo(constraintLayout);
 
-                    isIngredientListDisplayed = false;
+                isIngredientListDisplayed = false;
 
-                }
             }
         });
 
@@ -139,9 +138,17 @@ public class DetailListFragment extends Fragment {
 
         // TODO save Instance, add else statement -- does statePager auto save instance?
         if (savedInstanceState == null) {
-            detailList = realm.where(RecipeData.class)
-                    .equalTo("id", foodID)
-                    .findFirst().getSteps();
+            recipeRepository.getRecipe(foodID, new RecipeDataSource.GetRecipeCallback() {
+                @Override
+                public void onRecipeLoaded(RecipeData recipe) {
+                    detailList = recipe.getSteps();
+                }
+
+                @Override
+                public void onDataNotAvailable(String failureMessage) {
+
+                }
+            });
         }
 
         updateUI();

@@ -5,22 +5,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import com.example.android.bakingapplication.DetailListFragment;
 import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
-
+import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
+import java.util.List;
 import javax.inject.Inject;
-
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
     @Inject
-    Realm realm;
+    RecipeRepository recipeRepository;
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
     public static final String ID_OF_FOOD_SELECTED = "id_of_food_selected";
@@ -30,6 +28,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	private static final String TAG = DetailListActivity.class.getSimpleName();
 	
 	private String nameOfFoodItem;
+    private Step step;
     private int foodID;
     private boolean twoPane;
 
@@ -64,7 +63,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     }
 
     @Override
-    public void onRecipeDetailButtonClicked(int position) {
+    public void onRecipeDetailButtonClicked(final int position) {
 
         Log.d(TAG, "name of button clicked: " + position);
 
@@ -81,11 +80,18 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO fix: orientation change on tablet causes crash
 		// TODO update with constraintSet
         } else {
-            Step step = realm.where(RecipeData.class)
-                    .equalTo("id", foodID)
-                    .findFirst()
-                    .getSteps()
-                    .get(position);
+
+            recipeRepository.getSteps(foodID, new RecipeDataSource.GetStepsCallback() {
+                @Override
+                public void onStepsLoaded(List<Step> steps) {
+                    step = steps.get(position);
+                }
+
+                @Override
+                public void onDataNotAvailable() {
+
+                }
+            });
 
                 Fragment instructionFragment = InstructionFragment.newInstance(step);
 

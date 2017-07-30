@@ -10,6 +10,8 @@ import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
+import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.retrofit.RecipeService;
 
 import java.util.List;
@@ -29,10 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     private List<RecipeData> recipeList;
 
     @Inject
-    Retrofit retrofit;
-
-    @Inject
-    Realm realm;
+    RecipeRepository recipeRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +40,15 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getAppComponent().inject(this);
 
-        recipeList = realm.where(RecipeData.class).findAll();
-
-        Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
-
-        recipeCall.enqueue(new Callback<List<RecipeData>>() {
-
+        recipeRepository.getRecipes(new RecipeDataSource.LoadRecipesCallback() {
             @Override
-            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
-                Log.d(TAG, "onResponse: " + response.code());
-                if (response.isSuccessful()) {
-                    recipeList = response.body();
-                    realm.beginTransaction();
-                    realm.copyToRealmOrUpdate(recipeList);
-                    realm.commitTransaction();
-                }
+            public void onRecipesLoaded(List<RecipeData> recipes) {
+                recipeList = recipes;
             }
 
             @Override
-            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
-                Log.d(TAG, "onFailure: Could not load recipe data from network path" + t.toString());
+            public void onDataNotAvailable(String failureMessage) {
+
             }
         });
 

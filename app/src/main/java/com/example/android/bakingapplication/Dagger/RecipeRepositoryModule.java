@@ -10,17 +10,22 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 
 @Module
-abstract class RecipeRepositoryModule {
+public class RecipeRepositoryModule {
 
     @Singleton
-    @Binds
+    @Provides
     @Local
-    abstract RecipeDataSource provideRecipeDatabaseSource(RecipeDatabaseSource dataSource);
+    RecipeDataSource provideRecipeDatabaseSource() {
+        return new RecipeDatabaseSource();
+    }
 
     @Singleton
-    @Binds
+    @Provides
     @Network
-    abstract RecipeDataSource provideRecipeNetworkSource(RecipeNetworkSource dataSource);
+    RecipeDataSource provideRecipeNetworkSource() {
+        return new RecipeNetworkSource();
+    }
 }

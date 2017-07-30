@@ -12,6 +12,8 @@ import com.example.android.bakingapplication.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
+import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 	private int foodItemID;
 
 	@Inject
-	Realm realm;
+	RecipeRepository recipeRepository;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +52,17 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 		setTitle(nameOfFoodItem);
 
-		stepDetailList = realm.where(RecipeData.class)
-				.equalTo("id", foodItemID)
-				.findFirst().getSteps();
+		recipeRepository.getSteps(foodItemID, new RecipeDataSource.GetStepsCallback() {
+			@Override
+			public void onStepsLoaded(List<Step> steps) {
+				stepDetailList = steps;
+			}
+
+			@Override
+			public void onDataNotAvailable() {
+
+			}
+		});
 		
 	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
 		
