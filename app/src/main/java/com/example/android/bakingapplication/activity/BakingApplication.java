@@ -6,6 +6,7 @@ import com.example.android.bakingapplication.Dagger.AppModule;
 import com.example.android.bakingapplication.Dagger.DaggerAppComponent;
 import com.example.android.bakingapplication.Dagger.NetworkModule;
 import com.example.android.bakingapplication.Dagger.RealmModule;
+import com.example.android.bakingapplication.Dagger.RecipeRepositoryModule;
 
 public class BakingApplication extends Application {
 
@@ -27,6 +28,7 @@ public class BakingApplication extends Application {
                 .appModule(new AppModule(application))
                 .networkModule(new NetworkModule(ROOT_URL))
                 .realmModule(new RealmModule())
+                .recipeRepositoryModule(new RecipeRepositoryModule())
                 .build();
     }
 }

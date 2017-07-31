@@ -1,5 +1,6 @@
 package com.example.android.bakingapplication.repository.remote;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -10,12 +11,14 @@ import com.example.android.bakingapplication.retrofit.RecipeService;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+@Singleton
 public class RecipeNetworkSource implements RecipeDataSource {
 
     private static final String TAG = RecipeNetworkSource.class.getSimpleName();

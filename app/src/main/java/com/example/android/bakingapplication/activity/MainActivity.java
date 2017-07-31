@@ -12,17 +12,10 @@ import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
-import com.example.android.bakingapplication.retrofit.RecipeService;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import io.realm.Realm;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler {
 
