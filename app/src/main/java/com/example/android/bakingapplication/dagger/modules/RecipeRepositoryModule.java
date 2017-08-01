@@ -1,12 +1,12 @@
-package com.example.android.bakingapplication.dagger;
+package com.example.android.bakingapplication.dagger.modules;
 
-import com.example.android.bakingapplication.repository.Local;
-import com.example.android.bakingapplication.repository.Network;
+import com.example.android.bakingapplication.dagger.qualifiers.Local;
+import com.example.android.bakingapplication.dagger.qualifiers.Network;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.local.RecipeDatabaseSource;
 import com.example.android.bakingapplication.repository.remote.RecipeNetworkSource;
 import javax.inject.Singleton;
-import dagger.Binds;
+
 import dagger.Module;
 import dagger.Provides;
 

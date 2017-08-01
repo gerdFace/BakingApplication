@@ -1,9 +1,9 @@
 package com.example.android.bakingapplication.repository;
 
-import com.example.android.bakingapplication.dagger.FakeRecipeDataModule;
-import com.example.android.bakingapplication.dagger.NetworkModule;
-import com.example.android.bakingapplication.dagger.RealmModule;
-import com.example.android.bakingapplication.dagger.RecipeRepositoryModule;
+import com.example.android.bakingapplication.dagger.modules.FakeRecipeDataModule;
+import com.example.android.bakingapplication.dagger.modules.NetworkModule;
+import com.example.android.bakingapplication.dagger.modules.RealmModule;
+import com.example.android.bakingapplication.dagger.modules.RecipeRepositoryModule;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
 import com.example.android.bakingapplication.view.activity.DetailPagerActivity;
 import com.example.android.bakingapplication.view.activity.MainActivity;

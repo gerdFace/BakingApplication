@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.dagger;
+package com.example.android.bakingapplication.dagger.modules;
 
 import com.example.android.bakingapplication.model.FakeRecipeData;
 import javax.inject.Singleton;

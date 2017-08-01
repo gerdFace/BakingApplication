@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.repository;
+package com.example.android.bakingapplication.dagger.qualifiers;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
