@@ -2,7 +2,9 @@ package com.example.android.bakingapplication.repository;
 
 import android.support.annotation.NonNull;
 
+import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
+import com.example.android.bakingapplication.model.Step;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,11 +21,11 @@ public class RecipeRepository implements RecipeDataSource {
 
     private final RecipeDataSource recipeNetworkSource;
 
-    Map<String, RecipeData> cachedRecipes;
+    Map<Integer, RecipeData> cachedRecipes;
     private boolean cacheIsDirty = false;
 
     @Inject
-    RecipeRepository(@Network RecipeDataSource recipeDatabaseSource, @Local RecipeDataSource recipeNetworkSource) {
+    RecipeRepository(@Local RecipeDataSource recipeDatabaseSource, @Network RecipeDataSource recipeNetworkSource) {
         this.recipeDatabaseSource = recipeDatabaseSource;
         this.recipeNetworkSource = recipeNetworkSource;
     }
@@ -64,23 +66,80 @@ public class RecipeRepository implements RecipeDataSource {
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Could not load recipe data from network path");
+                callback.onDataNotAvailable("Could not load recipe data from network");
             }
         });
     }
 
     @Override
     public void getRecipe(int recipeId, @NonNull GetRecipeCallback callback) {
+        RecipeData cachedRecipe = getRecipeWithId(recipeId);
 
+        if (cachedRecipe != null) {
+            callback.onRecipeLoaded(cachedRecipe);
+            return;
+        }
+
+        recipeDatabaseSource.getRecipe(recipeId, new GetRecipeCallback() {
+            @Override
+            public void onRecipeLoaded(RecipeData recipe) {
+                callback.onRecipeLoaded(recipe);
+            }
+
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
+                callback.onDataNotAvailable("Failed to load recipe from network");
+            }
+        });
     }
 
     @Override
-    public void getSteps(int recipeId, @NonNull GetStepsCallback callback) {
+    public void getSteps(int recipeId, @NonNull final GetStepsCallback callback) {
 
+        List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
+
+        if (cachedSteps != null) {
+            callback.onStepsLoaded(cachedSteps);
+            return;
+        }
+
+        recipeDatabaseSource.getSteps(recipeId, new GetStepsCallback() {
+            @Override
+            public void onStepsLoaded(List<Step> steps) {
+                callback.onStepsLoaded(steps);
+            }
+
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
+                callback.onDataNotAvailable("Failed to load steps list from Realm database");
+            }
+        });
     }
 
     @Override
-    public void refreshCache() {
+    public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
+
+        List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
+
+        if (cachedIngredients != null) {
+            callback.onIngredientsLoaded(cachedIngredients);
+        }
+
+        recipeDatabaseSource.getIngredients(recipeId, new GetIngredientsCallback() {
+            @Override
+            public void onIngredientsLoaded(List<Ingredient> ingredients) {
+
+            }
+
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
+
+            }
+        });
+    }
+
+    @Override
+    public void refreshRecipes() {
         cacheIsDirty = true;
     }
 
@@ -94,7 +153,7 @@ public class RecipeRepository implements RecipeDataSource {
         }
         cachedRecipes.clear();
         for (RecipeData recipe : recipes) {
-            cachedRecipes.put(recipe.getId().toString(), recipe);
+            cachedRecipes.put(recipe.getId(), recipe);
         }
 
         cacheIsDirty = false;
@@ -102,5 +161,13 @@ public class RecipeRepository implements RecipeDataSource {
 
     private void refreshDatabase(List<RecipeData> recipes) {
         recipeDatabaseSource.saveRecipesToDatabase(recipes);
+    }
+
+    private RecipeData getRecipeWithId(int id) {
+        if (cachedRecipes == null || cachedRecipes.isEmpty()) {
+            return null;
+        } else {
+            return cachedRecipes.get(id);
+        }
     }
 }

@@ -1,25 +1,40 @@
 package com.example.android.bakingapplication.repository.local;
 
 import android.support.annotation.NonNull;
+
+import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
-import java.util.ArrayList;
+
 import java.util.List;
+
 import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import io.realm.Realm;
 
+@Singleton
 public class RecipeDatabaseSource implements RecipeDataSource {
 
+    private Realm realm;
+
     @Inject
-    Realm realm;
+    public RecipeDatabaseSource(Realm realm) {
+        this.realm = realm;
+    }
 
     @Override
     public void getRecipes(@NonNull LoadRecipesCallback callback) {
-        List<RecipeData> recipes = new ArrayList<>();
+        List<RecipeData> recipes;
         recipes = realm.where(RecipeData.class).findAll();
 
-        realm.close();
+        if (recipes.isEmpty()) {
+            callback.onDataNotAvailable("No Realm data");
+        } else {
+            callback.onRecipesLoaded(recipes);
+        }
+
     }
 
     @Override
@@ -29,21 +44,47 @@ public class RecipeDatabaseSource implements RecipeDataSource {
                 .equalTo("id", recipeId)
                 .findFirst();
 
-        realm.close();
+        if (recipe == null) {
+            callback.onDataNotAvailable("No Realm data");
+        } else {
+            callback.onRecipeLoaded(recipe);
+        }
+
     }
 
     @Override
     public void getSteps(int recipeId, @NonNull GetStepsCallback callback) {
-        List<Step> steps = new ArrayList<>();
+        List<Step> steps;
         steps = realm.where(RecipeData.class)
                 .equalTo("id", recipeId)
-                .findFirst().getSteps();
+                .findFirst()
+                .getSteps();
 
-        realm.close();
+        if (steps == null) {
+            callback.onDataNotAvailable("No Realm data");
+        } else {
+            callback.onStepsLoaded(steps);
+        }
+
     }
 
     @Override
-    public void refreshCache() {
+    public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
+        List<Ingredient> ingredients;
+        ingredients = realm.where(RecipeData.class)
+                .equalTo("id", recipeId)
+                .findFirst()
+                .getIngredients();
+
+        if (ingredients == null) {
+            callback.onDataNotAvailable("No Realm data available");
+        } else {
+            callback.onIngredientsLoaded(ingredients);
+        }
+    }
+
+    @Override
+    public void refreshRecipes() {
 
     }
 
@@ -53,6 +94,5 @@ public class RecipeDatabaseSource implements RecipeDataSource {
         realm.copyToRealmOrUpdate(recipes);
         realm.commitTransaction();
 
-        realm.close();
     }
 }

@@ -1,7 +1,6 @@
-package com.example.android.bakingapplication.Dagger;
+package com.example.android.bakingapplication.dagger;
 
 import android.app.Application;
-import android.content.Context;
 
 import javax.inject.Singleton;
 

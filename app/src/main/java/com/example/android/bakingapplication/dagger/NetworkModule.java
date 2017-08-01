@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.Dagger;
+package com.example.android.bakingapplication.dagger;
 
 import android.app.Application;
 import android.util.Log;
@@ -16,13 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetworkModule {
-    private String baseUrl;
 
+    private static final String ROOT_URL = "https://d17h27t6h515a5.cloudfront.net/";
     public static String TAG = NetworkModule.class.getSimpleName();
-
-    public NetworkModule(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
 
     @Provides
     @Singleton
@@ -51,10 +47,10 @@ public class NetworkModule {
     @Provides
     @Singleton
     Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
-        Log.d(TAG, "provideRetrofit: " + baseUrl);
+        Log.d(TAG, "provideRetrofit: " + ROOT_URL);
         return new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .baseUrl(baseUrl)
+                .baseUrl(ROOT_URL)
                 .client(okHttpClient)
                 .build();
     }

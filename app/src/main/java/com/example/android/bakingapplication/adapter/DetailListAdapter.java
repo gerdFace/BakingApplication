@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.example.android.bakingapplication.DetailListFragment;
+import com.example.android.bakingapplication.view.fragment.DetailListFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 

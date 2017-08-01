@@ -1,12 +1,10 @@
 package com.example.android.bakingapplication.repository.remote;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
-import com.example.android.bakingapplication.retrofit.RecipeService;
 
 import java.util.List;
 
@@ -23,10 +21,14 @@ public class RecipeNetworkSource implements RecipeDataSource {
 
     private static final String TAG = RecipeNetworkSource.class.getSimpleName();
 
-    @Inject
-    Retrofit retrofit;
+    private Retrofit retrofit;
 
     private List<RecipeData> recipeList;
+
+    @Inject
+    public RecipeNetworkSource(Retrofit retrofit) {
+        this.retrofit = retrofit;
+    }
 
     @Override
     public void getRecipes(@NonNull final LoadRecipesCallback callback) {
@@ -50,8 +52,6 @@ public class RecipeNetworkSource implements RecipeDataSource {
                 callback.onDataNotAvailable("Could not load recipe data from network path" + t.toString());
             }
         });
-
-
     }
 
     @Override
@@ -65,7 +65,12 @@ public class RecipeNetworkSource implements RecipeDataSource {
     }
 
     @Override
-    public void refreshCache() {
+    public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
+
+    }
+
+    @Override
+    public void refreshRecipes() {
 
     }
 

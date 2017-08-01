@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.retrofit;
+package com.example.android.bakingapplication.repository.remote;
 
 import com.example.android.bakingapplication.model.RecipeData;
 import java.util.List;

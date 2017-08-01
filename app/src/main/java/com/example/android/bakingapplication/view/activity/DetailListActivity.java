@@ -1,12 +1,12 @@
-package com.example.android.bakingapplication.activity;
+package com.example.android.bakingapplication.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import com.example.android.bakingapplication.DetailListFragment;
-import com.example.android.bakingapplication.InstructionFragment;
+import com.example.android.bakingapplication.view.fragment.DetailListFragment;
+import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
@@ -39,7 +39,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
         ButterKnife.bind(this);
 
-        ((BakingApplication)getApplication()).getAppComponent().inject(this);
+        ((BakingApplication)getApplication()).getRecipeRepositoryComponent().inject(this);
 
         if (savedInstanceState != null) {
 		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE_NAME);
@@ -88,7 +88,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
                 }
 
                 @Override
-                public void onDataNotAvailable() {
+                public void onDataNotAvailable(String failureMessage) {
 
                 }
             });

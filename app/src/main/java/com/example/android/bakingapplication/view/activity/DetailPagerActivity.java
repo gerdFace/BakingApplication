@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.activity;
+package com.example.android.bakingapplication.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.android.bakingapplication.InstructionFragment;
+import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
@@ -19,10 +18,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.realm.Realm;
-
-import static com.example.android.bakingapplication.activity.DetailListActivity.ID_OF_FOOD_SELECTED;
-import static com.example.android.bakingapplication.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
+import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_FOOD_SELECTED;
+import static com.example.android.bakingapplication.view.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
 
 public class DetailPagerActivity extends AppCompatActivity {
 
@@ -42,13 +39,21 @@ public class DetailPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_pager);
 
-		((BakingApplication)getApplication()).getAppComponent().inject(this);
+		((BakingApplication)getApplication()).getRecipeRepositoryComponent().inject(this);
 
-		positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
+		if (savedInstanceState == null) {
+			positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
 
-		nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
+			nameOfFoodItem = getIntent().getStringExtra(DetailListActivity.NAME_OF_FOOD_SELECTED);
 
-		foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED, 0);
+			foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED, 0);
+		} else {
+			positionOfStepSelected = savedInstanceState.getInt(POSITION_OF_STEP_SELECTED, 0);
+
+			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
+
+			foodItemID = savedInstanceState.getInt(ID_OF_FOOD_SELECTED, 0);
+		}
 
 		setTitle(nameOfFoodItem);
 
@@ -59,8 +64,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 			}
 
 			@Override
-			public void onDataNotAvailable() {
-
+			public void onDataNotAvailable(String failureMessage) {
 			}
 		});
 		
@@ -73,7 +77,6 @@ public class DetailPagerActivity extends AppCompatActivity {
 		    public Fragment getItem(int position) {
 				    return InstructionFragment
 						    .newInstance(stepDetailList.get(position));
-//			    }
 		    }
 		
 		    @Override
@@ -90,4 +93,12 @@ public class DetailPagerActivity extends AppCompatActivity {
 			}
 		}
     }
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(ID_OF_FOOD_SELECTED, foodItemID);
+		outState.putInt(POSITION_OF_STEP_SELECTED, positionOfStepSelected);
+		outState.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
+	}
 }

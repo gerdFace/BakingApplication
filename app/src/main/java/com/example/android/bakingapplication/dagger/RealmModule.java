@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.Dagger;
+package com.example.android.bakingapplication.dagger;
 
 import android.app.Application;
 import android.util.Log;
@@ -10,7 +10,7 @@ import dagger.Provides;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-@Module
+@Module(includes = AppModule.class)
 public class RealmModule {
     private static String TAG = RealmModule.class.getSimpleName();
 

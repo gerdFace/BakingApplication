@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication;
+package com.example.android.bakingapplication.view.fragment;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -86,8 +87,12 @@ public class InstructionFragment extends Fragment {
 
         longDescription.setText(step.getDescription());
 
-        initializeMediaPlayer();
-	}
+        if (!step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty()) {
+            initializeMediaPlayer();
+        } else {
+            simpleExoPlayerView.setVisibility(View.GONE);
+        }
+    }
 
     private void initializeMediaPlayer() {
         applicationContext = this.getActivity();
@@ -104,13 +109,15 @@ public class InstructionFragment extends Fragment {
     }
 
     private MediaSource prepareMediaSource() {
-	    DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
+        String videoUrl = !step.getVideoURL().isEmpty() ? step.getVideoURL() : step.getThumbnailURL();
+
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
 	                                                                        Util.getUserAgent(applicationContext, "BakingApplication"),
 	                                                                        null);
 
         ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
 
-        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(step.getVideoURL()));
+        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(videoUrl));
 
         return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
                                         dataSourceFactory, extractorsFactory, null, null);

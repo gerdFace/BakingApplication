@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication;
+package com.example.android.bakingapplication.view.fragment;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,20 +11,20 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.android.bakingapplication.activity.BakingApplication;
-import com.example.android.bakingapplication.activity.DetailListActivity;
+import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.view.activity.BakingApplication;
+import com.example.android.bakingapplication.view.activity.DetailListActivity;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 public class DetailListFragment extends Fragment {
 
@@ -85,14 +84,16 @@ public class DetailListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	
-	    nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY, "");
 
-        foodID = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
+        if (savedInstanceState == null) {
+            nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY, "");
 
-        if (nameOfFoodItem != null) {
-		    Log.d(TAG, "DetailListFragment onCreate: " + nameOfFoodItem);
-	    }
+            foodID = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
+        } else {
+            nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_ITEM_KEY);
+
+            foodID = savedInstanceState.getInt(ID_OF_FOOD_ITEM_KEY);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -101,7 +102,7 @@ public class DetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list, container, false);
 
-        ((BakingApplication)getActivity().getApplication()).getAppComponent().inject(this);
+        ((BakingApplication)getActivity().getApplication()).getRecipeRepositoryComponent().inject(this);
 
         ButterKnife.bind(this, view);
 
@@ -137,19 +138,17 @@ public class DetailListFragment extends Fragment {
         rvDetailList.setLayoutManager(layoutManager);
 
         // TODO save Instance, add else statement -- does statePager auto save instance?
-        if (savedInstanceState == null) {
-            recipeRepository.getRecipe(foodID, new RecipeDataSource.GetRecipeCallback() {
-                @Override
-                public void onRecipeLoaded(RecipeData recipe) {
-                    detailList = recipe.getSteps();
-                }
+        recipeRepository.getRecipe(foodID, new RecipeDataSource.GetRecipeCallback() {
+            @Override
+            public void onRecipeLoaded(RecipeData recipe) {
+                detailList = recipe.getSteps();
+            }
 
-                @Override
-                public void onDataNotAvailable(String failureMessage) {
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
 
-                }
-            });
-        }
+            }
+        });
 
         updateUI();
 
@@ -196,6 +195,7 @@ public class DetailListFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(DetailListActivity.SAVED_RECIPE_NAME, nameOfFoodItem);
+        outState.putInt(ID_OF_FOOD_ITEM_KEY, foodID);
 	}
 }
 

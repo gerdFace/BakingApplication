@@ -2,6 +2,7 @@ package com.example.android.bakingapplication.repository;
 
 import android.support.annotation.NonNull;
 
+import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
 
@@ -27,7 +28,14 @@ public interface RecipeDataSource {
 
         void onStepsLoaded(List<Step> steps);
 
-        void onDataNotAvailable();
+        void onDataNotAvailable(String failureMessage);
+    }
+
+    interface GetIngredientsCallback {
+
+        void onIngredientsLoaded(List<Ingredient> ingredients);
+
+        void onDataNotAvailable(String failureMessage);
     }
 
     void getRecipes(@NonNull LoadRecipesCallback callback);
@@ -36,7 +44,9 @@ public interface RecipeDataSource {
 
     void getSteps(int recipeId, @NonNull GetStepsCallback callback);
 
-    void refreshCache();
+    void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback);
+
+    void refreshRecipes();
 
     void saveRecipesToDatabase(List<RecipeData> recipes);
 

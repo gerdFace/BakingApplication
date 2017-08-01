@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.Dagger;
+package com.example.android.bakingapplication.dagger;
 
 import com.example.android.bakingapplication.repository.Local;
 import com.example.android.bakingapplication.repository.Network;
@@ -10,22 +10,17 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
-import dagger.Provides;
 
 @Module
-public class RecipeRepositoryModule {
+public abstract class RecipeRepositoryModule {
 
     @Singleton
-    @Provides
+    @Binds
     @Local
-    RecipeDataSource provideRecipeDatabaseSource() {
-        return new RecipeDatabaseSource();
-    }
+    public abstract RecipeDataSource provideRecipeDatabaseSource(RecipeDatabaseSource databaseSource);
 
     @Singleton
-    @Provides
+    @Binds
     @Network
-    RecipeDataSource provideRecipeNetworkSource() {
-        return new RecipeNetworkSource();
-    }
+    public abstract RecipeDataSource provideRecipeNetworkSource(RecipeNetworkSource networkSource);
 }

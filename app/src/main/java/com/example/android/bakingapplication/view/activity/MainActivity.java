@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.activity;
+package com.example.android.bakingapplication.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((BakingApplication) getApplication()).getAppComponent().inject(this);
+        ((BakingApplication) getApplication()).getRecipeRepositoryComponent().inject(this);
 
         recipeRepository.getRecipes(new RecipeDataSource.LoadRecipesCallback() {
             @Override
