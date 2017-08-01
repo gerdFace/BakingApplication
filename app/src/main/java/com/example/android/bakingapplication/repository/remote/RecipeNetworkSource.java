@@ -8,15 +8,11 @@ import com.example.android.bakingapplication.repository.RecipeDataSource;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-@Singleton
 public class RecipeNetworkSource implements RecipeDataSource {
 
     private static final String TAG = RecipeNetworkSource.class.getSimpleName();
@@ -25,7 +21,6 @@ public class RecipeNetworkSource implements RecipeDataSource {
 
     private List<RecipeData> recipeList;
 
-    @Inject
     public RecipeNetworkSource(Retrofit retrofit) {
         this.retrofit = retrofit;
     }

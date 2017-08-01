@@ -9,17 +9,12 @@ import com.example.android.bakingapplication.repository.RecipeDataSource;
 
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import io.realm.Realm;
 
-@Singleton
 public class RecipeDatabaseSource implements RecipeDataSource {
 
     private Realm realm;
 
-    @Inject
     public RecipeDatabaseSource(Realm realm) {
         this.realm = realm;
     }

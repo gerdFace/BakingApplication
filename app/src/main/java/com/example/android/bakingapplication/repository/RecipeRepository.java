@@ -13,14 +13,14 @@ import java.util.Map;
 
 public class RecipeRepository implements RecipeDataSource {
 
-    private final RecipeDataSource recipeDatabaseSource;
+    private RecipeDataSource recipeDatabaseSource;
 
-    private final RecipeDataSource recipeNetworkSource;
+    private RecipeDataSource recipeNetworkSource;
 
     Map<Integer, RecipeData> cachedRecipes;
     private boolean cacheIsDirty = false;
 
-    RecipeRepository(@Local RecipeDataSource recipeDatabaseSource, @Network RecipeDataSource recipeNetworkSource) {
+    public RecipeRepository(@Local RecipeDataSource recipeDatabaseSource, @Network RecipeDataSource recipeNetworkSource) {
         this.recipeDatabaseSource = recipeDatabaseSource;
         this.recipeNetworkSource = recipeNetworkSource;
     }
