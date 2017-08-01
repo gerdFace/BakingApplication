@@ -11,10 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-@Singleton
 public class RecipeRepository implements RecipeDataSource {
 
     private final RecipeDataSource recipeDatabaseSource;
@@ -24,7 +20,6 @@ public class RecipeRepository implements RecipeDataSource {
     Map<Integer, RecipeData> cachedRecipes;
     private boolean cacheIsDirty = false;
 
-    @Inject
     RecipeRepository(@Local RecipeDataSource recipeDatabaseSource, @Network RecipeDataSource recipeNetworkSource) {
         this.recipeDatabaseSource = recipeDatabaseSource;
         this.recipeNetworkSource = recipeNetworkSource;
