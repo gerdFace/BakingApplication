@@ -10,8 +10,8 @@ import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     private List<RecipeData> recipeList;
 
     @Inject
-    RecipeRepository recipeRepository;
+    RecipeRepositoryImpl recipeRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
         ((BakingApplication) getApplication()).getRecipeRepositoryComponent().inject(this);
 
-        recipeRepository.getRecipes(new RecipeDataSource.LoadRecipesCallback() {
+        recipeRepository.getRecipes(new RecipeRepository.LoadRecipesCallback() {
             @Override
             public void onRecipesLoaded(List<RecipeData> recipes) {
                 recipeList = recipes;

@@ -33,7 +33,7 @@ public class IngredientsFragment extends Fragment {
 
 	@Inject
 	FakeRecipeData fakeRecipeData;
-//	RecipeRepository recipeRepository;
+//	RecipeRepositoryImpl recipeRepository;
 
 	@BindView(R.id.rv_ingredient_list)
     RecyclerView rvIngredientList;

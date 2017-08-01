@@ -21,8 +21,8 @@ import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
 
@@ -48,7 +48,7 @@ public class DetailListFragment extends Fragment {
     private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
-    RecipeRepository recipeRepository;
+    RecipeRepositoryImpl recipeRepository;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -138,7 +138,7 @@ public class DetailListFragment extends Fragment {
         rvDetailList.setLayoutManager(layoutManager);
 
         // TODO save Instance, add else statement -- does statePager auto save instance?
-        recipeRepository.getRecipe(foodID, new RecipeDataSource.GetRecipeCallback() {
+        recipeRepository.getRecipe(foodID, new RecipeRepository.GetRecipeCallback() {
             @Override
             public void onRecipeLoaded(RecipeData recipe) {
                 detailList = recipe.getSteps();

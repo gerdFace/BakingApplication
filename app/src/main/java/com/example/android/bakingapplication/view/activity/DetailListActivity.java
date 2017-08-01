@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.fragment.DetailListFragment;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
 import com.example.android.bakingapplication.repository.RecipeRepository;
+
 import java.util.List;
 import javax.inject.Inject;
 import butterknife.ButterKnife;
@@ -18,7 +20,7 @@ import butterknife.ButterKnife;
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
     @Inject
-    RecipeRepository recipeRepository;
+    RecipeRepositoryImpl recipeRepository;
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
     public static final String ID_OF_FOOD_SELECTED = "id_of_food_selected";
@@ -81,7 +83,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO update with constraintSet
         } else {
 
-            recipeRepository.getSteps(foodID, new RecipeDataSource.GetStepsCallback() {
+            recipeRepository.getSteps(foodID, new RecipeRepository.GetStepsCallback() {
                 @Override
                 public void onStepsLoaded(List<Step> steps) {
                     step = steps.get(position);

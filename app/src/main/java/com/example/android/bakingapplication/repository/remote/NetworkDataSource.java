@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.bakingapplication.model.RecipeData;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
 
 import java.util.List;
 
@@ -13,32 +13,28 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class RecipeNetworkSource implements RecipeDataSource {
-
-    private static final String TAG = RecipeNetworkSource.class.getSimpleName();
+public class NetworkDataSource implements RecipeRepository {
 
     private Retrofit retrofit;
 
     private List<RecipeData> recipeList;
 
-    public RecipeNetworkSource(Retrofit retrofit) {
+    public NetworkDataSource(Retrofit retrofit) {
         this.retrofit = retrofit;
     }
 
     @Override
     public void getRecipes(@NonNull final LoadRecipesCallback callback) {
 
-        Call<List<RecipeData>> recipeCall = retrofit.create(RecipeService.class).getRecipes();
+        Call<List<RecipeData>> recipeCall = retrofit.create(NetworkService.class).getRecipes();
 
         recipeCall.enqueue(new Callback<List<RecipeData>>() {
 
             @Override
             public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
-                Log.d(TAG, "onResponse: " + response.code());
                 if (response.isSuccessful()) {
                     recipeList = response.body();
                     callback.onRecipesLoaded(recipeList);
-                    Log.d(TAG, "Recipes loaded: " + recipeList);
                 }
             }
 

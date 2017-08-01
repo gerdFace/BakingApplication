@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.dagger;
+package com.example.android.bakingapplication.dagger.module;
 
 import android.app.Application;
 import android.util.Log;

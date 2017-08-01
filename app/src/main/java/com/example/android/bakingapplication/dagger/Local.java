@@ -1,4 +1,4 @@
-package com.example.android.bakingapplication.repository;
+package com.example.android.bakingapplication.dagger;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -9,5 +9,5 @@ import javax.inject.Qualifier;
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Network {
+public @interface Local {
 }

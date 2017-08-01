@@ -8,11 +8,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
-import com.example.android.bakingapplication.repository.RecipeRepository;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 	private int foodItemID;
 
 	@Inject
-	RecipeRepository recipeRepository;
+    RecipeRepositoryImpl recipeRepository;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 		setTitle(nameOfFoodItem);
 
-		recipeRepository.getSteps(foodItemID, new RecipeDataSource.GetStepsCallback() {
+		recipeRepository.getSteps(foodItemID, new RecipeRepository.GetStepsCallback() {
 			@Override
 			public void onStepsLoaded(List<Step> steps) {
 				stepDetailList = steps;

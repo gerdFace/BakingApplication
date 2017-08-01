@@ -2,8 +2,8 @@ package com.example.android.bakingapplication.view.activity;
 
 import android.app.Application;
 
-import com.example.android.bakingapplication.dagger.AppModule;
-import com.example.android.bakingapplication.repository.ApplicationComponent;
+import com.example.android.bakingapplication.dagger.module.AppModule;
+import com.example.android.bakingapplication.dagger.component.ApplicationComponent;
 import com.example.android.bakingapplication.repository.DaggerApplicationComponent;
 
 public class BakingApplication extends Application {

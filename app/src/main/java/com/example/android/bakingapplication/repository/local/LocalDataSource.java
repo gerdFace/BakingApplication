@@ -5,17 +5,17 @@ import android.support.annotation.NonNull;
 import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeDataSource;
+import com.example.android.bakingapplication.repository.RecipeRepository;
 
 import java.util.List;
 
 import io.realm.Realm;
 
-public class RecipeDatabaseSource implements RecipeDataSource {
+public class LocalDataSource implements RecipeRepository {
 
     private Realm realm;
 
-    public RecipeDatabaseSource(Realm realm) {
+    public LocalDataSource(Realm realm) {
         this.realm = realm;
     }
 

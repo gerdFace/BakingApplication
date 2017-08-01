@@ -1,7 +1,8 @@
-package com.example.android.bakingapplication.repository;
+package com.example.android.bakingapplication.dagger.component;
 
-import com.example.android.bakingapplication.dagger.FakeRecipeDataModule;
-import com.example.android.bakingapplication.dagger.RecipeRepositoryModule;
+import com.example.android.bakingapplication.dagger.module.FakeRecipeDataModule;
+import com.example.android.bakingapplication.dagger.module.RecipeRepositoryModule;
+import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
 import com.example.android.bakingapplication.view.activity.DetailPagerActivity;
 import com.example.android.bakingapplication.view.activity.MainActivity;
@@ -26,5 +27,5 @@ public interface ApplicationComponent {
 
     void inject(IngredientsFragment target);
 
-    RecipeRepository getRecipeRepository();
+    RecipeRepositoryImpl getRecipeRepository();
 }
