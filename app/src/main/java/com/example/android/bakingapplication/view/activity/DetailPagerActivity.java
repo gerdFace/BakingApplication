@@ -18,7 +18,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_FOOD_SELECTED;
+import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_RECIPE_SELECTED;
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
 
 public class DetailPagerActivity extends AppCompatActivity {
@@ -46,13 +46,13 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 			nameOfFoodItem = getIntent().getStringExtra(DetailListActivity.NAME_OF_FOOD_SELECTED);
 
-			foodItemID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED, 0);
+			foodItemID = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
 		} else {
 			positionOfStepSelected = savedInstanceState.getInt(POSITION_OF_STEP_SELECTED, 0);
 
 			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
 
-			foodItemID = savedInstanceState.getInt(ID_OF_FOOD_SELECTED, 0);
+			foodItemID = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED, 0);
 		}
 
 		setTitle(nameOfFoodItem);
@@ -97,7 +97,7 @@ public class DetailPagerActivity extends AppCompatActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(ID_OF_FOOD_SELECTED, foodItemID);
+		outState.putInt(ID_OF_RECIPE_SELECTED, foodItemID);
 		outState.putInt(POSITION_OF_STEP_SELECTED, positionOfStepSelected);
 		outState.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
 	}

@@ -19,6 +19,9 @@ public class Ingredient implements Parcelable, RealmModel {
     @SerializedName("ingredient")
     @Expose
     private String ingredient;
+
+    private String ingredientFormattedForDisplay;
+
     public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
 
 
@@ -37,8 +40,11 @@ public class Ingredient implements Parcelable, RealmModel {
             return (new Ingredient[size]);
         }
 
+    };
+
+    public String getIngredientFormattedForDisplay() {
+        return ingredient + ": " + quantity.toString() + " " + measure;
     }
-    ;
 
     public Double getQuantity() {
         return quantity;

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.android.bakingapplication.R;
+import com.example.android.bakingapplication.model.Ingredient;
 
 import java.util.List;
 
@@ -14,9 +15,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
     public static final String TAG = IngredientsAdapter.class.getSimpleName();
 
-    public List<String> ingredientsList;
+    private List<Ingredient> ingredientsList;
 
-        public IngredientsAdapter(List<String> ingredientList) {
+        public IngredientsAdapter(List<Ingredient> ingredientList) {
             this.ingredientsList = ingredientList;
         }
 
@@ -28,8 +29,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
         @Override
         public void onBindViewHolder(final IngredientsViewHolder holder, int position) {
-            String ingredient = ingredientsList.get(position);
-            Log.d(TAG, "Ingredient loaded from list: " + ingredientsList.get(position));
+            String ingredient = ingredientsList.get(position).getIngredientFormattedForDisplay();
+            Log.d(TAG, "Ingredient loaded from list: " + ingredient);
             holder.ingredients.setText(ingredient);
         }
 
@@ -46,4 +47,12 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
                 ingredients = (TextView) view.findViewById(R.id.textview_single_ingredient);
             }
         }
+//
+//    private String formatIngredientText(Ingredient ingredient) {
+//        String ingredientName = ingredient.getIngredient() + ": ";
+//        String quantity = ingredient.getQuantity().toString();
+//        String measure = " " + ingredient.getMeasure();
+//
+//        return ingredientName + quantity + measure;
+//    }
 }

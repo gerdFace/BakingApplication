@@ -23,7 +23,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     RecipeRepositoryImpl recipeRepository;
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
-    public static final String ID_OF_FOOD_SELECTED = "id_of_food_selected";
+    public static final String ID_OF_RECIPE_SELECTED = "id_of_food_selected";
     public static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
 	public static final String SAVED_RECIPE_NAME = "saved_recipe_name";
 	public static final String SAVED_RECIPE_ID = "saved_recipe_id";
@@ -31,7 +31,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	
 	private String nameOfFoodItem;
     private Step step;
-    private int foodID;
+    private int recipeId;
     private boolean twoPane;
 
 	@Override
@@ -45,15 +45,13 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
         if (savedInstanceState != null) {
 		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE_NAME);
-            foodID = savedInstanceState.getInt(SAVED_RECIPE_ID, 0);
+            recipeId = savedInstanceState.getInt(SAVED_RECIPE_ID, 0);
         } else {
             nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
-            foodID = getIntent().getIntExtra(ID_OF_FOOD_SELECTED, 0);
+            recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
         }
 
-        Log.d(TAG, "onCreate: " + nameOfFoodItem + "ID: " + foodID);
-
-        Fragment detailListFragment = DetailListFragment.newInstance(nameOfFoodItem, foodID);
+        Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_list_container, detailListFragment)
@@ -73,7 +71,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	        Bundle bundle = new Bundle();
 	        bundle.putInt(POSITION_OF_STEP_SELECTED, position);
 	        bundle.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
-            bundle.putInt(ID_OF_FOOD_SELECTED, foodID);
+            bundle.putInt(ID_OF_RECIPE_SELECTED, recipeId);
 
             Intent intentToStartDetailPagerActivity = new Intent(this, DetailPagerActivity.class);
             intentToStartDetailPagerActivity.putExtras(bundle);
@@ -83,7 +81,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO update with constraintSet
         } else {
 
-            recipeRepository.getSteps(foodID, new RecipeRepository.GetStepsCallback() {
+            recipeRepository.getSteps(recipeId, new RecipeRepository.GetStepsCallback() {
                 @Override
                 public void onStepsLoaded(List<Step> steps) {
                     step = steps.get(position);
@@ -107,6 +105,6 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putString(SAVED_RECIPE_NAME, nameOfFoodItem);
-        outState.putInt(SAVED_RECIPE_ID, foodID);
+        outState.putInt(SAVED_RECIPE_ID, recipeId);
 	}
 }

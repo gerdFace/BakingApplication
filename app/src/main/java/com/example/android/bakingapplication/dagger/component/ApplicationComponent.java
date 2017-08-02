@@ -1,6 +1,5 @@
 package com.example.android.bakingapplication.dagger.component;
 
-import com.example.android.bakingapplication.dagger.module.FakeRecipeDataModule;
 import com.example.android.bakingapplication.dagger.module.RecipeRepositoryModule;
 import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
@@ -14,7 +13,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {RecipeRepositoryModule.class, FakeRecipeDataModule.class})
+@Component(modules = {RecipeRepositoryModule.class})
 public interface ApplicationComponent {
 
     void inject(MainActivity target);

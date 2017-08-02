@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-
+                Log.d(TAG, failureMessage);
             }
         });
 

@@ -24,7 +24,6 @@ import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
-import com.example.android.bakingapplication.view.activity.DetailListActivity;
 
 import java.util.List;
 
@@ -35,12 +34,9 @@ import butterknife.ButterKnife;
 
 public class DetailListFragment extends Fragment {
 
-    private static final String TAG = DetailListActivity.class.getClass().getSimpleName();
-    private static final String NAME_OF_FOOD_ITEM_KEY = "name_of_food_item_key";
     private static final String ID_OF_FOOD_ITEM_KEY = "id_of_food_item_key";
 
-    private String nameOfFoodItem;
-    private int foodID;
+    private int recipeId;
     private boolean isIngredientListDisplayed = false;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
@@ -71,9 +67,8 @@ public class DetailListFragment extends Fragment {
     }
 	
 	
-	public static DetailListFragment newInstance(String nameOfFoodItem, int foodID) {
+	public static DetailListFragment newInstance(int foodID) {
 		Bundle args = new Bundle();
-		args.putString(NAME_OF_FOOD_ITEM_KEY, nameOfFoodItem);
 		args.putInt(ID_OF_FOOD_ITEM_KEY, foodID);
 
 		DetailListFragment detailListFragment = new DetailListFragment();
@@ -86,13 +81,9 @@ public class DetailListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            nameOfFoodItem = getArguments().getString(NAME_OF_FOOD_ITEM_KEY, "");
-
-            foodID = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
+            recipeId = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
         } else {
-            nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_ITEM_KEY);
-
-            foodID = savedInstanceState.getInt(ID_OF_FOOD_ITEM_KEY);
+            recipeId = savedInstanceState.getInt(ID_OF_FOOD_ITEM_KEY);
         }
     }
 
@@ -114,7 +105,7 @@ public class DetailListFragment extends Fragment {
                 constraintSet.setVisibility(R.id.ingredient_fragment_container, View.VISIBLE);
                 constraintSet.applyTo(constraintLayout);
 
-                Fragment ingredientsFragment = IngredientsFragment.newInstance(nameOfFoodItem);
+                Fragment ingredientsFragment = IngredientsFragment.newInstance(recipeId);
 
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.ingredient_fragment_container, ingredientsFragment)
@@ -138,7 +129,7 @@ public class DetailListFragment extends Fragment {
         rvDetailList.setLayoutManager(layoutManager);
 
         // TODO save Instance, add else statement -- does statePager auto save instance?
-        recipeRepository.getRecipe(foodID, new RecipeRepository.GetRecipeCallback() {
+        recipeRepository.getRecipe(recipeId, new RecipeRepository.GetRecipeCallback() {
             @Override
             public void onRecipeLoaded(RecipeData recipe) {
                 detailList = recipe.getSteps();
@@ -194,8 +185,7 @@ public class DetailListFragment extends Fragment {
 		@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(DetailListActivity.SAVED_RECIPE_NAME, nameOfFoodItem);
-        outState.putInt(ID_OF_FOOD_ITEM_KEY, foodID);
+        outState.putInt(ID_OF_FOOD_ITEM_KEY, recipeId);
 	}
 }
 

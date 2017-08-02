@@ -93,9 +93,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public void getSteps(int recipeId, @NonNull final GetStepsCallback callback) {
 
-        List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
-
-        if (cachedSteps != null) {
+        if (cachedRecipes != null) {
+            List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
             callback.onStepsLoaded(cachedSteps);
             return;
         }
@@ -108,7 +107,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Failed to load steps list from Realm database");
+                callback.onDataNotAvailable("Failed to load step list from database");
             }
         });
     }
@@ -116,21 +115,20 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
-        List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
-
-        if (cachedIngredients != null) {
+        if (cachedRecipes != null) {
+            List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
             callback.onIngredientsLoaded(cachedIngredients);
         }
 
         recipeDatabaseSource.getIngredients(recipeId, new GetIngredientsCallback() {
             @Override
             public void onIngredientsLoaded(List<Ingredient> ingredients) {
-
+                callback.onIngredientsLoaded(ingredients);
             }
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-
+                callback.onDataNotAvailable("Failed to load ingredient list from database");
             }
         });
     }
