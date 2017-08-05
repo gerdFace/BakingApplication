@@ -2,8 +2,8 @@ package com.example.android.bakingapplication.repository;
 
 import android.support.annotation.NonNull;
 
-import com.example.android.bakingapplication.dagger.Local;
-import com.example.android.bakingapplication.dagger.Network;
+import com.example.android.bakingapplication.dagger.qualifier.Local;
+import com.example.android.bakingapplication.dagger.qualifier.Network;
 import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;

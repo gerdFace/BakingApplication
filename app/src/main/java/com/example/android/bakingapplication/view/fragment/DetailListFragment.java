@@ -22,7 +22,6 @@ import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeRepository;
-import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
 
 import java.util.List;
@@ -44,7 +43,7 @@ public class DetailListFragment extends Fragment {
     private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
-    RecipeRepositoryImpl recipeRepository;
+    RecipeRepository recipeRepository;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -93,7 +92,7 @@ public class DetailListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list_before, container, false);
 
-        ((BakingApplication)getActivity().getApplication()).getRecipeRepositoryComponent().inject(this);
+        ((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
 
         ButterKnife.bind(this, view);
 

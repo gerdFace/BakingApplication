@@ -8,12 +8,12 @@ import com.example.android.bakingapplication.dagger.module.AppModule;
 
 public class BakingApplication extends Application {
 
-    private ApplicationComponent recipeRepositoryComponent;
+    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        recipeRepositoryComponent = initRecipeRepository();
+        applicationComponent = initRecipeRepository();
     }
 
     protected ApplicationComponent initRecipeRepository() {
@@ -22,7 +22,7 @@ public class BakingApplication extends Application {
                 .build();
     }
 
-    public ApplicationComponent getRecipeRepositoryComponent() {
-        return recipeRepositoryComponent;
+    public ApplicationComponent getApplicationComponent() {
+        return applicationComponent;
     }
 }

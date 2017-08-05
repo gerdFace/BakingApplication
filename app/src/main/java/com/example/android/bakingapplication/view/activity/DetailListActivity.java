@@ -6,21 +6,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
-import com.example.android.bakingapplication.view.fragment.DetailListFragment;
-import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.view.fragment.DetailListFragment;
+import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
 import java.util.List;
+
 import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
     @Inject
-    RecipeRepositoryImpl recipeRepository;
+    RecipeRepository recipeRepository;
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
     public static final String ID_OF_RECIPE_SELECTED = "id_of_food_selected";
@@ -41,7 +42,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
         ButterKnife.bind(this);
 
-        ((BakingApplication)getApplication()).getRecipeRepositoryComponent().inject(this);
+        ((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
         if (savedInstanceState != null) {
 		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE_NAME);

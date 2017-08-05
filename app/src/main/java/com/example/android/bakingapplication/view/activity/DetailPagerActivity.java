@@ -8,11 +8,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.android.bakingapplication.repository.RecipeRepository;
-import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
-import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
+import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
 import java.util.List;
 
@@ -32,14 +31,14 @@ public class DetailPagerActivity extends AppCompatActivity {
 	private int foodItemID;
 
 	@Inject
-    RecipeRepositoryImpl recipeRepository;
+    RecipeRepository recipeRepository;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_pager);
 
-		((BakingApplication)getApplication()).getRecipeRepositoryComponent().inject(this);
+		((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
 		if (savedInstanceState == null) {
 			positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
