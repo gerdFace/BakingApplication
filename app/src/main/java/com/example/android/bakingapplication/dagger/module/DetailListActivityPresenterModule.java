@@ -11,7 +11,7 @@ import dagger.Provides;
 public class DetailListActivityPresenterModule {
 
     @Provides
-    public DetailListActivityPresenter provideDetailListActivityPresenter(RecipeRepository recipeRepository) {
+    DetailListActivityPresenter provideDetailListActivityPresenter(RecipeRepository recipeRepository) {
         return new DetailListActivityPresenterImpl(recipeRepository);
     }
 }

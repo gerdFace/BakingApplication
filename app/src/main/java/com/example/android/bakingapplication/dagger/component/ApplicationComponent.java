@@ -1,6 +1,7 @@
 package com.example.android.bakingapplication.dagger.component;
 
 import com.example.android.bakingapplication.dagger.module.DetailListActivityPresenterModule;
+import com.example.android.bakingapplication.dagger.module.DetailPagerActivityPresenterModule;
 import com.example.android.bakingapplication.dagger.module.MainActivityPresenterModule;
 import com.example.android.bakingapplication.dagger.module.RecipeRepositoryModule;
 import com.example.android.bakingapplication.repository.RecipeRepository;
@@ -15,7 +16,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 @Singleton
-@Component(modules = {RecipeRepositoryModule.class, MainActivityPresenterModule.class, DetailListActivityPresenterModule.class})
+@Component(modules = {RecipeRepositoryModule.class, MainActivityPresenterModule.class, DetailListActivityPresenterModule.class, DetailPagerActivityPresenterModule.class})
+
 public interface ApplicationComponent {
 
     void inject(MainActivity target);

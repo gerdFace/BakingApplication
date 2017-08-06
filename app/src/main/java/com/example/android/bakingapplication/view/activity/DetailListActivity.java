@@ -14,8 +14,6 @@ import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
 import javax.inject.Inject;
 
-import butterknife.ButterKnife;
-
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks, DetailListActivityView {
 
     @Inject
@@ -37,8 +35,6 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_detail);
-
-        ButterKnife.bind(this);
 
         ((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 

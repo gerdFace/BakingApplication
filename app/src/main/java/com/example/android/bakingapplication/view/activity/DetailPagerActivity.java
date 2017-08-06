@@ -10,28 +10,33 @@ import android.util.Log;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.presentation.DetailPagerActivityPresenter;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_RECIPE_SELECTED;
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
 
-public class DetailPagerActivity extends AppCompatActivity {
+public class DetailPagerActivity extends AppCompatActivity implements DetailPagerActivityView{
 
-	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 	private static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
 
 	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
 	private int positionOfStepSelected;
-	private int foodItemID;
+	private int recipeId;
 
 	@Inject
-    RecipeRepository recipeRepository;
+	DetailPagerActivityPresenter detailPagerActivityPresenter;
+
+	@BindView(R.id.step_view_pager)
+	ViewPager stepViewPager;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,63 +45,85 @@ public class DetailPagerActivity extends AppCompatActivity {
 
 		((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
+		ButterKnife.bind(this);
+
 		if (savedInstanceState == null) {
 			positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
 
 			nameOfFoodItem = getIntent().getStringExtra(DetailListActivity.NAME_OF_FOOD_SELECTED);
 
-			foodItemID = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
+			recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
 		} else {
 			positionOfStepSelected = savedInstanceState.getInt(POSITION_OF_STEP_SELECTED, 0);
 
 			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
 
-			foodItemID = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED, 0);
+			recipeId = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED, 0);
 		}
 
 		setTitle(nameOfFoodItem);
+    }
 
-		recipeRepository.getSteps(foodItemID, new RecipeRepository.GetStepsCallback() {
+    private void setViewPager() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+
+		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 			@Override
-			public void onStepsLoaded(List<Step> steps) {
-				stepDetailList = steps;
+			public Fragment getItem(int position) {
+				return InstructionFragment
+						.newInstance(stepDetailList.get(position));
 			}
 
 			@Override
-			public void onDataNotAvailable(String failureMessage) {
+			public int getCount() {
+				return stepDetailList.size();
 			}
 		});
-		
-	    ViewPager viewPager = (ViewPager) findViewById(R.id.step_view_pager);
-		
-	    FragmentManager fragmentManager = getSupportFragmentManager();
-	
-	    viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-		    @Override
-		    public Fragment getItem(int position) {
-				    return InstructionFragment
-						    .newInstance(stepDetailList.get(position));
-		    }
-		
-		    @Override
-		    public int getCount() {
-			    return stepDetailList.size();
-		    }
-	    });
-	    
-	    for (int i = 0; i < stepDetailList.size(); i ++) {
-			Log.d(TAG, "stepDescriptionList: " + stepDetailList.get(i) + "Position of step selected: " + positionOfStepSelected);
+
+		for (int i = 0; i < stepDetailList.size(); i ++) {
 			if (i == positionOfStepSelected) {
-				viewPager.setCurrentItem(i);
+				stepViewPager.setCurrentItem(i);
 				break;
 			}
 		}
-    }
+	}
+
+	private void setPresenterView() {
+		detailPagerActivityPresenter.setView(this);
+	}
+
+	@Override
+	public void setSteps(List<Step> steps) {
+		stepDetailList = steps;
+		setViewPager();
+	}
+
+	@Override
+	public void showErrorMessage(String failureMessage) {
+		Log.d("Error loading steps: ", failureMessage);
+	}
+
+	@Override
+	public int getRecipeId() {
+		return recipeId;
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		setPresenterView();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		setPresenterView();
+	}
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(ID_OF_RECIPE_SELECTED, foodItemID);
+		outState.putInt(ID_OF_RECIPE_SELECTED, recipeId);
 		outState.putInt(POSITION_OF_STEP_SELECTED, positionOfStepSelected);
 		outState.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
 	}
