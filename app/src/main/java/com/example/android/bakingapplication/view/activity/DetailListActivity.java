@@ -8,32 +8,30 @@ import android.util.Log;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.presentation.DetailListActivityPresenter;
 import com.example.android.bakingapplication.view.fragment.DetailListFragment;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 
-public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
+public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks, DetailListActivityView {
 
     @Inject
-    RecipeRepository recipeRepository;
+    DetailListActivityPresenter detailListActivityPresenter;
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
     public static final String ID_OF_RECIPE_SELECTED = "id_of_food_selected";
     public static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
 	public static final String SAVED_RECIPE_NAME = "saved_recipe_name";
 	public static final String SAVED_RECIPE_ID = "saved_recipe_id";
-	private static final String TAG = DetailListActivity.class.getSimpleName();
-	
+
 	private String nameOfFoodItem;
-    private Step step;
     private int recipeId;
+    private int positionOfStepSelected;
     private boolean twoPane;
+    private Step step;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     @Override
     public void onRecipeDetailButtonClicked(final int position) {
 
-        Log.d(TAG, "name of button clicked: " + position);
+        positionOfStepSelected = position;
 
         if (!twoPane) {
 	        Bundle bundle = new Bundle();
@@ -81,24 +79,11 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO fix: orientation change on tablet causes crash
 		// TODO update with constraintSet
         } else {
+            Fragment instructionFragment = InstructionFragment.newInstance(step);
 
-            recipeRepository.getSteps(recipeId, new RecipeRepository.GetStepsCallback() {
-                @Override
-                public void onStepsLoaded(List<Step> steps) {
-                    step = steps.get(position);
-                }
-
-                @Override
-                public void onDataNotAvailable(String failureMessage) {
-
-                }
-            });
-
-                Fragment instructionFragment = InstructionFragment.newInstance(step);
-
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ingredient_and_instruction_container, instructionFragment)
-                        .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.ingredient_and_instruction_container, instructionFragment)
+                    .commit();
             }
         }
 
@@ -108,4 +93,36 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		outState.putString(SAVED_RECIPE_NAME, nameOfFoodItem);
         outState.putInt(SAVED_RECIPE_ID, recipeId);
 	}
+
+    @Override
+    public void setStep(Step step) {
+        this.step = step;
+    }
+
+    @Override
+    public void showErrorMessage(String failureMessage) {
+        Log.d("Error loading step: ", failureMessage);
+    }
+
+    @Override
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    @Override
+    public int getStepSelectedPosition() {
+        return positionOfStepSelected;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        detailListActivityPresenter.setView(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        detailListActivityPresenter.setView(this);
+    }
 }
