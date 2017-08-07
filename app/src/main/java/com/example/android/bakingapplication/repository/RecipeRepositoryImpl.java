@@ -1,13 +1,12 @@
 package com.example.android.bakingapplication.repository;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.example.android.bakingapplication.dagger.qualifier.Local;
 import com.example.android.bakingapplication.dagger.qualifier.Network;
 import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,11 +14,11 @@ import java.util.Map;
 
 public class RecipeRepositoryImpl implements RecipeRepository {
 
+    private static String TAG = RecipeRepositoryImpl.class.getSimpleName();
+
     private RecipeRepository recipeDatabaseSource;
-
     private RecipeRepository recipeNetworkSource;
-
-    Map<Integer, RecipeData> cachedRecipes;
+    private Map<Integer, RecipeData> cachedRecipes;
     private boolean cacheIsDirty = false;
 
     public RecipeRepositoryImpl(@Local RecipeRepository recipeDatabaseSource, @Network RecipeRepository recipeNetworkSource) {
@@ -46,6 +45,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
                 @Override
                 public void onDataNotAvailable(String failureMessage) {
+                    Log.d(TAG, "onDataNotAvailable: " + failureMessage);
                     getRecipesFromNetworkSource(callback);
                 }
             });
@@ -94,6 +94,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public void getSteps(int recipeId, @NonNull final GetStepsCallback callback) {
 
         if (cachedRecipes != null) {
+            //noinspection ConstantConditions
             List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
             callback.onStepsLoaded(cachedSteps);
             return;
@@ -116,6 +117,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
         if (cachedRecipes != null) {
+            //noinspection ConstantConditions
             List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
             callback.onIngredientsLoaded(cachedIngredients);
         }

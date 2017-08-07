@@ -15,10 +15,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements RecipeCardAdapter.RecipeCardAdapterOnClickHandler, MainActivityView {
 
     @Inject
     MainActivityPresenter mainActivityPresenter;
+
+    @BindView(R.id.rv_recipe_list)
+    RecyclerView recipeCardRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         setContentView(R.layout.activity_main);
 
         ((BakingApplication) getApplication()).getApplicationComponent().inject(this);
+
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -49,14 +57,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @Override
     public void showRecipes(List<RecipeData> recipeList) {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_recipe_list);
-
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
 
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recipeCardAdapter);
+        recipeCardRecyclerView.setLayoutManager(layoutManager);
+        recipeCardRecyclerView.setAdapter(recipeCardAdapter);
     }
 
     @Override

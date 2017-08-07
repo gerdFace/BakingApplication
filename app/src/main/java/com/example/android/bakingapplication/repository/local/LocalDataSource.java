@@ -24,7 +24,7 @@ public class LocalDataSource implements RecipeRepository {
         List<RecipeData> recipes;
         recipes = realm.where(RecipeData.class).findAll();
 
-        if (recipes.isEmpty()) {
+        if (realm.isEmpty() || recipes.isEmpty()) {
             callback.onDataNotAvailable("No Realm data");
         } else {
             callback.onRecipesLoaded(recipes);
@@ -88,6 +88,5 @@ public class LocalDataSource implements RecipeRepository {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(recipes);
         realm.commitTransaction();
-
     }
 }

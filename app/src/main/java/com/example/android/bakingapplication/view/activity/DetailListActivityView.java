@@ -11,5 +11,4 @@ public interface DetailListActivityView {
     int getRecipeId();
 
     int getStepSelectedPosition();
-
 }

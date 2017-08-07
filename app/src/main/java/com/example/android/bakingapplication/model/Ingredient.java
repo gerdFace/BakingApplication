@@ -2,8 +2,12 @@ package com.example.android.bakingapplication.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Locale;
+
 import io.realm.RealmModel;
 import io.realm.annotations.RealmClass;
 
@@ -12,15 +16,13 @@ public class Ingredient implements Parcelable, RealmModel {
 
     @SerializedName("quantity")
     @Expose
-    private Double quantity;
+    private float quantity;
     @SerializedName("measure")
     @Expose
     private String measure;
     @SerializedName("ingredient")
     @Expose
     private String ingredient;
-
-    private String ingredientFormattedForDisplay;
 
     public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
 
@@ -30,7 +32,7 @@ public class Ingredient implements Parcelable, RealmModel {
         })
         public Ingredient createFromParcel(Parcel in) {
             Ingredient instance = new Ingredient();
-            instance.quantity = ((Double) in.readValue((Double.class.getClassLoader())));
+            instance.quantity = ((float) in.readValue((Double.class.getClassLoader())));
             instance.measure = ((String) in.readValue((String.class.getClassLoader())));
             instance.ingredient = ((String) in.readValue((String.class.getClassLoader())));
             return instance;
@@ -43,14 +45,15 @@ public class Ingredient implements Parcelable, RealmModel {
     };
 
     public String getIngredientFormattedForDisplay() {
-        return ingredient + ": " + quantity.toString() + " " + measure;
+        String formattedIngredient = ingredient.substring(0, 1).toUpperCase() + ingredient.substring(1);
+        return formattedIngredient + ": " + String.format(Locale.US, "%s", quantity) + " " + measure;
     }
 
-    public Double getQuantity() {
+    public float getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(float quantity) {
         this.quantity = quantity;
     }
 
