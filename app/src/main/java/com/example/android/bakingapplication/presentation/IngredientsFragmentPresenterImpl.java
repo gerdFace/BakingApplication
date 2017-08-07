@@ -37,8 +37,4 @@ public class IngredientsFragmentPresenterImpl implements IngredientsFragmentPres
         this.view = view;
         loadIngredients();
     }
-
-    private void formatIngredientsForDisplay(List<Ingredient> ingredients) {
-
-    }
 }

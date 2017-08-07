@@ -18,11 +18,15 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     private DetailListFragment.DetailItemCallbacks callback;
 
-    private List<Step> detailList;
+    private List<Step> stepsList;
 
-    public DetailListAdapter(List<Step> detailList, DetailListFragment.DetailItemCallbacks callback) {
-        this.detailList = detailList;
+    public DetailListAdapter(DetailListFragment.DetailItemCallbacks callback) {
         this.callback = callback;
+    }
+
+    public void updateDetailListAdapter(List<Step> steps) {
+        this.stepsList = steps;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -33,9 +37,9 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     @Override
     public void onBindViewHolder(final DetailListViewHolder holder, int position) {
-        final String detailButtonText = detailList.get(position).getShortDescription();
+        final String detailButtonText = stepsList.get(position).getShortDescription();
         Log.d(TAG, "DetailList short description: " + detailButtonText);
-        Log.d(TAG, "DetailList onBindViewHolder: " + detailList.get(position));
+        Log.d(TAG, "DetailList onBindViewHolder: " + stepsList.get(position));
         holder.detailButton.setText(detailButtonText);
         holder.detailButton.setOnClickListener(v -> {
         // Check validity of callback
@@ -47,7 +51,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     @Override
     public int getItemCount() {
-        return detailList.size();
+        return stepsList.size();
     }
 
     public class DetailListViewHolder extends RecyclerView.ViewHolder{

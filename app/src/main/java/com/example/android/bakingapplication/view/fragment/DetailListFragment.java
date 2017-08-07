@@ -19,9 +19,8 @@ import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
-import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.repository.RecipeRepository;
+import com.example.android.bakingapplication.presentation.DetailListFragmentPresenter;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
 
 import java.util.List;
@@ -31,19 +30,18 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailListFragment extends Fragment {
+public class DetailListFragment extends Fragment implements DetailListFragmentView{
 
-    private static final String ID_OF_FOOD_ITEM_KEY = "id_of_food_item_key";
+    private static final String RECIPE_ID_KEY = "recipe_id";
 
     private int recipeId;
     private boolean isIngredientListDisplayed = false;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
-    private List<Step> detailList;
     private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
-    RecipeRepository recipeRepository;
+    DetailListFragmentPresenter detailListFragmentPresenter;
 
     @BindView(R.id.rv_detail_list)
     RecyclerView rvDetailList;
@@ -57,6 +55,7 @@ public class DetailListFragment extends Fragment {
     @BindView(R.id.ingredient_fragment_container)
     FrameLayout ingredientFrameLayout;
 
+    //    Needed??
     public DetailListFragment() {
     }
 
@@ -66,9 +65,9 @@ public class DetailListFragment extends Fragment {
     }
 	
 	
-	public static DetailListFragment newInstance(int foodID) {
+	public static DetailListFragment newInstance(int recipeId) {
 		Bundle args = new Bundle();
-		args.putInt(ID_OF_FOOD_ITEM_KEY, foodID);
+		args.putInt(RECIPE_ID_KEY, recipeId);
 
 		DetailListFragment detailListFragment = new DetailListFragment();
 		detailListFragment.setArguments(args);
@@ -80,9 +79,9 @@ public class DetailListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            recipeId = getArguments().getInt(ID_OF_FOOD_ITEM_KEY, 0);
+            recipeId = getArguments().getInt(RECIPE_ID_KEY, 0);
         } else {
-            recipeId = savedInstanceState.getInt(ID_OF_FOOD_ITEM_KEY);
+            recipeId = savedInstanceState.getInt(RECIPE_ID_KEY);
         }
     }
 
@@ -119,7 +118,6 @@ public class DetailListFragment extends Fragment {
                 constraintSet.applyTo(constraintLayout);
 
                 isIngredientListDisplayed = false;
-
             }
         });
 
@@ -127,33 +125,25 @@ public class DetailListFragment extends Fragment {
 
         rvDetailList.setLayoutManager(layoutManager);
 
-        // TODO save Instance, add else statement -- does statePager auto save instance?
-        recipeRepository.getRecipe(recipeId, new RecipeRepository.GetRecipeCallback() {
-            @Override
-            public void onRecipeLoaded(RecipeData recipe) {
-                detailList = recipe.getSteps();
-            }
-
-            @Override
-            public void onDataNotAvailable(String failureMessage) {
-
-            }
-        });
-
-        updateUI();
-
         return view;
     }
 
-	private void updateUI() {
-		if (detailListAdapter == null) {
-			detailListAdapter = new DetailListAdapter(detailList, callbacks);
-			
-			rvDetailList.setAdapter(detailListAdapter);
-		} else {
-			detailListAdapter.notifyDataSetChanged();
-		}
-	}
+    @Override
+    public void showSteps(List<Step> steps) {
+        if (detailListAdapter == null) {
+            detailListAdapter = new DetailListAdapter(callbacks);
+            detailListAdapter.updateDetailListAdapter(steps);
+
+            rvDetailList.setAdapter(detailListAdapter);
+        } else {
+            detailListAdapter.updateDetailListAdapter(steps);
+        }
+    }
+
+    @Override
+    public int getRecipeId() {
+        return recipeId;
+    }
 
     // Ensure that host activity implements the callback interface
     @Override
@@ -178,13 +168,13 @@ public class DetailListFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		updateUI();
-	}
+        detailListFragmentPresenter.setView(this);
+    }
 	
-		@Override
+    @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        outState.putInt(ID_OF_FOOD_ITEM_KEY, recipeId);
+        outState.putInt(RECIPE_ID_KEY, recipeId);
 	}
 }
 
