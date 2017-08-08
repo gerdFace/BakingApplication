@@ -55,6 +55,11 @@ dependencies {
         exclude module: 'design'
     }
 
+    // Memory Leak Detection
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+
     // Dependency Injection
     compile 'com.google.dagger:dagger:2.11'
     compile 'com.google.dagger:dagger-android:2.11'

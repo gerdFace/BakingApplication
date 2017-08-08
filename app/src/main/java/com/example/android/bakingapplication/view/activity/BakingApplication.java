@@ -13,10 +13,10 @@ public class BakingApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        applicationComponent = initRecipeRepository();
+        applicationComponent = initDagger();
     }
 
-    protected ApplicationComponent initRecipeRepository() {
+    protected ApplicationComponent initDagger() {
         return DaggerApplicationComponent.builder()
                 .appModule(new AppModule(this))
                 .build();

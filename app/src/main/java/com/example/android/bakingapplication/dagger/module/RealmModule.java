@@ -16,9 +16,8 @@ public class RealmModule {
     @Singleton
     Realm provideRealmInstance(Application application) {
         Realm.init(application);
-        RealmConfiguration.Builder builder = new RealmConfiguration.Builder()
-                .name("recipeDB2.realm")
-                .schemaVersion(1)
+        RealmConfiguration.Builder builder = new RealmConfiguration.Builder();
+        builder.name("recipeDB3.realm")
                 .deleteRealmIfMigrationNeeded();
 
         RealmConfiguration configuration = builder.build();
