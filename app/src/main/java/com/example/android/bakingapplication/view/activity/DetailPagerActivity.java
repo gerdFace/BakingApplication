@@ -2,9 +2,6 @@ package com.example.android.bakingapplication.view.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -16,9 +13,6 @@ import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_RECIPE_SELECTED;
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
@@ -35,8 +29,8 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 	@Inject
 	DetailPagerActivityPresenter detailPagerActivityPresenter;
 
-	@BindView(R.id.step_view_pager)
-	ViewPager stepViewPager;
+//	@BindView(R.id.step_view_pager)
+//	ViewPager stepViewPager;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +39,7 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 
 		((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
-		ButterKnife.bind(this);
+//		ButterKnife.bind(this);
 
 		if (savedInstanceState == null) {
 			positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
@@ -65,28 +59,33 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
     }
 
     private void setViewPager() {
-		FragmentManager fragmentManager = getSupportFragmentManager();
+		Fragment detailListFragment = InstructionFragment.newInstance(stepDetailList.get(positionOfStepSelected));
 
-		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-			@Override
-			public Fragment getItem(int position) {
-				return InstructionFragment
-						.newInstance(stepDetailList.get(position));
-			}
-
-			@Override
-			public int getCount() {
-				return stepDetailList.size();
-			}
-		});
-
-		for (int i = 0; i < stepDetailList.size(); i ++) {
-			if (i == positionOfStepSelected) {
-				stepViewPager.setCurrentItem(i);
-				break;
-			}
-		}
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.instruction_container, detailListFragment)
+				.commit();
 	}
+
+//		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
+//			@Override
+//			public Fragment getItem(int position) {
+//				return InstructionFragment
+//						.newInstance(stepDetailList.get(position));
+//			}
+//
+//			@Override
+//			public int getCount() {
+//				return stepDetailList.size();
+//			}
+//		});
+//
+//		for (int i = 0; i < stepDetailList.size(); i ++) {
+//			if (i == positionOfStepSelected) {
+//				stepViewPager.setCurrentItem(i);
+//				break;
+//			}
+//		}
+//	}
 
 	private void setPresenterView() {
 		detailPagerActivityPresenter.setView(this);
