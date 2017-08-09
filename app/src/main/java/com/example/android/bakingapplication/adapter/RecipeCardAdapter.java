@@ -22,24 +22,24 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
     private Context context;
     private List<RecipeData> recipeList;
     private int[] thumbnails = new int[] {
-            R.mipmap.nutella_pie,
-            R.mipmap.brownies,
-            R.mipmap.yellow_cake,
-            R.mipmap.cheesecake};
+            R.drawable.nutella_pie,
+            R.drawable.brownies,
+            R.drawable.yellow_cake,
+            R.drawable.cheesecake};
 
     public interface RecipeCardAdapterOnClickHandler {
         void onRecipeSelected(String nameOfFoodSelected, int foodID);
     }
 
 
-    public class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView dessertName;
-        public TextView numberOfSteps;
-        public TextView numberOfIngredients;
-        public TextView numberOfServings;
-        public ImageView thumbnail;
+    class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView dessertName;
+        TextView numberOfSteps;
+        TextView numberOfIngredients;
+        TextView numberOfServings;
+        ImageView thumbnail;
 
-        public RecipeViewHolder(View view) {
+        RecipeViewHolder(View view) {
             super(view);
             dessertName = (TextView) view.findViewById(R.id.dessert_name);
             numberOfSteps = (TextView) view.findViewById(R.id.number_of_steps);

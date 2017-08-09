@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BakingApplication</string>
     <string name="ingredients">Ingredients:</string>
+    <string name="nutella_pie">Nutella Pie</string>
     <string name="servings">Servings:</string>
     <string name="steps">Steps:</string>
     <string name="pastry_name">Nutella Pie</string>

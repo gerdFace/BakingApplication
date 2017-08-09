@@ -37,10 +37,10 @@ public class FakeRecipeData {
 	
 	public void addFakeRecipes() {
         int[] thumbnails = new int[] {
-                R.mipmap.nutella_pie,
-                R.mipmap.brownies,
-                R.mipmap.yellow_cake,
-                R.mipmap.cheesecake};
+                R.drawable.nutella_pie,
+                R.drawable.brownies,
+                R.drawable.yellow_cake,
+                R.drawable.cheesecake};
 
         ingredientList.add("2 eggs");
         ingredientList.add("1 cup Flour");
