@@ -16,7 +16,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.example.android.bakingapplication.BakingMatchers.withImageDrawable;
-import static com.example.android.bakingapplication.BakingMatchers.withIndex;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {

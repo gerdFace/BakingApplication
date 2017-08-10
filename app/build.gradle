@@ -34,9 +34,10 @@ dependencies {
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    // Unit Testsapply plugin: 'realm-android'
-
+    // Unit Tests
     testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:2.7.22'
+    androidTestCompile 'org.mockito:mockito-android:2.7.22'
 
     // UI Tests
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -54,11 +55,6 @@ dependencies {
         exclude group: 'com.google.code.findbugs'
         exclude module: 'design'
     }
-
-    // Memory Leak Detection
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
 
     // Dependency Injection
     compile 'com.google.dagger:dagger:2.11'
