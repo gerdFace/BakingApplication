@@ -90,5 +90,8 @@ class MockRecipeData {
         recipe2.steps.add(step2)
         recipe2.steps.add(step3)
         recipe2.steps.add(step4)
+
+        recipeList.add(recipe1)
+        recipeList.add(recipe2)
     }
 }

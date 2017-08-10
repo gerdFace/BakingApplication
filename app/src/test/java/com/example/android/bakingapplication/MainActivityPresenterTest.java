@@ -7,21 +7,24 @@ import com.example.android.bakingapplication.view.activity.MainActivityView;
 
 import org.junit.Before;
 
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 
 public class MainActivityPresenterTest {
 
-    private RecipeRepository mockUserRepository;
+    private RecipeRepository mockRecipeRepository;
     private MainActivityView mockView;
     private MainActivityPresenter presenter;
-    private RecipeData recipeList;
+    private List<RecipeData> recipeList;
 
     @Before
     public void setup() {
-        mockUserRepository = mock(RecipeRepository.class);
+        mockRecipeRepository = mock(RecipeRepository.class);
 
-        Mock new MockRecipeData().;
-
+        MockRecipeData mockRecipeData = new MockRecipeData();
+        mockRecipeData.createRecipeList();
+        recipeList = mockRecipeData.getRecipeList();
     }
 }
 
