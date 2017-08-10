@@ -11,16 +11,16 @@ import static org.mockito.Mockito.mock;
 
 public class MainActivityPresenterTest {
 
-    RecipeRepository mockUserRepository;
-    MainActivityView mockView;
-    MainActivityPresenter presenter;
-    RecipeData recipeList;
+    private RecipeRepository mockUserRepository;
+    private MainActivityView mockView;
+    private MainActivityPresenter presenter;
+    private RecipeData recipeList;
 
     @Before
     public void setup() {
         mockUserRepository = mock(RecipeRepository.class);
 
-        recipeList = new RecipeData();
+        Mock new MockRecipeData().;
 
     }
 }

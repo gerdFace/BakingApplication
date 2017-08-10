@@ -15,7 +15,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static com.example.android.bakingapplication.BakingMatchers.withImageDrawable;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
@@ -40,25 +39,5 @@ public class MainActivityTest {
 				.check(matches(hasDescendant(withText("Steps: 7"))))
 				.check(matches(hasDescendant(withText("Ingredients: 9"))))
 				.check(matches(hasDescendant(withText("Servings: 8"))));
-	}
-
-	@Test
-	public void checkRecipeCardHasCorrectImageDisplayed() {
-//		onView(withImageDrawable(R.drawable.nutella_pie))
-//				.check(matches(withId(R.id.recipe_image)))
-//				.check(matches(withText("Nutella Pie")));
-
-		onView(withIndex(withId(R.id.recipe_image), 2))
-				.check(matches(withImageDrawable(R.drawable.nutella_pie)));
-//				.check(matches(hasSibling(withText("Nutella Pie"))));
-
-//		onView(withId(R.id.recipe_image)hasSibling(withText("Nutella Pie")).matches(withImageDrawable(R.drawable.nutella_pie))));
-
-//		onView(withId(R.id.recipe_image)).check(matches(withImageDrawable(R.drawable.nutella_pie)));
-//		onView(withId(R.id.rv_recipe_list)).check(matches(hasSibling(withImageDrawable(R.drawable.nutella_pie))));
-
-//		onView(withId(R.id.recipe_image))
-//				.check(matches(withImageDrawable(R.drawable.nutella_pie)))
-//				.check(matches(withText(R.string.nutella_pie)));
 	}
 }
