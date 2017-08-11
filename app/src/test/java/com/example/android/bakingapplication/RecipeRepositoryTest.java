@@ -24,7 +24,7 @@ public class RecipeRepositoryTest {
 
     private List<RecipeData> recipeList;
 
-    private String failureMessage = "No data retrieved";
+    private String failureMessage = "No Realm data";
 
     private RecipeRepositoryImpl recipeRepositoryImpl;
 
