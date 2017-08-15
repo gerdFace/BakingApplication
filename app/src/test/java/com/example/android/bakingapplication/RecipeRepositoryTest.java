@@ -38,16 +38,10 @@ public class RecipeRepositoryTest {
     private Context context;
 
     @Mock
-    private RecipeRepository.GetRecipeCallback getRecipeCallback;
-
-    @Mock
     private RecipeRepository.LoadRecipesCallback loadRecipesCallback;
 
     @Captor
     private ArgumentCaptor<RecipeRepository.LoadRecipesCallback> recipesCallbackCaptor;
-
-    @Captor
-    private ArgumentCaptor<RecipeRepository.GetRecipeCallback> recipeCallbackCaptor;
 
     @Before
     public void setupRecipeRepository() {
@@ -65,6 +59,8 @@ public class RecipeRepositoryTest {
         makeTwoCallsToRepository(loadRecipesCallback);
 
         verify(networkDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
+
+        verify(localDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
     }
 
     @Test
