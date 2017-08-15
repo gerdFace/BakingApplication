@@ -24,15 +24,15 @@ public class RecipeRepositoryTest {
 
     private List<RecipeData> recipeList;
 
-    private String failureMessage = "No Realm data";
+    private String failureMessage = "Could not load recipe data";
 
     private RecipeRepositoryImpl recipeRepositoryImpl;
 
     @Mock
-    private RecipeRepository recipeRemoteRepository;
+    private RecipeRepository networkDataSource;
 
     @Mock
-    private RecipeRepository recipeLocalRepository;
+    private RecipeRepository localDataSource;
 
     @Mock
     private Context context;
@@ -44,16 +44,16 @@ public class RecipeRepositoryTest {
     private RecipeRepository.LoadRecipesCallback loadRecipesCallback;
 
     @Captor
-    private ArgumentCaptor<RecipeRepository.LoadRecipesCallback> recipesCallbackArgumentCaptor;
+    private ArgumentCaptor<RecipeRepository.LoadRecipesCallback> recipesCallbackCaptor;
 
     @Captor
-    private ArgumentCaptor<RecipeRepository.GetRecipeCallback> recipeCallbackArgumentCaptor;
+    private ArgumentCaptor<RecipeRepository.GetRecipeCallback> recipeCallbackCaptor;
 
     @Before
     public void setupRecipeRepository() {
         MockitoAnnotations.initMocks(this);
 
-        recipeRepositoryImpl = new RecipeRepositoryImpl(recipeLocalRepository, recipeRemoteRepository);
+        recipeRepositoryImpl = new RecipeRepositoryImpl(localDataSource, networkDataSource);
 
         mockRecipeData.createRecipeList();
 
@@ -64,20 +64,52 @@ public class RecipeRepositoryTest {
     public void repositoryCachesAfterFirstApiCall() {
         makeTwoCallsToRepository(loadRecipesCallback);
 
-        verify(recipeRemoteRepository).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
+        verify(networkDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
+    }
+
+    @Test
+    public void getRecipesFromNetworkDataSourceWhenLocalDataSourceUnavailable() {
+        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+
+        setRecipesNotAvailable(localDataSource);
+
+        setRecipesAvailable(networkDataSource, recipeList);
+
+        verify(loadRecipesCallback).onRecipesLoaded(recipeList);
+    }
+
+    @Test
+    public void shouldGetOnDataNotAvailableCallbackWhenBothDataSourcesUnavailable() {
+        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+
+        setRecipesNotAvailable(localDataSource);
+
+        setRecipesNotAvailable(networkDataSource);
+
+        verify(loadRecipesCallback).onDataNotAvailable(failureMessage);
     }
 
     private void makeTwoCallsToRepository(RecipeRepository.LoadRecipesCallback callback) {
         recipeRepositoryImpl.getRecipes(callback);
 
-        verify(recipeLocalRepository).getRecipes(recipesCallbackArgumentCaptor.capture());
+        verify(localDataSource).getRecipes(recipesCallbackCaptor.capture());
 
-        recipesCallbackArgumentCaptor.getValue().onDataNotAvailable(failureMessage);
+        recipesCallbackCaptor.getValue().onDataNotAvailable(failureMessage);
 
-        verify(recipeRemoteRepository).getRecipes(recipesCallbackArgumentCaptor.capture());
+        verify(networkDataSource).getRecipes(recipesCallbackCaptor.capture());
 
-        recipesCallbackArgumentCaptor.getValue().onRecipesLoaded(recipeList);
+        recipesCallbackCaptor.getValue().onRecipesLoaded(recipeList);
 
         recipeRepositoryImpl.getRecipes(callback);
+    }
+
+    private void setRecipesNotAvailable(RecipeRepository recipeRepository) {
+        verify(recipeRepository).getRecipes(recipesCallbackCaptor.capture());
+        recipesCallbackCaptor.getValue().onDataNotAvailable(failureMessage);
+    }
+
+    private void setRecipesAvailable(RecipeRepository recipeRepository, List<RecipeData> recipes) {
+        verify(recipeRepository).getRecipes(recipesCallbackCaptor.capture());
+        recipesCallbackCaptor.getValue().onRecipesLoaded(recipes);
     }
 }

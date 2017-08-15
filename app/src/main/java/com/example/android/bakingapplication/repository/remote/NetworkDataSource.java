@@ -1,7 +1,6 @@
 package com.example.android.bakingapplication.repository.remote;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.repository.RecipeRepository;
@@ -31,7 +30,7 @@ public class NetworkDataSource implements RecipeRepository {
         recipeCall.enqueue(new Callback<List<RecipeData>>() {
 
             @Override
-            public void onResponse(Call<List<RecipeData>> call, Response<List<RecipeData>> response) {
+            public void onResponse(@NonNull Call<List<RecipeData>> call, @NonNull Response<List<RecipeData>> response) {
                 if (response.isSuccessful()) {
                     recipeList = response.body();
                     callback.onRecipesLoaded(recipeList);
@@ -39,8 +38,8 @@ public class NetworkDataSource implements RecipeRepository {
             }
 
             @Override
-            public void onFailure(Call<List<RecipeData>> call, Throwable t) {
-                callback.onDataNotAvailable("Could not load recipe data from network path" + t.toString());
+            public void onFailure(@NonNull Call<List<RecipeData>> call, @NonNull Throwable t) {
+                callback.onDataNotAvailable("Could not load recipe list from network path" + t.toString());
             }
         });
     }
@@ -57,11 +56,6 @@ public class NetworkDataSource implements RecipeRepository {
 
     @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
-
-    }
-
-    @Override
-    public void refreshRecipes() {
 
     }
 

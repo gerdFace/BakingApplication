@@ -29,6 +29,7 @@ class MockRecipeData {
     val recipeList: MutableList<RecipeData> = mutableListOf(recipe1, recipe2)
 
     fun createRecipeList() {
+        recipeList.clear()
         setupMockIngredients()
         setupMockSteps()
         setupMockRecipes()

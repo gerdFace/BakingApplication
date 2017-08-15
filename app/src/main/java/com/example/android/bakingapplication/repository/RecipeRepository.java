@@ -46,8 +46,5 @@ public interface RecipeRepository {
 
     void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback);
 
-    void refreshRecipes();
-
     void saveRecipesToDatabase(List<RecipeData> recipes);
-
 }

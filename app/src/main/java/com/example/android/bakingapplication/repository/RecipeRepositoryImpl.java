@@ -1,7 +1,6 @@
 package com.example.android.bakingapplication.repository;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.example.android.bakingapplication.dagger.qualifier.Local;
 import com.example.android.bakingapplication.dagger.qualifier.Network;
@@ -20,10 +19,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     private RecipeRepository recipeNetworkSource;
 
-    private static String TAG = RecipeRepositoryImpl.class.getSimpleName();
-
     Map<Integer, RecipeData> cachedRecipes;
-    private boolean cacheIsDirty = false;
 
     public RecipeRepositoryImpl(@Local RecipeRepository recipeDatabaseSource, @Network RecipeRepository recipeNetworkSource) {
         this.recipeDatabaseSource = recipeDatabaseSource;
@@ -32,13 +28,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     @Override
     public void getRecipes(@NonNull final LoadRecipesCallback callback) {
-        if (cachedRecipes != null && !cacheIsDirty) {
+        if (cachedRecipes != null) {
             callback.onRecipesLoaded(new ArrayList<>(cachedRecipes.values()));
-            return;
-        }
-
-        if (cacheIsDirty) {
-            getRecipesFromNetworkSource(callback);
         } else {
             recipeDatabaseSource.getRecipes(new LoadRecipesCallback() {
                 @Override
@@ -49,27 +40,10 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
                 @Override
                 public void onDataNotAvailable(String failureMessage) {
-                    Log.d(TAG, "onDataNotAvailable: " + failureMessage);
                     getRecipesFromNetworkSource(callback);
                 }
             });
         }
-    }
-
-    private void getRecipesFromNetworkSource(@NonNull final LoadRecipesCallback callback) {
-        recipeNetworkSource.getRecipes(new LoadRecipesCallback() {
-            @Override
-            public void onRecipesLoaded(List<RecipeData> recipes) {
-                refreshCache(recipes);
-                refreshDatabase(recipes);
-                callback.onRecipesLoaded(new ArrayList<>(cachedRecipes.values()));
-            }
-
-            @Override
-            public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Could not load recipe data from network");
-            }
-        });
     }
 
     @Override
@@ -89,7 +63,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Failed to load recipe from network");
+                callback.onDataNotAvailable(failureMessage);
             }
         });
     }
@@ -98,6 +72,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public void getSteps(int recipeId, @NonNull final GetStepsCallback callback) {
 
         if (cachedRecipes != null) {
+            //noinspection ConstantConditions
             List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
             callback.onStepsLoaded(cachedSteps);
             return;
@@ -111,7 +86,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Failed to load step list from database");
+                callback.onDataNotAvailable(failureMessage);
             }
         });
     }
@@ -120,6 +95,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
         if (cachedRecipes != null) {
+            //noinspection ConstantConditions
             List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
             callback.onIngredientsLoaded(cachedIngredients);
         }
@@ -132,18 +108,29 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
             @Override
             public void onDataNotAvailable(String failureMessage) {
-                callback.onDataNotAvailable("Failed to load ingredient list from database");
+                callback.onDataNotAvailable(failureMessage);
             }
         });
     }
 
     @Override
-    public void refreshRecipes() {
-        cacheIsDirty = true;
+    public void saveRecipesToDatabase(List<RecipeData> recipes) {
     }
 
-    @Override
-    public void saveRecipesToDatabase(List<RecipeData> recipes) {
+    private void getRecipesFromNetworkSource(@NonNull final LoadRecipesCallback callback) {
+        recipeNetworkSource.getRecipes(new LoadRecipesCallback() {
+            @Override
+            public void onRecipesLoaded(List<RecipeData> recipes) {
+                refreshCache(recipes);
+                refreshDatabase(recipes);
+                callback.onRecipesLoaded(new ArrayList<>(cachedRecipes.values()));
+            }
+
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
+                callback.onDataNotAvailable(failureMessage);
+            }
+        });
     }
 
     private void refreshCache(List<RecipeData> recipes) {
@@ -154,8 +141,6 @@ public class RecipeRepositoryImpl implements RecipeRepository {
         for (RecipeData recipe : recipes) {
             cachedRecipes.put(recipe.getId(), recipe);
         }
-
-        cacheIsDirty = false;
     }
 
     private void refreshDatabase(List<RecipeData> recipes) {
