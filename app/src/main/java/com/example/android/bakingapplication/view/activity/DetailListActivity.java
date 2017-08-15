@@ -21,9 +21,9 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_food_selected";
     public static final String ID_OF_RECIPE_SELECTED = "id_of_food_selected";
-    public static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
-	public static final String SAVED_RECIPE_NAME = "saved_recipe_name";
-	public static final String SAVED_RECIPE_ID = "saved_recipe_id";
+    private static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
+	private static final String SAVED_RECIPE_NAME = "saved_recipe_name";
+	private static final String SAVED_RECIPE_ID = "saved_recipe_id";
 
 	private String nameOfFoodItem;
     private int recipeId;
