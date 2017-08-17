@@ -1,7 +1,5 @@
 package com.example.android.bakingapplication;
 
-import android.content.Context;
-
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
@@ -38,9 +36,6 @@ public class RecipeRepositoryTest {
     private RecipeRepository localDataSource;
 
     @Mock
-    private Context context;
-
-    @Mock
     private RecipeRepository.LoadRecipesCallback loadRecipesCallback;
 
     @Mock
@@ -67,31 +62,35 @@ public class RecipeRepositoryTest {
         mockRecipeData.createRecipeList();
 
         recipeList = mockRecipeData.getRecipeList();
+
+        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
     }
 
     @Test
     public void shouldGetRecipesFromLocalDataSourceIfDatabaseIsNotEmpty() {
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
-
         verify(localDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
     }
 
     @Test
     public void checkRepositoryCachesAfterFirstApiCall() {
-        makeTwoCallsToRepository(loadRecipesCallback);
+        setRecipesNotAvailable(localDataSource);
+
+        recipeRepositoryImpl.cachedRecipes = null;
+
+        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+
+        verify(networkDataSource).getRecipes(recipesCallbackCaptor.capture());
+
+        recipesCallbackCaptor.getValue().onRecipesLoaded(recipeList);
 
         verify(networkDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
 
-        verify(localDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
-
-        // Redundant check for data caching
+        // Verify cached data is accurate
         assertThat(recipeList, is(new ArrayList<>(recipeRepositoryImpl.cachedRecipes.values())));
     }
 
     @Test
     public void shouldGetRecipesFromNetworkDataSourceWhenLocalDataSourceUnavailable() {
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
-
         setRecipesNotAvailable(localDataSource);
 
         setRecipesAvailable(networkDataSource, recipeList);
@@ -101,8 +100,6 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetOnDataNotAvailableCallbackWhenBothDataSourcesUnavailable() {
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
-
         setRecipesNotAvailable(localDataSource);
 
         setRecipesNotAvailable(networkDataSource);
@@ -119,8 +116,7 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetRecipeFromCacheWithRecipeId() {
-        // Load recipes
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+        //  Ensure localDatabase is hydrated and available
         setRecipesAvailable(localDataSource, recipeList);
 
         // Get single recipe from repository with ID
@@ -138,10 +134,6 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetStepsFromDatabaseIfCacheIsEmpty() {
-        // Load recipes
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
-        setRecipesAvailable(localDataSource, recipeList);
-
         // Nullify cached recipes
         recipeRepositoryImpl.cachedRecipes = null;
 
@@ -152,8 +144,7 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetStepsFromCacheIfCacheIsNotEmpty() {
-        // Load recipes
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+        // Ensure localDataSource is hydrated and available
         setRecipesAvailable(localDataSource, recipeList);
 
         recipeRepositoryImpl.getSteps(0, getStepsCallback);
@@ -163,10 +154,6 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetIngredientsFromDatabaseIfCacheIsEmpty() {
-        // Load recipes
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
-        setRecipesAvailable(localDataSource, recipeList);
-
         // Nullify cached recipes
         recipeRepositoryImpl.cachedRecipes = null;
 
@@ -179,8 +166,7 @@ public class RecipeRepositoryTest {
 
     @Test
     public void shouldGetIngredientsFromCacheIfCacheIsNotEmpty() {
-        // Load recipes
-        recipeRepositoryImpl.getRecipes(loadRecipesCallback);
+        // Ensure localDataSource is hydrated and available
         setRecipesAvailable(localDataSource, recipeList);
 
         // Load ingredients from repository
@@ -188,21 +174,6 @@ public class RecipeRepositoryTest {
 
         // Confirm getIngredients method in localDataSource is never called
         verify(localDataSource, never()).getSteps(anyInt(), any(RecipeRepository.GetStepsCallback.class));
-    }
-
-
-    private void makeTwoCallsToRepository(RecipeRepository.LoadRecipesCallback callback) {
-        recipeRepositoryImpl.getRecipes(callback);
-
-        verify(localDataSource).getRecipes(recipesCallbackCaptor.capture());
-
-        recipesCallbackCaptor.getValue().onDataNotAvailable(failureMessage);
-
-        verify(networkDataSource).getRecipes(recipesCallbackCaptor.capture());
-
-        recipesCallbackCaptor.getValue().onRecipesLoaded(recipeList);
-
-        recipeRepositoryImpl.getRecipes(callback);
     }
 
     private void setRecipesNotAvailable(RecipeRepository recipeRepository) {
