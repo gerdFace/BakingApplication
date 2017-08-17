@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     public void onRecipeSelected(String nameOfFoodItemSelected, int foodID) {
         Class recipeDetailActivityDestination = DetailListActivity.class;
         Intent openRecipeDetailActivity = new Intent(this, recipeDetailActivityDestination);
-        openRecipeDetailActivity.putExtra("id_of_food_selected", foodID);
-        openRecipeDetailActivity.putExtra("name_of_food_selected", nameOfFoodItemSelected);
+        openRecipeDetailActivity.putExtra("id_of_recipe_selected", foodID);
+        openRecipeDetailActivity.putExtra("name_of_recipe_selected", nameOfFoodItemSelected);
         startActivity(openRecipeDetailActivity);
     }
 
