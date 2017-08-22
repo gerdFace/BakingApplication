@@ -11,6 +11,7 @@ import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.presentation.DetailPagerActivityPresenter;
+import com.example.android.bakingapplication.view.ExoPlayerVideoHandler;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
 import java.util.List;
@@ -67,6 +68,23 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
     private void setViewPager() {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
+		stepViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
+
 		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 			@Override
 			public Fragment getItem(int position) {
@@ -118,6 +136,7 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 	protected void onResume() {
 		super.onResume();
 		setPresenterView();
+
 	}
 
 	@Override

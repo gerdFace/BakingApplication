@@ -1,21 +1,20 @@
 package com.example.android.bakingapplication.view.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.view.ExoPlayerVideoHandler;
-import com.example.android.bakingapplication.view.FullscreenVideoActivity;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import butterknife.BindView;
@@ -27,8 +26,6 @@ public class InstructionFragment extends Fragment {
     private static final String TAG = InstructionFragment.class.getSimpleName();
 
     private Step step;
-    private SimpleExoPlayer player;
-    private Context applicationContext;
     private String videoUrl;
 
     @BindView(R.id.short_step_description)
@@ -140,9 +137,10 @@ public class InstructionFragment extends Fragment {
             super.onResume();
             if(videoUrl != null && simpleExoPlayerView != null){
                 ExoPlayerVideoHandler.getInstance()
-                        .prepareExoPlayerForUri(applicationContext, videoUrl, simpleExoPlayerView);
+                        .prepareExoPlayerForUri(getActivity().getApplicationContext(), videoUrl, simpleExoPlayerView);
                 ExoPlayerVideoHandler.getInstance().goToForeground();
             }
+            Log.d(TAG, "onResume: " + videoUrl + simpleExoPlayerView);
         }
 
     @Override
@@ -150,10 +148,14 @@ public class InstructionFragment extends Fragment {
         super.onConfigurationChanged(newConfig);
 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl != null) {
-            Intent intent = new Intent(getContext(),
-                    FullscreenVideoActivity.class);
-            intent.putExtra("video_url", videoUrl);
-            getContext().startActivity(intent);
+            shortDescription.setVisibility(View.GONE);
+            longDescription.setVisibility(View.GONE);
+            //        //Remove title bar
+        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //Remove notification bar
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
 

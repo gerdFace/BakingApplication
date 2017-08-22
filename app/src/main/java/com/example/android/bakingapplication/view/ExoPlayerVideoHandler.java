@@ -34,7 +34,7 @@ public class ExoPlayerVideoHandler
 
     private ExoPlayerVideoHandler(){}
 
-    public ExtractorMediaSource prepareExoPlayerForUri(Context context, String uri,
+    public void prepareExoPlayerForUri(Context context, String uri,
                                        SimpleExoPlayerView exoPlayerView){
         if(context != null && uri != null && exoPlayerView != null){
             if(!uri.equals(playerUri) || player == null){
@@ -62,7 +62,6 @@ public class ExoPlayerVideoHandler
             player.seekTo(player.getCurrentPosition() + 1);
             exoPlayerView.setPlayer(player);
         }
-        return null;
     }
 
     public void releaseVideoPlayer(){

@@ -38,7 +38,7 @@ public class FullscreenVideoActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl != null) {
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT && videoUrl != null) {
             destroyVideo = false;
             finish();
         }
