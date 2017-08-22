@@ -16,14 +16,13 @@ public class DetailListActivityPresenterImpl implements DetailListActivityPresen
     }
 
     @Override
-    public void loadStep() {
+    public void loadSteps() {
         int recipeId = view.getRecipeId();
-        int stepSelectedPosition = view.getStepSelectedPosition();
 
         recipeRepository.getSteps(recipeId, new RecipeRepository.GetStepsCallback() {
             @Override
             public void onStepsLoaded(List<Step> steps) {
-                view.setStep(steps.get(stepSelectedPosition));
+                view.setSteps(steps);
             }
 
             @Override
@@ -37,6 +36,6 @@ public class DetailListActivityPresenterImpl implements DetailListActivityPresen
     @Override
     public void setView(DetailListActivityView view) {
         this.view = view;
-        loadStep();
+        loadSteps();
     }
 }

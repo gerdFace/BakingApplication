@@ -12,6 +12,8 @@ import com.example.android.bakingapplication.presentation.DetailListActivityPres
 import com.example.android.bakingapplication.view.fragment.DetailListFragment;
 import com.example.android.bakingapplication.view.fragment.InstructionFragment;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks, DetailListActivityView {
@@ -25,11 +27,10 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	private static final String SAVED_RECIPE_NAME = "saved_recipe_name";
 	private static final String SAVED_RECIPE_ID = "saved_recipe_id";
 
-	private String nameOfFoodItem;
+	private String recipeName;
     private int recipeId;
-    private int positionOfStepSelected;
     private boolean twoPane;
-    private Step step;
+    private List<Step> steps;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +40,11 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         ((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
         if (savedInstanceState != null) {
-		    nameOfFoodItem = savedInstanceState.getString(SAVED_RECIPE_NAME);
-            recipeId = savedInstanceState.getInt(SAVED_RECIPE_ID, 0);
+		    recipeName = savedInstanceState.getString(SAVED_RECIPE_NAME);
+            recipeId = savedInstanceState.getInt(SAVED_RECIPE_ID, 1);
         } else {
-            nameOfFoodItem = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
-            recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
+            recipeName = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
+            recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 1);
         }
 
         Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
@@ -54,18 +55,16 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
 	    twoPane = findViewById(R.id.ingredient_and_instruction_container) != null;
 
-        setTitle(nameOfFoodItem);
+        setTitle(recipeName);
     }
 
     @Override
     public void onRecipeDetailButtonClicked(final int position) {
 
-        positionOfStepSelected = position;
-
         if (!twoPane) {
 	        Bundle bundle = new Bundle();
 	        bundle.putInt(POSITION_OF_STEP_SELECTED, position);
-	        bundle.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
+	        bundle.putString(NAME_OF_FOOD_SELECTED, recipeName);
             bundle.putInt(ID_OF_RECIPE_SELECTED, recipeId);
 
             Intent intentToStartDetailPagerActivity = new Intent(this, DetailPagerActivity.class);
@@ -75,7 +74,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO fix: orientation change on tablet causes crash
 		// TODO update with constraintSet
         } else {
-            Fragment instructionFragment = InstructionFragment.newInstance(step);
+            Fragment instructionFragment = InstructionFragment.newInstance(steps.get(position));
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.ingredient_and_instruction_container, instructionFragment)
@@ -86,18 +85,18 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(SAVED_RECIPE_NAME, nameOfFoodItem);
+		outState.putString(SAVED_RECIPE_NAME, recipeName);
         outState.putInt(SAVED_RECIPE_ID, recipeId);
 	}
 
     @Override
-    public void setStep(Step step) {
-        this.step = step;
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 
     @Override
     public void showErrorMessage(String failureMessage) {
-        Log.d("Error loading step: ", failureMessage);
+        Log.d("Error loading steps: ", failureMessage);
     }
 
     @Override
@@ -106,19 +105,8 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
     }
 
     @Override
-    public int getStepSelectedPosition() {
-        return positionOfStepSelected;
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        detailListActivityPresenter.setView(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         detailListActivityPresenter.setView(this);
     }
 }

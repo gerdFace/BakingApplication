@@ -57,8 +57,7 @@ public class RecipeData implements Parcelable, RealmModel {
             return (new RecipeData[size]);
         }
 
-    }
-    ;
+    };
 
     public Integer getId() {
         return id;

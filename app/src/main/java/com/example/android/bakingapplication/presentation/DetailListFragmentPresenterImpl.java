@@ -25,6 +25,7 @@ public class DetailListFragmentPresenterImpl implements DetailListFragmentPresen
             @Override
             public void onRecipeLoaded(RecipeData recipe) {
                 view.showSteps(recipe.getSteps());
+                view.updateWidgets();
             }
 
             @Override

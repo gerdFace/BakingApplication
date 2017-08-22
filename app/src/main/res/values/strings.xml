@@ -9,4 +9,6 @@
     <string name="short_step_description">Prep the cookie crust.</string>
     <string name="ingredients_button_text">Ingredients</string>
     <string name="long_step_description"><![CDATA[Whisk the graham cracker crumbs, 50 grams (&#188; cup) of sugar, and &#189; teaspoon of salt together in a medium bowl. Pour the melted butter and 1 teaspoon of vanilla into the dry ingredients and stir together until evenly mixed.]]></string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

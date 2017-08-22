@@ -1,10 +1,12 @@
 package com.example.android.bakingapplication.dagger.component;
 
+import com.example.android.bakingapplication.BakingApplicationWidget;
 import com.example.android.bakingapplication.dagger.module.DetailListActivityPresenterModule;
 import com.example.android.bakingapplication.dagger.module.DetailListFragmentPresenterModule;
 import com.example.android.bakingapplication.dagger.module.DetailPagerActivityPresenterModule;
 import com.example.android.bakingapplication.dagger.module.IngredientsFragmentPresenterModule;
 import com.example.android.bakingapplication.dagger.module.MainActivityPresenterModule;
+import com.example.android.bakingapplication.dagger.module.RealmModule;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
 import com.example.android.bakingapplication.view.activity.DetailPagerActivity;
@@ -19,8 +21,10 @@ import dagger.Component;
 @Singleton
 @Component(modules = {MainActivityPresenterModule.class, DetailListActivityPresenterModule.class,
         DetailPagerActivityPresenterModule.class, IngredientsFragmentPresenterModule.class,
-        DetailListFragmentPresenterModule.class})
+        DetailListFragmentPresenterModule.class, RealmModule.class})
 public interface ApplicationComponent {
+
+    void inject(BakingApplicationWidget target);
 
     void inject(MainActivity target);
 

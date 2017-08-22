@@ -4,7 +4,7 @@ import com.example.android.bakingapplication.view.activity.DetailListActivityVie
 
 public interface DetailListActivityPresenter {
 
-    void loadStep();
+    void loadSteps();
 
     void setView(DetailListActivityView view);
 }

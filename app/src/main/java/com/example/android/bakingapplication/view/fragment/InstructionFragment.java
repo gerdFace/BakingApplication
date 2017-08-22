@@ -1,6 +1,7 @@
 package com.example.android.bakingapplication.view.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
@@ -34,64 +37,73 @@ import butterknife.ButterKnife;
 public class InstructionFragment extends Fragment {
 
     private static final String ARG_SELECTED_STEP = "selected_step";
-	private static final String TAG = InstructionFragment.class.getSimpleName();
+    private static final String TAG = InstructionFragment.class.getSimpleName();
 
     private Step step;
     private SimpleExoPlayer player;
     private Context applicationContext;
 
-	@BindView(R.id.short_step_description)
-	TextView shortDescription;
-	
+    @BindView(R.id.short_step_description)
+    TextView shortDescription;
+
     @BindView(R.id.long_step_description)
     TextView longDescription;
-	
-	@BindView(R.id.player_view)
-	SimpleExoPlayerView simpleExoPlayerView;
+
+    @BindView(R.id.player_view)
+    SimpleExoPlayerView simpleExoPlayerView;
 
     public InstructionFragment() {
         // Required empty public constructor
     }
-	
-	public static InstructionFragment newInstance(Step selectedStep) {
-		Bundle args = new Bundle();
-		args.putParcelable(ARG_SELECTED_STEP, selectedStep);
 
-		InstructionFragment instructionFragment = new InstructionFragment();
-		instructionFragment.setArguments(args);
-		return instructionFragment;
-	}
-	
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public static InstructionFragment newInstance(Step selectedStep) {
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_SELECTED_STEP, selectedStep);
+
+        InstructionFragment instructionFragment = new InstructionFragment();
+        instructionFragment.setArguments(args);
+        return instructionFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         step = getArguments().getParcelable(ARG_SELECTED_STEP);
     }
-	
-	@Override
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instruction, container, false);
 
         ButterKnife.bind(this, view);
 
-		updateUI();
-		
+        updateUI();
+
         return view;
     }
 
-	private void updateUI() {
-        shortDescription.setText(step.getShortDescription());
+    private void updateUI() {
 
-        Log.d(TAG, "InstructionFragment shortDescription: " + step.getShortDescription());
-
-        longDescription.setText(step.getDescription());
+        int orientation = getActivity().getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            showPortraitView();
+        }
+        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE); //Remove title bar}
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN); //Remove notification bar
 
         if (!step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty()) {
             initializeMediaPlayer();
         } else {
             simpleExoPlayerView.setVisibility(View.GONE);
         }
+    }
+
+    private void showPortraitView() {
+        shortDescription.setText(step.getShortDescription());
+
+        longDescription.setText(step.getDescription());
     }
 
     private void initializeMediaPlayer() {

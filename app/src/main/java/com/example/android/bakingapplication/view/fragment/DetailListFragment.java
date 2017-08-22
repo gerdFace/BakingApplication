@@ -1,5 +1,7 @@
 package com.example.android.bakingapplication.view.fragment;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.android.bakingapplication.BakingApplicationWidget;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.Step;
@@ -145,6 +148,15 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
         return recipeId;
     }
 
+    @Override
+    public void updateWidgets() {
+        Context context = getActivity();
+        BakingApplicationWidget bakingApplicationWidget = new BakingApplicationWidget();
+        bakingApplicationWidget.setLastAccessedRecipeId(recipeId);
+        int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, BakingApplicationWidget.class));
+        bakingApplicationWidget.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+    }
+
     // Ensure that host activity implements the callback interface
     @Override
     public void onAttach(Context context) {
@@ -176,6 +188,8 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
 		super.onSaveInstanceState(outState);
         outState.putInt(RECIPE_ID_KEY, recipeId);
 	}
+
+
 }
 
 

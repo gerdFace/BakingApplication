@@ -1,20 +1,18 @@
 package com.example.android.bakingapplication.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.example.android.bakingapplication.view.fragment.DetailListFragment;
+
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
+import com.example.android.bakingapplication.view.fragment.DetailListFragment;
 
 import java.util.List;
 
 public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.DetailListViewHolder> {
-
-    private static final String TAG = DetailListAdapter.class.getSimpleName();
 
     private DetailListFragment.DetailItemCallbacks callback;
 
@@ -37,9 +35,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
 
     @Override
     public void onBindViewHolder(final DetailListViewHolder holder, int position) {
-        final String detailButtonText = stepsList.get(position).getShortDescription();
-        Log.d(TAG, "DetailList short description: " + detailButtonText);
-        Log.d(TAG, "DetailList onBindViewHolder: " + stepsList.get(position));
+        final String detailButtonText = stepsList.get(position).getShortDescription().replaceAll("\\.", "");
         holder.detailButton.setText(detailButtonText);
         holder.detailButton.setOnClickListener(v -> {
         // Check validity of callback
@@ -54,10 +50,10 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
         return stepsList.size();
     }
 
-    public class DetailListViewHolder extends RecyclerView.ViewHolder{
-        public Button detailButton;
+    class DetailListViewHolder extends RecyclerView.ViewHolder{
+        Button detailButton;
 
-        public DetailListViewHolder(View itemView) {
+        DetailListViewHolder(View itemView) {
             super(itemView);
             detailButton = (Button) itemView.findViewById(R.id.detail_button);
         }

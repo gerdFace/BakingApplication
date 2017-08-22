@@ -15,6 +15,7 @@ import com.example.android.bakingapplication.R;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,7 @@ public class DetailListActivityTest {
     @Rule
     public ActivityTestRule<DetailListActivity> detailListActivityTestRule = new ActivityTestRule<>(DetailListActivity.class, true, false);
 
-    @Test
+    @Before
     public void demonstrateIntentPrep() {
         Intent intent = new Intent();
         intent.putExtra("RECIPE_ID", 0);

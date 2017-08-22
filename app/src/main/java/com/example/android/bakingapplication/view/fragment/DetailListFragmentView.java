@@ -9,4 +9,6 @@ public interface DetailListFragmentView {
     void showSteps(List<Step> steps);
 
     int getRecipeId();
+
+    void updateWidgets();
 }
