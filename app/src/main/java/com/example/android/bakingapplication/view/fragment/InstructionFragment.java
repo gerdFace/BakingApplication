@@ -113,7 +113,7 @@ public class InstructionFragment extends Fragment {
 
     private void showNoVideoView() {
         setDescriptionText();
-        simpleExoPlayerView.setVisibility(View.INVISIBLE);
+        simpleExoPlayerView.setVisibility(View.GONE);
     }
 
     private void setDescriptionText() {
@@ -152,14 +152,11 @@ public class InstructionFragment extends Fragment {
 
     private void releasePlayer() {
         if (player != null) {
-            player.setPlayWhenReady(false);
-            player.stop();
             player.release();
             player = null;
         }
     }
     
-//    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
     @Override
     public void onPause() {
         super.onPause();
@@ -168,19 +165,20 @@ public class InstructionFragment extends Fragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (player != null) {
-            releasePlayer();
-            Log.d(TAG, "onDestroy: player destroyed");
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (player == null) {
             updateUI();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (this.isVisible()) {
+            if (!isVisibleToUser && player != null) {
+                player.setPlayWhenReady(false);
+            }
         }
     }
 }
