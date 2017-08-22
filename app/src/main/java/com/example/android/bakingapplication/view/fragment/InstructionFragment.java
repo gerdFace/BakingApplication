@@ -1,35 +1,22 @@
 package com.example.android.bakingapplication.view.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
+import com.example.android.bakingapplication.view.ExoPlayerVideoHandler;
+import com.example.android.bakingapplication.view.FullscreenVideoActivity;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +29,7 @@ public class InstructionFragment extends Fragment {
     private Step step;
     private SimpleExoPlayer player;
     private Context applicationContext;
+    private String videoUrl;
 
     @BindView(R.id.short_step_description)
     TextView shortDescription;
@@ -78,109 +66,106 @@ public class InstructionFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
-        updateUI();
+        shortDescription.setText(step.getShortDescription());
+        longDescription.setText(step.getDescription());
+
+        if (!step.getVideoURL().isEmpty()) {
+            videoUrl = step.getVideoURL();
+        } else if (step.getVideoURL().isEmpty() && !step.getThumbnailURL().isEmpty()) {
+            videoUrl = step.getThumbnailURL();
+        } else {
+            videoUrl = null;
+        }
+
+//        updateUI();
 
         return view;
     }
+//
+//    private void updateUI() {
+//
+//        boolean videoIsAvailable = !step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty();
+//        int orientation = getActivity().getResources().getConfiguration().orientation;
+//
+//        if (videoIsAvailable && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//            showVideoFullscreenView();
+//        } else if (videoIsAvailable && orientation == Configuration.ORIENTATION_PORTRAIT) {
+//            setDescriptionText();
+//        } else {
+//            showNoVideoView();
+//        }
+//    }
+//
+//    private void showVideoFullscreenView() {
+//        //Remove title bar
+//        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
+//
+//        //Remove notification bar
+//        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//
+//        shortDescription.setVisibility(View.INVISIBLE);
+//        longDescription.setVisibility(View.INVISIBLE);
+//    }
 
-    private void updateUI() {
+//    private void showNoVideoView() {
+//        setDescriptionText();
+//        simpleExoPlayerView.setVisibility(View.INVISIBLE);
+//    }
+//
+//    private void setDescriptionText() {
+//
+//    }
 
-        boolean videoIsAvailable = !step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty();
-        int orientation = getActivity().getResources().getConfiguration().orientation;
+//    private void releasePlayer() {
+//        if (player != null) {
+//            player.setPlayWhenReady(false);
+//            player.stop();
+//            player.release();
+//            player = null;
+//        }
+//    }
 
-        if (videoIsAvailable && orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            showVideoFullscreenView();
-        } else if (videoIsAvailable && orientation == Configuration.ORIENTATION_PORTRAIT) {
-            initializeMediaPlayer();
-            setDescriptionText();
-        } else {
-            showNoVideoView();
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        if (player != null) {
+//            releasePlayer();
+//            Log.d(TAG, "onDestroy: player destroyed");
+//        }
+//    }
+//
+        @Override
+        public void onResume() {
+            super.onResume();
+            if(videoUrl != null && simpleExoPlayerView != null){
+                ExoPlayerVideoHandler.getInstance()
+                        .prepareExoPlayerForUri(applicationContext, videoUrl, simpleExoPlayerView);
+                ExoPlayerVideoHandler.getInstance().goToForeground();
+            }
         }
-    }
-
-    private void showVideoFullscreenView() {
-        //Remove title bar
-        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        //Remove notification bar
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        initializeMediaPlayer();
-        shortDescription.setVisibility(View.INVISIBLE);
-        longDescription.setVisibility(View.INVISIBLE);
-    }
-
-    private void showNoVideoView() {
-        setDescriptionText();
-        simpleExoPlayerView.setVisibility(View.INVISIBLE);
-    }
-
-    private void setDescriptionText() {
-        shortDescription.setText(step.getShortDescription());
-        longDescription.setText(step.getDescription());
-    }
-
-    private void initializeMediaPlayer() {
-        applicationContext = this.getActivity();
-
-        TrackSelector trackSelector = new DefaultTrackSelector();
-
-        LoadControl loadControl = new DefaultLoadControl();
-
-        player = ExoPlayerFactory.newSimpleInstance(applicationContext, trackSelector, loadControl);
-
-        simpleExoPlayerView.setPlayer(player);
-
-        player.prepare(prepareMediaSource());
-    }
-
-    private MediaSource prepareMediaSource() {
-        String videoUrl = !step.getVideoURL().isEmpty() ? step.getVideoURL() : step.getThumbnailURL();
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(applicationContext,
-	                                                                        Util.getUserAgent(applicationContext, "BakingApplication"),
-	                                                                        null);
-
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-
-        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(videoUrl));
-
-        return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
-                                        dataSourceFactory, extractorsFactory, null, null);
-    }
-
-    private void releasePlayer() {
-        if (player != null) {
-            player.setPlayWhenReady(false);
-            player.stop();
-            player.release();
-            player = null;
-        }
-    }
-    
-//    TODO Media continues to play after navigating from page (2 pages left or right stops media?)
-    @Override
-    public void onPause() {
-        super.onPause();
-        releasePlayer();
-	    Log.d(TAG, "onPause: player paused");
-    }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        if (player != null) {
-            releasePlayer();
-            Log.d(TAG, "onDestroy: player destroyed");
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl != null) {
+            Intent intent = new Intent(getContext(),
+                    FullscreenVideoActivity.class);
+            intent.putExtra("video_url", videoUrl);
+            getContext().startActivity(intent);
         }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (player == null) {
-            updateUI();
+        public void onPause(){
+            super.onPause();
+            ExoPlayerVideoHandler.getInstance().goToBackground();
+        }
+
+        @Override
+        public void onDestroyView(){
+            super.onDestroyView();
+            ExoPlayerVideoHandler.getInstance().releaseVideoPlayer();
         }
     }
-}

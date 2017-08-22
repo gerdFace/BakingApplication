@@ -23,11 +23,13 @@
         </activity>
         <activity
             android:name=".view.activity.DetailListActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
             android:parentActivityName=".view.activity.MainActivity">
         </activity>
         <activity
             android:name=".view.activity.DetailPagerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName=".view.activity.DetailListActivity">
         </activity>
 
@@ -40,6 +42,9 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/baking_application_widget_info"/>
         </receiver>
+
+        <activity android:name=".view.FullscreenVideoActivity">
+        </activity>
     </application>
 
 </manifest>
