@@ -85,24 +85,39 @@ public class InstructionFragment extends Fragment {
 
     private void updateUI() {
 
+        boolean videoIsAvailable = !step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty();
         int orientation = getActivity().getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            showPortraitView();
-        }
-        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE); //Remove title bar}
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN); //Remove notification bar
 
-        if (!step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty()) {
+        if (videoIsAvailable && orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            showVideoFullscreenView();
+        } else if (videoIsAvailable && orientation == Configuration.ORIENTATION_PORTRAIT) {
             initializeMediaPlayer();
+            setDescriptionText();
         } else {
-            simpleExoPlayerView.setVisibility(View.GONE);
+            showNoVideoView();
         }
     }
 
-    private void showPortraitView() {
-        shortDescription.setText(step.getShortDescription());
+    private void showVideoFullscreenView() {
+        //Remove title bar
+        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
 
+        //Remove notification bar
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        initializeMediaPlayer();
+        shortDescription.setVisibility(View.INVISIBLE);
+        longDescription.setVisibility(View.INVISIBLE);
+    }
+
+    private void showNoVideoView() {
+        setDescriptionText();
+        simpleExoPlayerView.setVisibility(View.INVISIBLE);
+    }
+
+    private void setDescriptionText() {
+        shortDescription.setText(step.getShortDescription());
         longDescription.setText(step.getDescription());
     }
 
