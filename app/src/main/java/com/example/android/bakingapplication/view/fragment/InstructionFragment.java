@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
@@ -42,6 +40,9 @@ public class InstructionFragment extends Fragment {
     private Step step;
     private SimpleExoPlayer player;
     private Context applicationContext;
+    boolean videoIsAvailable;
+    boolean isPlaying;
+    long playerPosition;
 
     @BindView(R.id.short_step_description)
     TextView shortDescription;
@@ -69,6 +70,7 @@ public class InstructionFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         step = getArguments().getParcelable(ARG_SELECTED_STEP);
+        videoIsAvailable = !step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty();
     }
 
     @Override
@@ -78,6 +80,11 @@ public class InstructionFragment extends Fragment {
 
         ButterKnife.bind(this, view);
 
+        if (savedInstanceState != null) {
+            isPlaying = savedInstanceState.getBoolean("is_playing");
+            playerPosition = savedInstanceState.getLong("position");
+        }
+
         updateUI();
 
         return view;
@@ -85,13 +92,15 @@ public class InstructionFragment extends Fragment {
 
     private void updateUI() {
 
-        boolean videoIsAvailable = !step.getVideoURL().isEmpty() || !step.getThumbnailURL().isEmpty();
+        if (videoIsAvailable) {
+            initializeMediaPlayer();
+        }
+
         int orientation = getActivity().getResources().getConfiguration().orientation;
 
         if (videoIsAvailable && orientation == Configuration.ORIENTATION_LANDSCAPE) {
             showVideoFullscreenView();
-        } else if (videoIsAvailable && orientation == Configuration.ORIENTATION_PORTRAIT) {
-            initializeMediaPlayer();
+        } else if (videoIsAvailable) {
             setDescriptionText();
         } else {
             showNoVideoView();
@@ -99,16 +108,14 @@ public class InstructionFragment extends Fragment {
     }
 
     private void showVideoFullscreenView() {
-        //Remove title bar
-        getActivity().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        //Remove notification bar
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        initializeMediaPlayer();
-        shortDescription.setVisibility(View.INVISIBLE);
-        longDescription.setVisibility(View.INVISIBLE);
+//        simpleExoPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        shortDescription.setVisibility(View.GONE);
+        longDescription.setVisibility(View.GONE);
     }
 
     private void showNoVideoView() {
@@ -133,6 +140,8 @@ public class InstructionFragment extends Fragment {
         simpleExoPlayerView.setPlayer(player);
 
         player.prepare(prepareMediaSource());
+
+        restoreVideoState();
     }
 
     private MediaSource prepareMediaSource() {
@@ -146,8 +155,15 @@ public class InstructionFragment extends Fragment {
 
         Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(videoUrl));
 
-        return new ExtractorMediaSource(Uri.parse(step.getVideoURL()),
+        return new ExtractorMediaSource(Uri.parse(videoUrl),
                                         dataSourceFactory, extractorsFactory, null, null);
+    }
+
+    private void restoreVideoState() {
+        if (playerPosition > 0) {
+            player.seekTo(playerPosition);
+            player.setPlayWhenReady(isPlaying);
+        }
     }
 
     private void releasePlayer() {
@@ -167,9 +183,10 @@ public class InstructionFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (player == null) {
-            updateUI();
-        }
+//
+//        if (player == null) {
+//            updateUI();
+//        }
     }
 
     @Override
@@ -177,8 +194,21 @@ public class InstructionFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (this.isVisible()) {
             if (!isVisibleToUser && player != null) {
-                player.setPlayWhenReady(false);
+//                player.setPlayWhenReady(false);
+                releasePlayer();
             }
+
+            if (isVisibleToUser && player == null) {
+                updateUI();
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putLong("position", player.getCurrentPosition());
+            outState.putBoolean("is_playing", player.getPlayWhenReady());
         }
     }
 }
