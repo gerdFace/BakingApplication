@@ -92,6 +92,28 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     }
 
     @Override
+    public void getStep(int recipeId, int stepIndex, @NonNull GetStepCallback callback) {
+        if (cachedRecipes != null) {
+            //noinspection ConstantConditions
+            Step cachedStep = getRecipeWithId(recipeId).getSteps().get(stepIndex);
+            callback.onStepLoaded(cachedStep);
+            return;
+        }
+
+        recipeDatabaseSource.getSteps(recipeId, new GetStepsCallback() {
+            @Override
+            public void onStepsLoaded(List<Step> steps) {
+                callback.onStepLoaded(steps.get(stepIndex));
+            }
+
+            @Override
+            public void onDataNotAvailable(String failureMessage) {
+                callback.onDataNotAvailable(failureMessage);
+            }
+        });
+    }
+
+    @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
         if (cachedRecipes != null) {

@@ -55,6 +55,11 @@ public class NetworkDataSource implements RecipeRepository {
     }
 
     @Override
+    public void getStep(int recipeId, int stepIndex, @NonNull GetStepCallback callback) {
+
+    }
+
+    @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
     }

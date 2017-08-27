@@ -31,6 +31,13 @@ public interface RecipeRepository {
         void onDataNotAvailable(String failureMessage);
     }
 
+    interface GetStepCallback {
+
+        void onStepLoaded(Step step);
+
+        void onDataNotAvailable(String failureMessage);
+    }
+
     interface GetIngredientsCallback {
 
         void onIngredientsLoaded(List<Ingredient> ingredients);
@@ -43,6 +50,8 @@ public interface RecipeRepository {
     void getRecipe(int recipeId, @NonNull GetRecipeCallback callback);
 
     void getSteps(int recipeId, @NonNull GetStepsCallback callback);
+
+    void getStep(int recipeId, int stepIndex, @NonNull GetStepCallback callback);
 
     void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback);
 

@@ -11,7 +11,7 @@ import android.util.Log;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.presentation.DetailPagerActivityPresenter;
-import com.example.android.bakingapplication.view.fragment.InstructionFragment;
+import com.example.android.bakingapplication.view.fragment.StepFragment;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import static com.example.android.bakingapplication.view.activity.DetailListActi
 
 public class DetailPagerActivity extends AppCompatActivity implements DetailPagerActivityView{
 
-	private static final String POSITION_OF_STEP_SELECTED = "position_of_step_selected";
+	private static final String STEP_INDEX = "position_of_step_selected";
 
 	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
-	private int positionOfStepSelected;
+	private int stepIndex;
 	private int recipeId;
 
 	@Inject
@@ -48,13 +48,13 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 		ButterKnife.bind(this);
 
 		if (savedInstanceState == null) {
-			positionOfStepSelected = getIntent().getIntExtra(POSITION_OF_STEP_SELECTED, 0);
+			stepIndex = getIntent().getIntExtra(STEP_INDEX, 0);
 
 			nameOfFoodItem = getIntent().getStringExtra(DetailListActivity.NAME_OF_FOOD_SELECTED);
 
 			recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
 		} else {
-			positionOfStepSelected = savedInstanceState.getInt(POSITION_OF_STEP_SELECTED, 0);
+			stepIndex = savedInstanceState.getInt(STEP_INDEX, 0);
 
 			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
 
@@ -70,8 +70,8 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
 			@Override
 			public Fragment getItem(int position) {
-				return InstructionFragment
-						.newInstance(stepDetailList.get(position));
+				return StepFragment
+						.newInstance(recipeId, stepIndex);
 			}
 
 			@Override
@@ -81,7 +81,7 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 		});
 
 		for (int i = 0; i < stepDetailList.size(); i ++) {
-			if (i == positionOfStepSelected) {
+			if (i == stepIndex) {
 				stepViewPager.setCurrentItem(i);
 				break;
 			}
@@ -124,7 +124,7 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(ID_OF_RECIPE_SELECTED, recipeId);
-		outState.putInt(POSITION_OF_STEP_SELECTED, positionOfStepSelected);
+		outState.putInt(STEP_INDEX, stepIndex);
 		outState.putString(NAME_OF_FOOD_SELECTED, nameOfFoodItem);
 	}
 }

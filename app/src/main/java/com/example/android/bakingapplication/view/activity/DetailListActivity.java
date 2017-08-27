@@ -4,22 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.example.android.bakingapplication.R;
-import com.example.android.bakingapplication.model.Step;
-import com.example.android.bakingapplication.presentation.DetailListActivityPresenter;
 import com.example.android.bakingapplication.view.fragment.DetailListFragment;
-import com.example.android.bakingapplication.view.fragment.InstructionFragment;
+import com.example.android.bakingapplication.view.fragment.StepFragment;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
-public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks, DetailListActivityView {
-
-    @Inject
-    DetailListActivityPresenter detailListActivityPresenter;
+public class DetailListActivity extends AppCompatActivity implements DetailListFragment.DetailItemCallbacks {
 
     public static final String NAME_OF_FOOD_SELECTED = "name_of_recipe_selected";
     public static final String ID_OF_RECIPE_SELECTED = "id_of_recipe_selected";
@@ -30,14 +20,11 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	private String recipeName;
     private int recipeId;
     private boolean twoPane;
-    private List<Step> steps;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_master_detail);
-
-        ((BakingApplication)getApplication()).getApplicationComponent().inject(this);
 
         if (savedInstanceState != null) {
 		    recipeName = savedInstanceState.getString(SAVED_RECIPE_NAME);
@@ -74,7 +61,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		// TODO fix: orientation change on tablet causes crash
 		// TODO update with constraintSet
         } else {
-            Fragment instructionFragment = InstructionFragment.newInstance(steps.get(position));
+            Fragment instructionFragment = StepFragment.newInstance(recipeId, position);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.ingredient_and_instruction_container, instructionFragment)
@@ -88,25 +75,4 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		outState.putString(SAVED_RECIPE_NAME, recipeName);
         outState.putInt(SAVED_RECIPE_ID, recipeId);
 	}
-
-    @Override
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
-    }
-
-    @Override
-    public void showErrorMessage(String failureMessage) {
-        Log.d("Error loading steps: ", failureMessage);
-    }
-
-    @Override
-    public int getRecipeId() {
-        return recipeId;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        detailListActivityPresenter.setView(this);
-    }
 }
