@@ -50,8 +50,8 @@ public class StepFragment extends Fragment implements StepFragmentView{
 
     public static StepFragment newInstance(int recipeId, int stepIndex) {
         Bundle args = new Bundle();
-        args.putInt(ARG_STEP_INDEX, 0);
-        args.putInt(ARG_RECIPE_ID, 0);
+        args.putInt(ARG_RECIPE_ID, recipeId);
+        args.putInt(ARG_STEP_INDEX, stepIndex);
 
         StepFragment instructionFragment = new StepFragment();
         instructionFragment.setArguments(args);
@@ -70,11 +70,21 @@ public class StepFragment extends Fragment implements StepFragmentView{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_instruction, container, false);
 
-        ((BakingApplication)getApplication()).getApplicationComponent().inject(this);
+        ((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
 
         ButterKnife.bind(this, view);
 
-        stepFragmentPresenter.initializeVideoPlayer();
+        if (savedInstanceState != null) {
+            isPlaying = savedInstanceState.getBoolean("is_playing");
+            playerPosition = savedInstanceState.getLong("player_position");
+        } else {
+            isPlaying = false;
+            playerPosition = 0;
+        }
+
+//        stepFragmentPresenter.loadStep();
+
+//        stepFragmentPresenter.initializeVideoPlayer();
 
         return view;
     }
@@ -98,13 +108,16 @@ public class StepFragment extends Fragment implements StepFragmentView{
     public void onPause() {
         super.onPause();
         stepFragmentPresenter.releaseVideoPlayer();
-	    Log.d(TAG, "onPause: player paused");
+	    Log.d(TAG, "onPause: StepFragment paused");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         stepFragmentPresenter.setView(this);
+        stepFragmentPresenter.setVideoPlayerPosition(playerPosition);
+        stepFragmentPresenter.setVideoIsPlaying(isPlaying);
+        Log.d(TAG, "onResume: StepFragment resumed");
 //
 //        if (player == null) {
 //            updateUI();
@@ -167,5 +180,13 @@ public class StepFragment extends Fragment implements StepFragmentView{
     @Override
     public int getStepIndex() {
         return stepIndex;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("is_playing", isPlaying);
+        outState.putLong("player_position", playerPosition);
+
     }
 }

@@ -6,7 +6,13 @@ public interface StepFragmentPresenter {
 
     void initializeVideoPlayer();
 
-    void setVideoPlayerState();
+    void setVideoPlayerPosition(long playerPosition);
+
+    void setVideoIsPlaying(boolean isPlaying);
+
+    long getVideoPlayerPosition();
+
+    boolean getVideoIsPlaying();
 
     void releaseVideoPlayer();
 

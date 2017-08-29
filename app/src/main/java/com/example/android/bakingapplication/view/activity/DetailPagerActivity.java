@@ -71,7 +71,7 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 			@Override
 			public Fragment getItem(int position) {
 				return StepFragment
-						.newInstance(recipeId, stepIndex);
+						.newInstance(recipeId, position);
 			}
 
 			@Override
@@ -86,10 +86,6 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 				break;
 			}
 		}
-	}
-
-	private void setPresenterView() {
-		detailPagerActivityPresenter.setView(this);
 	}
 
 	@Override
@@ -108,16 +104,16 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 		return recipeId;
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		setPresenterView();
-	}
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		setPresenterView();
+//	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		setPresenterView();
+		detailPagerActivityPresenter.setView(this);
 	}
 
 	@Override

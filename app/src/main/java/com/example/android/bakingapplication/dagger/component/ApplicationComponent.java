@@ -36,4 +36,5 @@ public interface ApplicationComponent {
     void inject(IngredientsFragment target);
 
     RecipeRepository getRecipeRepository();
+
 }

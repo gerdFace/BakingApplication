@@ -27,8 +27,6 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     private SimpleExoPlayer player;
     private boolean videoIsAvailable;
     private boolean isPlaying;
-    private boolean isVisible;
-    private boolean isLanscapeOrientation;
     private long playerPosition;
     private RecipeRepository recipeRepository;
     private StepFragmentView view;
@@ -43,26 +41,54 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     @Override
     public void initializeVideoPlayer() {
 
-        if (videoIsAvailable) {
+        videoIsAvailable = !currentStep.getVideoURL().isEmpty() || !currentStep.getThumbnailURL().isEmpty();
+
+        if (videoIsAvailable && player == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
 
             LoadControl loadControl = new DefaultLoadControl();
 
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
 
-            prepareMediaSource();
-    //        view.simpleExoPlayerView.setPlayer(player);
+            restoreVideoState();
 
-
-            updateUI(player);
+            player.prepare(prepareMediaSource());
         }
+
+        updateUI();
     }
 
     @Override
-    public void setVideoPlayerState() {
-        playerPosition = player.getCurrentPosition();
-        player.setPlayWhenReady(isPlaying);
+    public void setVideoPlayerPosition(long playerPosition) {
+        this.playerPosition = playerPosition;
     }
+
+    @Override
+    public void setVideoIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+
+    @Override
+    public long getVideoPlayerPosition() {
+        return player.getCurrentPosition();
+    }
+
+    @Override
+    public boolean getVideoIsPlaying() {
+        return player.getPlayWhenReady();
+    }
+
+//    @Override
+//    public void setVideoPlayerPosition() {
+//        if (player != null) {
+//            isPlaying = player.getPlayWhenReady();
+//            if (isPlaying) {
+//                playerPosition = player.getCurrentPosition();
+////                player.setPlayWhenReady(isPlaying);
+//                Log.d(TAG, "setVideoPlayerPosition: " + playerPosition + " " + isPlaying);
+//            }
+//        }
+//    }
 
     @Override
     public void releaseVideoPlayer() {
@@ -92,7 +118,8 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     @Override
     public void setView(StepFragmentView view) {
         this.view = view;
-
+        loadStep();
+        initializeVideoPlayer();
     }
 
     private MediaSource prepareMediaSource() {
@@ -110,16 +137,22 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
                 dataSourceFactory, extractorsFactory, null, null);
     }
 
-    private void updateUI(SimpleExoPlayer player) {
+    private void updateUI() {
         String shortStepDescription = currentStep.getShortDescription();
         String longStepDescription = currentStep.getDescription();
 
-        view.showNoVideoView(shortStepDescription, longStepDescription);
-
-        if (videoIsAvailable && isLanscapeOrientation) {
+        if (videoIsAvailable && view.isLandscapeOrientation()) {
             view.showFullScreenVideoView(player);
         } else if (videoIsAvailable) {
             view.showVideoView(player, shortStepDescription, longStepDescription);
+        } else {
+            view.showNoVideoView(shortStepDescription, longStepDescription);
         }
+    }
+
+    private void restoreVideoState() {
+        player.seekTo(Math.max(0, playerPosition));
+        player.setPlayWhenReady(isPlaying);
+        Log.d(TAG, "restoreVideoState: " + playerPosition + " " + isPlaying);
     }
 }
