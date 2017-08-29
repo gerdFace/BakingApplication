@@ -91,14 +91,6 @@ public class StepFragment extends Fragment implements StepFragmentView{
         return view;
     }
 
-//    private void showVideoFullscreenView() {
-//        simpleExoPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-//                | View.SYSTEM_UI_FLAG_IMMERSIVE);
-
     @Override
     public void onPause() {
         super.onPause();
@@ -150,7 +142,6 @@ public class StepFragment extends Fragment implements StepFragmentView{
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void videoIsAvailable(boolean videoIsAvailable) {
-
         if (!videoIsAvailable) {
             TransitionManager.beginDelayedTransition(constraintLayout);
             constraintSet.setVisibility(R.id.player_view, View.GONE);

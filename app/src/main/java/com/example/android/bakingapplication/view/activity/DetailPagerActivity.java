@@ -26,6 +26,7 @@ import static com.example.android.bakingapplication.view.activity.DetailListActi
 public class DetailPagerActivity extends AppCompatActivity implements DetailPagerActivityView{
 
 	private static final String STEP_INDEX = "position_of_step_selected";
+	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 
 	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
@@ -47,8 +48,6 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 
 		ButterKnife.bind(this);
 
-//		TODO fix: after app goes to background with low resources, when app comes to foreground StepFragment starts at index 0
-
 		if (savedInstanceState == null) {
 			stepIndex = getIntent().getIntExtra(STEP_INDEX, 0);
 
@@ -64,7 +63,8 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 		}
 
 		setTitle(nameOfFoodItem);
-    }
+		Log.d(TAG, "onCreate - stepIndex = " + stepIndex);
+	}
 
     private void setViewPager() {
 		FragmentManager fragmentManager = getSupportFragmentManager();
