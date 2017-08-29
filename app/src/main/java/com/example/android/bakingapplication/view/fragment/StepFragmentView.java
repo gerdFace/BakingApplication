@@ -8,6 +8,8 @@ public interface StepFragmentView {
 
     void showNoVideoView(String shortStepDescription, String longStepDescription);
 
+    void videoIsAvailable(boolean videoIsAvailable);
+
     void showFullScreenVideoView(SimpleExoPlayer player);
 
     int getRecipeId();

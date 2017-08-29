@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.view.fragment.StepFragmentView;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -26,8 +27,9 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     private Step currentStep;
     private SimpleExoPlayer player;
     private boolean videoIsAvailable;
-    private boolean isPlaying;
-    private long playerPosition;
+    private boolean shouldAutoPlay;
+    private long resumePosition;
+    private int resumeWindow;
     private RecipeRepository recipeRepository;
     private StepFragmentView view;
     private Context context;
@@ -42,6 +44,7 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     public void initializeVideoPlayer() {
 
         videoIsAvailable = !currentStep.getVideoURL().isEmpty() || !currentStep.getThumbnailURL().isEmpty();
+        view.videoIsAvailable(videoIsAvailable);
 
         if (videoIsAvailable && player == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -50,49 +53,23 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
 
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
 
-            restoreVideoState();
+//            restoreVideoState();
+            boolean haveResumePosition = resumeWindow != C.INDEX_UNSET;
 
-            player.prepare(prepareMediaSource());
+            if (haveResumePosition) {
+                player.seekTo(resumeWindow, resumePosition);
+            }
+
+            player.prepare(prepareMediaSource(), !haveResumePosition, false);
         }
 
         updateUI();
     }
 
     @Override
-    public void setVideoPlayerPosition(long playerPosition) {
-        this.playerPosition = playerPosition;
-    }
-
-    @Override
-    public void setVideoIsPlaying(boolean isPlaying) {
-        this.isPlaying = isPlaying;
-    }
-
-    @Override
-    public long getVideoPlayerPosition() {
-        return player.getCurrentPosition();
-    }
-
-    @Override
-    public boolean getVideoIsPlaying() {
-        return player.getPlayWhenReady();
-    }
-
-//    @Override
-//    public void setVideoPlayerPosition() {
-//        if (player != null) {
-//            isPlaying = player.getPlayWhenReady();
-//            if (isPlaying) {
-//                playerPosition = player.getCurrentPosition();
-////                player.setPlayWhenReady(isPlaying);
-//                Log.d(TAG, "setVideoPlayerPosition: " + playerPosition + " " + isPlaying);
-//            }
-//        }
-//    }
-
-    @Override
     public void releaseVideoPlayer() {
         if (player != null) {
+            shouldAutoPlay = player.getPlayWhenReady();
             player.release();
             player = null;
         }
@@ -137,7 +114,8 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
                 dataSourceFactory, extractorsFactory, null, null);
     }
 
-    private void updateUI() {
+    @Override
+    public void updateUI() {
         String shortStepDescription = currentStep.getShortDescription();
         String longStepDescription = currentStep.getDescription();
 
@@ -150,9 +128,21 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
         }
     }
 
-    private void restoreVideoState() {
-        player.seekTo(Math.max(0, playerPosition));
-        player.setPlayWhenReady(isPlaying);
-        Log.d(TAG, "restoreVideoState: " + playerPosition + " " + isPlaying);
+    @Override
+    public void pauseVideoPlayer() {
+        if (player != null) {
+            player.setPlayWhenReady(false);
+        }
     }
+
+//    private void updateResumePosition() {
+//        resumeWindow = player.getCurrentWindowIndex();
+//        resumePosition = Math.max(0, player.getCurrentPosition());
+//        Log.d(TAG, "updateResumePosition: " + resumeWindow + " " + resumePosition);
+//    }
+//
+//    private void clearResumePosition() {
+//        resumeWindow = C.INDEX_UNSET;
+//        resumePosition = C.TIME_UNSET;
+//    }
 }

@@ -58,7 +58,6 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
     @BindView(R.id.ingredient_fragment_container)
     FrameLayout ingredientFrameLayout;
 
-    //    Needed??
     public DetailListFragment() {
     }
 
@@ -115,7 +114,6 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
                 isIngredientListDisplayed = true;
 
             } else {
-                // TODO check does fragment instance remain after view is gone?
                 TransitionManager.beginDelayedTransition(constraintLayout);
                 constraintSet.setVisibility(R.id.ingredient_fragment_container, View.GONE);
                 constraintSet.applyTo(constraintLayout);

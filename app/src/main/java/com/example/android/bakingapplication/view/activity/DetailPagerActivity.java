@@ -47,6 +47,8 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 
 		ButterKnife.bind(this);
 
+//		TODO fix: after app goes to background with low resources, when app comes to foreground StepFragment starts at index 0
+
 		if (savedInstanceState == null) {
 			stepIndex = getIntent().getIntExtra(STEP_INDEX, 0);
 
@@ -54,11 +56,11 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 
 			recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
 		} else {
-			stepIndex = savedInstanceState.getInt(STEP_INDEX, 0);
+			stepIndex = savedInstanceState.getInt(STEP_INDEX);
 
 			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
 
-			recipeId = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED, 0);
+			recipeId = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED);
 		}
 
 		setTitle(nameOfFoodItem);
@@ -103,12 +105,6 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 	public int getRecipeId() {
 		return recipeId;
 	}
-
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		setPresenterView();
-//	}
 
 	@Override
 	protected void onResume() {
