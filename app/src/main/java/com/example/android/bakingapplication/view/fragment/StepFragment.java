@@ -82,13 +82,17 @@ public class StepFragment extends Fragment implements StepFragmentView{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_before, container, false);
 
-        ((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
+        getApplication().createStepFragmentComponent(getContext()).inject(this);
 
         ButterKnife.bind(this, view);
 
         constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_step_after);
 
         return view;
+    }
+
+    private BakingApplication getApplication() {
+        return (BakingApplication)getActivity().getApplication();
     }
 
     @Override
@@ -185,5 +189,10 @@ public class StepFragment extends Fragment implements StepFragmentView{
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         stepFragmentPresenter.updateUI();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

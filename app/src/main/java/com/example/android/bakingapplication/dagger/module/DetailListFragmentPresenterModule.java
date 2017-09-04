@@ -10,7 +10,7 @@ import dagger.Provides;
 public class DetailListFragmentPresenterModule {
 
     @Provides
-    DetailListFragmentPresenter provideDetailListFragmentPresenter(RecipeRepository recipeRepository) {
+    static DetailListFragmentPresenter provideDetailListFragmentPresenter(RecipeRepository recipeRepository) {
         return new DetailListFragmentPresenterImpl(recipeRepository);
     }
 }
