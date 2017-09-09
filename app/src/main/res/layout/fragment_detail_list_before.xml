@@ -11,6 +11,8 @@
         android:id="@+id/ingredient_card_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardBackgroundColor="@color/cardview_very_light_background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/rv_detail_list"
         app:layout_constraintLeft_toLeftOf="parent"

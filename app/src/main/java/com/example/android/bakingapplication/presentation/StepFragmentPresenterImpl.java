@@ -88,27 +88,12 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
         initializeVideoPlayer();
     }
 
-    private MediaSource prepareMediaSource() {
-        String videoUrl = !currentStep.getVideoURL().isEmpty() ? currentStep.getVideoURL() : currentStep.getThumbnailURL();
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, "BakingApplication"),
-                null);
-
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-
-        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(videoUrl));
-
-        return new ExtractorMediaSource(Uri.parse(videoUrl),
-                dataSourceFactory, extractorsFactory, null, null);
-    }
-
     @Override
     public void updateUI() {
         String shortStepDescription = currentStep.getShortDescription();
         String longStepDescription = currentStep.getDescription();
 
-        if (videoIsAvailable && view.isLandscapeOrientation()) {
+        if (videoIsAvailable && view.isLandscapeOrientation() && !view.twoPane()) {
             view.showFullScreenVideoView(player);
         } else if (videoIsAvailable) {
             view.showVideoView(player, shortStepDescription, longStepDescription);
@@ -122,5 +107,20 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
         if (player != null) {
             player.setPlayWhenReady(false);
         }
+    }
+
+    private MediaSource prepareMediaSource() {
+        String videoUrl = !currentStep.getVideoURL().isEmpty() ? currentStep.getVideoURL() : currentStep.getThumbnailURL();
+
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                Util.getUserAgent(context, "BakingApplication"),
+                null);
+
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+
+        Log.d(TAG, "prepareMediaSource: Media source = " + Uri.parse(videoUrl));
+
+        return new ExtractorMediaSource(Uri.parse(videoUrl),
+                dataSourceFactory, extractorsFactory, null, null);
     }
 }

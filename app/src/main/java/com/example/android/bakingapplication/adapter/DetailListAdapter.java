@@ -1,10 +1,11 @@
 package com.example.android.bakingapplication.adapter;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.model.Step;
@@ -36,8 +37,8 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
     @Override
     public void onBindViewHolder(final DetailListViewHolder holder, int position) {
         final String detailButtonText = stepsList.get(position).getShortDescription().replaceAll("\\.", "");
-        holder.detailButton.setText(detailButtonText);
-        holder.detailButton.setOnClickListener(v -> {
+        holder.detailCardText.setText(detailButtonText);
+        holder.detailCard.setOnClickListener(v -> {
         // Check validity of callback
             if (callback != null) {
                 callback.onRecipeDetailButtonClicked(holder.getAdapterPosition());
@@ -51,11 +52,13 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
     }
 
     class DetailListViewHolder extends RecyclerView.ViewHolder{
-        Button detailButton;
+        TextView detailCardText;
+        CardView detailCard;
 
         DetailListViewHolder(View itemView) {
             super(itemView);
-            detailButton = (Button) itemView.findViewById(R.id.detail_button);
+            detailCardText = (TextView) itemView.findViewById(R.id.detail_card_text);
+            detailCard = (CardView) itemView.findViewById(R.id.detail_card);
         }
     }
 }

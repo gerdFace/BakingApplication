@@ -40,7 +40,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
                     .replace(R.id.detail_list_container, detailListFragment)
                     .commit();
 
-	    twoPane = findViewById(R.id.ingredient_and_instruction_container) != null;
+	    twoPane = getResources().getBoolean(R.bool.isTablet);
 
         setTitle(recipeName);
     }
@@ -58,8 +58,6 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
             intentToStartDetailPagerActivity.putExtras(bundle);
             startActivity(intentToStartDetailPagerActivity);
 	        
-		// TODO fix: orientation change on tablet causes crash
-		// TODO update with constraintSet
         } else {
             Fragment instructionFragment = StepFragment.newInstance(recipeId, position);
 

@@ -91,10 +91,6 @@ public class StepFragment extends Fragment implements StepFragmentView{
         return view;
     }
 
-    private BakingApplication getApplication() {
-        return (BakingApplication)getActivity().getApplication();
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -119,11 +115,6 @@ public class StepFragment extends Fragment implements StepFragmentView{
                 stepFragmentPresenter.updateUI();
             }
         }
-    }
-
-    private void setDescriptionText(String shortStepDescription, String longStepDescription) {
-        shortDescriptionView.setText(shortStepDescription);
-        longDescriptionView.setText(longStepDescription);
     }
 
     @Override
@@ -174,6 +165,11 @@ public class StepFragment extends Fragment implements StepFragmentView{
     }
 
     @Override
+    public boolean twoPane() {
+        return getResources().getBoolean(R.bool.isTablet);
+    }
+
+    @Override
     public int getStepIndex() {
         return stepIndex;
     }
@@ -194,5 +190,18 @@ public class StepFragment extends Fragment implements StepFragmentView{
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        getApplication().releaseStepFragmentComponent();
+    }
+
+    private void setDescriptionText(String shortStepDescription, String longStepDescription) {
+        shortDescriptionView.setText(shortStepDescription);
+
+        if (!shortStepDescription.equals(longStepDescription)) {
+            longDescriptionView.setText(longStepDescription);
+        }
+    }
+
+    private BakingApplication getApplication() {
+        return (BakingApplication)getActivity().getApplication();
     }
 }

@@ -16,5 +16,7 @@ public interface StepFragmentView {
 
     boolean isLandscapeOrientation();
 
+    boolean twoPane();
+
     int getStepIndex();
 }

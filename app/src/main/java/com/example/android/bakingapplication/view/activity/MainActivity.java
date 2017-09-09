@@ -46,20 +46,12 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     }
 
     @Override
-    public void showLoading() {
-
-    }
-
-    @Override
-    public void hideLoading() {
-
-    }
-
-    @Override
     public void showRecipes(List<RecipeData> recipeList) {
         RecipeCardAdapter recipeCardAdapter = new RecipeCardAdapter(this, recipeList, this);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 1);
+        int numberOfColumns = !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
+
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, numberOfColumns);
 
         recipeCardRecyclerView.setLayoutManager(layoutManager);
         recipeCardRecyclerView.setAdapter(recipeCardAdapter);
@@ -82,26 +74,3 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
         mainActivityPresenter.setView(this);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
