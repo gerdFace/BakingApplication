@@ -10,12 +10,9 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-<<<<<<< HEAD
         classpath "io.realm:realm-gradle-plugin:3.4.0"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "gradle.plugin.me.tatarka:gradle-retrolambda:3.7.0"
-=======
->>>>>>> 5c0ed547a85e7db9fe442a022a754c537632178b
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
