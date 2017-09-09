@@ -17,7 +17,8 @@ public class RealmModule {
     Realm provideRealmInstance(Application application) {
         Realm.init(application);
         RealmConfiguration.Builder builder = new RealmConfiguration.Builder();
-        builder.name("recipeDB2.realm");
+        builder.name("recipeDB3.realm")
+                .deleteRealmIfMigrationNeeded();
 
         RealmConfiguration configuration = builder.build();
         return Realm.getInstance(configuration);

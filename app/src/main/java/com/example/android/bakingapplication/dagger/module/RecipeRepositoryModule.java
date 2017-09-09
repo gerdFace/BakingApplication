@@ -1,7 +1,7 @@
 package com.example.android.bakingapplication.dagger.module;
 
-import com.example.android.bakingapplication.dagger.Local;
-import com.example.android.bakingapplication.dagger.Network;
+import com.example.android.bakingapplication.dagger.qualifier.Local;
+import com.example.android.bakingapplication.dagger.qualifier.Network;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 import com.example.android.bakingapplication.repository.local.LocalDataSource;
@@ -19,7 +19,7 @@ public class RecipeRepositoryModule {
 
     @Singleton
     @Provides
-    RecipeRepositoryImpl provideRecipeRepository(@Local RecipeRepository databaseSource, @Network RecipeRepository networkSource) {
+    RecipeRepository provideRecipeRepository(@Local RecipeRepository databaseSource, @Network RecipeRepository networkSource) {
         return new RecipeRepositoryImpl(databaseSource, networkSource);
     }
 

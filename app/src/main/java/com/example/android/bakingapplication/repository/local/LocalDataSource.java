@@ -24,8 +24,8 @@ public class LocalDataSource implements RecipeRepository {
         List<RecipeData> recipes;
         recipes = realm.where(RecipeData.class).findAll();
 
-        if (recipes.isEmpty()) {
-            callback.onDataNotAvailable("No Realm data");
+        if (realm.isEmpty() || recipes.isEmpty()) {
+            callback.onDataNotAvailable("Could not load recipe list from database");
         } else {
             callback.onRecipesLoaded(recipes);
         }
@@ -40,7 +40,7 @@ public class LocalDataSource implements RecipeRepository {
                 .findFirst();
 
         if (recipe == null) {
-            callback.onDataNotAvailable("No Realm data");
+            callback.onDataNotAvailable("Could not load recipe from database");
         } else {
             callback.onRecipeLoaded(recipe);
         }
@@ -56,10 +56,15 @@ public class LocalDataSource implements RecipeRepository {
                 .getSteps();
 
         if (steps == null) {
-            callback.onDataNotAvailable("No Realm data");
+            callback.onDataNotAvailable("Could not load step list from database");
         } else {
             callback.onStepsLoaded(steps);
         }
+
+    }
+
+    @Override
+    public void getStep(int recipeId, int stepIndex, @NonNull GetStepCallback callback) {
 
     }
 
@@ -72,15 +77,10 @@ public class LocalDataSource implements RecipeRepository {
                 .getIngredients();
 
         if (ingredients == null) {
-            callback.onDataNotAvailable("No Realm data available");
+            callback.onDataNotAvailable("Could not load ingredient list from database");
         } else {
             callback.onIngredientsLoaded(ingredients);
         }
-    }
-
-    @Override
-    public void refreshRecipes() {
-
     }
 
     @Override
@@ -88,6 +88,5 @@ public class LocalDataSource implements RecipeRepository {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(recipes);
         realm.commitTransaction();
-
     }
 }

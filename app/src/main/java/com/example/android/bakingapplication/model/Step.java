@@ -45,8 +45,7 @@ public class Step implements Parcelable, RealmModel {
             return (new Step[size]);
         }
 
-    }
-    ;
+    };
 
     public Integer getId() {
         return id;
@@ -99,5 +98,4 @@ public class Step implements Parcelable, RealmModel {
     public int describeContents() {
         return  0;
     }
-
 }

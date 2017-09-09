@@ -10,27 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.IngredientsAdapter;
 import com.example.android.bakingapplication.model.Ingredient;
-import com.example.android.bakingapplication.repository.RecipeRepository;
-import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
+import com.example.android.bakingapplication.presentation.IngredientsFragmentPresenter;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class IngredientsFragment extends Fragment {
+public class IngredientsFragment extends Fragment implements IngredientsFragmentView {
 
-	private static final String TAG = IngredientsFragment.class.getSimpleName();
 	private static final String ARG_RECIPE_ID_KEY = "recipe_id_key";
 	private int recipeId;
 	private IngredientsAdapter ingredientAdapter;
-	private List<Ingredient> ingredientList;
 
 	@Inject
-	RecipeRepositoryImpl recipeRepository;
+	IngredientsFragmentPresenter ingredientsFragmentPresenter;
 
 	@BindView(R.id.rv_ingredient_list)
     RecyclerView rvIngredientList;
@@ -64,50 +65,46 @@ public class IngredientsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_ingredient_list, container, false);
 
-		((BakingApplication)getActivity().getApplication()).getRecipeRepositoryComponent().inject(this);
+		((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
 
 		ButterKnife.bind(this, view);
-
-		recipeRepository.getIngredients(recipeId, new RecipeRepository.GetIngredientsCallback() {
-			@Override
-			public void onIngredientsLoaded(List<Ingredient> ingredients) {
-				ingredientList = ingredients;
-			}
-
-			@Override
-			public void onDataNotAvailable(String failureMessage) {
-				Log.d(TAG, failureMessage);
-			}
-		});
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayout.VERTICAL, false);
         
 		rvIngredientList.setLayoutManager(layoutManager);
 
-		updateUI();
-		
         return view;
-    }
-    
-    private void updateUI() {
-
-	    if (ingredientAdapter == null) {
-		    ingredientAdapter = new IngredientsAdapter(ingredientList);
-		    rvIngredientList.setAdapter(ingredientAdapter);
-	    } else {
-		    ingredientAdapter.notifyDataSetChanged();
-	    }
     }
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		updateUI();
+		ingredientsFragmentPresenter.setView(this);
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(ARG_RECIPE_ID_KEY, recipeId);
+	}
+
+	@Override
+	public void showIngredients(List<Ingredient> ingredientList) {
+		if (ingredientAdapter == null) {
+			ingredientAdapter = new IngredientsAdapter(ingredientList);
+			rvIngredientList.setAdapter(ingredientAdapter);
+		} else {
+			ingredientAdapter.notifyDataSetChanged();
+		}
+	}
+
+	@Override
+	public void showErrorMessage(String failureMessage) {
+		Log.d("Failed ingredients: ", failureMessage);
+	}
+
+	@Override
+	public int getRecipeId() {
+		return recipeId;
 	}
 }
