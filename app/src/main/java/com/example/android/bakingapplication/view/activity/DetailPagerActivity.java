@@ -23,15 +23,15 @@ import butterknife.ButterKnife;
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.ID_OF_RECIPE_SELECTED;
 import static com.example.android.bakingapplication.view.activity.DetailListActivity.NAME_OF_FOOD_SELECTED;
 
-public class DetailPagerActivity extends AppCompatActivity implements DetailPagerActivityView{
+public class DetailPagerActivity extends AppCompatActivity implements DetailPagerActivityView {
 
 	private static final String STEP_INDEX = "position_of_step_selected";
-	private static final String TAG = DetailPagerActivity.class.getSimpleName();
 
 	private List<Step> stepDetailList;
 	private String nameOfFoodItem;
 	private int stepIndex;
 	private int recipeId;
+	private FragmentStatePagerAdapter fragmentStatePagerAdapter;
 
 	@Inject
 	DetailPagerActivityPresenter detailPagerActivityPresenter;
@@ -50,37 +50,38 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 
 		if (savedInstanceState == null) {
 			stepIndex = getIntent().getIntExtra(STEP_INDEX, 0);
-
 			nameOfFoodItem = getIntent().getStringExtra(DetailListActivity.NAME_OF_FOOD_SELECTED);
-
 			recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 0);
 		} else {
 			stepIndex = savedInstanceState.getInt(STEP_INDEX);
-
 			nameOfFoodItem = savedInstanceState.getString(NAME_OF_FOOD_SELECTED);
-
 			recipeId = savedInstanceState.getInt(ID_OF_RECIPE_SELECTED);
 		}
 
 		setTitle(nameOfFoodItem);
-		Log.d(TAG, "onCreate - stepIndex = " + stepIndex);
 	}
 
     private void setViewPager() {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 
-		stepViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-			@Override
-			public Fragment getItem(int position) {
-				return StepFragment
-						.newInstance(recipeId, position);
-			}
+		if (fragmentStatePagerAdapter == null) {
+			fragmentStatePagerAdapter = new FragmentStatePagerAdapter(fragmentManager) {
+				@Override
+				public Fragment getItem(int position) {
+					return StepFragment
+							.newInstance(recipeId, position);
+				}
 
-			@Override
-			public int getCount() {
-				return stepDetailList.size();
-			}
-		});
+				@Override
+				public int getCount() {
+					return stepDetailList.size();
+				}
+			};
+
+			stepViewPager.setAdapter(fragmentStatePagerAdapter);
+		} else {
+			fragmentStatePagerAdapter.notifyDataSetChanged();
+		}
 
 		for (int i = 0; i < stepDetailList.size(); i ++) {
 			if (i == stepIndex) {
@@ -88,6 +89,23 @@ public class DetailPagerActivity extends AppCompatActivity implements DetailPage
 				break;
 			}
 		}
+
+		stepViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				stepIndex = position;
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 	}
 
 	@Override

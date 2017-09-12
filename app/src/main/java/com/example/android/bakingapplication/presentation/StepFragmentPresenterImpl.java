@@ -38,9 +38,7 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
 
     @Override
     public void initializeVideoPlayer() {
-
-        videoIsAvailable = !currentStep.getVideoURL().isEmpty() || !currentStep.getThumbnailURL().isEmpty();
-        view.videoIsAvailable(videoIsAvailable);
+        videoIsAvailable = !currentStep.getVideoURL().isEmpty();
 
         if (videoIsAvailable && player == null) {
             TrackSelector trackSelector = new DefaultTrackSelector();
@@ -49,6 +47,11 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
 
             player = ExoPlayerFactory.newSimpleInstance(context, trackSelector, loadControl);
 
+            long playerResumePosition = view.getPlayerPosition();
+
+            if (playerResumePosition > 0) {
+                player.seekTo(playerResumePosition);
+            }
             player.prepare(prepareMediaSource());
         }
 
@@ -82,6 +85,15 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     }
 
     @Override
+    public long getPlayerPosition() {
+        if (player != null) {
+            return player.getCurrentPosition();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
     public void setView(StepFragmentView view) {
         this.view = view;
         loadStep();
@@ -92,13 +104,16 @@ public class StepFragmentPresenterImpl implements StepFragmentPresenter {
     public void updateUI() {
         String shortStepDescription = currentStep.getShortDescription();
         String longStepDescription = currentStep.getDescription();
+        boolean thumbnailIsAvailable = !currentStep.getThumbnailURL().isEmpty();
 
         if (videoIsAvailable && view.isLandscapeOrientation() && !view.twoPane()) {
             view.showFullScreenVideoView(player);
         } else if (videoIsAvailable) {
             view.showVideoView(player, shortStepDescription, longStepDescription);
+        } else if (thumbnailIsAvailable) {
+            view.showImageViewNoVideo(currentStep.getThumbnailURL(), shortStepDescription, longStepDescription);
         } else {
-            view.showNoVideoView(shortStepDescription, longStepDescription);
+            view.showNoVideoNoImageView(shortStepDescription, longStepDescription);
         }
     }
 

@@ -6,9 +6,9 @@ public interface StepFragmentView {
 
     void showVideoView(SimpleExoPlayer player, String shortStepDescription, String longStepDescription);
 
-    void showNoVideoView(String shortStepDescription, String longStepDescription);
+    void showNoVideoNoImageView(String shortStepDescription, String longStepDescription);
 
-    void videoIsAvailable(boolean videoIsAvailable);
+    void showImageViewNoVideo(String shortStepDescription, String longStepDescription, String imageUrl);
 
     void showFullScreenVideoView(SimpleExoPlayer player);
 
@@ -19,4 +19,6 @@ public interface StepFragmentView {
     boolean twoPane();
 
     int getStepIndex();
+
+    long getPlayerPosition();
 }

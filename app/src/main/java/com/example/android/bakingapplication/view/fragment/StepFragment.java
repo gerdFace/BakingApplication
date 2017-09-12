@@ -9,12 +9,13 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.presentation.StepFragmentPresenter;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
@@ -26,14 +27,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StepFragment extends Fragment implements StepFragmentView{
+public class StepFragment extends Fragment implements StepFragmentView {
 
     private static final String ARG_STEP_INDEX = "step_index";
     private static final String ARG_RECIPE_ID = "recipe_id";
-    private static final String TAG = StepFragment.class.getSimpleName();
 
     private int recipeId;
     private int stepIndex;
+    private long playerResumePosition;
     private ConstraintSet constraintSet = new ConstraintSet();
 
     @Inject
@@ -44,6 +45,9 @@ public class StepFragment extends Fragment implements StepFragmentView{
 
     @BindView(R.id.long_step_description)
     TextView longDescriptionView;
+
+    @BindView(R.id.image_that_does_not_exist)
+    ImageView imageView;
 
     @BindView(R.id.player_view)
     SimpleExoPlayerView simpleExoPlayerView;
@@ -68,25 +72,28 @@ public class StepFragment extends Fragment implements StepFragmentView{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            stepIndex = savedInstanceState.getInt("step_index");
-            recipeId = savedInstanceState.getInt("recipe_id");
-        } else {
-            stepIndex = getArguments().getInt(ARG_STEP_INDEX);
-            recipeId = getArguments().getInt(ARG_RECIPE_ID);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_step_before, container, false);
+        View view = inflater.inflate(R.layout.fragment_step_with_video, container, false);
 
         getApplication().createStepFragmentComponent(getContext()).inject(this);
 
         ButterKnife.bind(this, view);
 
-        constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_step_after);
+        constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_step_no_video);
+
+        if (savedInstanceState != null) {
+            stepIndex = savedInstanceState.getInt("step_index");
+            recipeId = savedInstanceState.getInt("recipe_id");
+            playerResumePosition = savedInstanceState.getLong("player_resume_position");
+        } else {
+            stepIndex = getArguments().getInt(ARG_STEP_INDEX);
+            recipeId = getArguments().getInt(ARG_RECIPE_ID);
+            playerResumePosition = 0;
+        }
 
         return view;
     }
@@ -94,15 +101,14 @@ public class StepFragment extends Fragment implements StepFragmentView{
     @Override
     public void onPause() {
         super.onPause();
+        playerResumePosition = stepFragmentPresenter.getPlayerPosition();
         stepFragmentPresenter.releaseVideoPlayer();
-	    Log.d(TAG, "onPause: StepFragment paused");
     }
 
     @Override
     public void onResume() {
         super.onResume();
         stepFragmentPresenter.setView(this);
-        Log.d(TAG, "onResume: StepFragment resumed");
     }
 
     @Override
@@ -121,27 +127,29 @@ public class StepFragment extends Fragment implements StepFragmentView{
     public void showVideoView(SimpleExoPlayer player, String shortStepDescription, String longStepDescription) {
         simpleExoPlayerView.setPlayer(player);
         simpleExoPlayerView.setVisibility(View.VISIBLE);
-        shortDescriptionView.setVisibility(View.VISIBLE);
-        longDescriptionView.setVisibility(View.VISIBLE);
-        setDescriptionText(shortStepDescription, longStepDescription);
-    }
-
-    @Override
-    public void showNoVideoView(String shortStepDescription, String longStepDescription) {
-        simpleExoPlayerView.setVisibility(View.GONE);
-        shortDescriptionView.setVisibility(View.VISIBLE);
-        longDescriptionView.setVisibility(View.VISIBLE);
+        setStepDescriptionViewsVisible();
         setDescriptionText(shortStepDescription, longStepDescription);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void videoIsAvailable(boolean videoIsAvailable) {
-        if (!videoIsAvailable) {
-            TransitionManager.beginDelayedTransition(constraintLayout);
-            constraintSet.setVisibility(R.id.player_view, View.GONE);
-            constraintSet.applyTo(constraintLayout);
-        }
+    public void showNoVideoNoImageView(String shortStepDescription, String longStepDescription) {
+        simpleExoPlayerView.setVisibility(View.GONE);
+        setStepDescriptionViewsVisible();
+        setDescriptionText(shortStepDescription, longStepDescription);
+        TransitionManager.beginDelayedTransition(constraintLayout);
+        constraintSet.setVisibility(R.id.player_view, View.GONE);
+        constraintSet.applyTo(constraintLayout);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void showImageViewNoVideo(String thumbnailUrl, String shortStepDescription, String longStepDescription) {
+        setStepDescriptionViewsVisible();
+        shortDescriptionView.setText(shortStepDescription);
+        longDescriptionView.setText(longStepDescription);
+        simpleExoPlayerView.setVisibility(View.GONE);
+        Glide.with(getContext()).load(thumbnailUrl).into(imageView);
     }
 
     @Override
@@ -175,10 +183,16 @@ public class StepFragment extends Fragment implements StepFragmentView{
     }
 
     @Override
+    public long getPlayerPosition() {
+        return playerResumePosition;
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("step_index", stepIndex);
         outState.putInt("recipe_id", recipeId);
+        outState.putLong("player_resume_position", playerResumePosition);
     }
 
     @Override
@@ -203,5 +217,10 @@ public class StepFragment extends Fragment implements StepFragmentView{
 
     private BakingApplication getApplication() {
         return (BakingApplication)getActivity().getApplication();
+    }
+
+    private void setStepDescriptionViewsVisible() {
+        shortDescriptionView.setVisibility(View.VISIBLE);
+        longDescriptionView.setVisibility(View.VISIBLE);
     }
 }

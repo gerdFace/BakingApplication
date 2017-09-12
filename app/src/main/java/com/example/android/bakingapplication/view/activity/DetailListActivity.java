@@ -47,7 +47,6 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
     @Override
     public void onRecipeDetailButtonClicked(final int position) {
-
         if (!twoPane) {
 	        Bundle bundle = new Bundle();
 	        bundle.putInt(POSITION_OF_STEP_SELECTED, position);

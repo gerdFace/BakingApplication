@@ -51,7 +51,7 @@ public class DetailListActivityTest {
 
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.ingredient_drop_toggle), withText("Ingredients"),
+                allOf(withId(R.id.ingredient_dropbar_text), withText("Ingredients"),
                         childAtPosition(
                                 allOf(withId(R.id.ingredient_card_container),
                                         childAtPosition(

@@ -31,7 +31,6 @@ public class RecipeCardAdapter extends RecyclerView.Adapter<RecipeCardAdapter.Re
         void onRecipeSelected(String nameOfFoodSelected, int foodID);
     }
 
-
     class RecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView dessertName;
         TextView numberOfSteps;
