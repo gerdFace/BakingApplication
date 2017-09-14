@@ -41,29 +41,29 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 
 	    twoPane = getResources().getBoolean(R.bool.isTablet);
 
+        if (twoPane) {
+            loadStepFragmentForTablet(0);
+        }
+
         setTitle(recipeName);
     }
 
     @Override
     public void onRecipeDetailButtonClicked(final int position) {
         if (!twoPane) {
-	        Bundle bundle = new Bundle();
-	        bundle.putInt(POSITION_OF_STEP_SELECTED, position);
-	        bundle.putString(NAME_OF_FOOD_SELECTED, recipeName);
+            Bundle bundle = new Bundle();
+            bundle.putInt(POSITION_OF_STEP_SELECTED, position);
+            bundle.putString(NAME_OF_FOOD_SELECTED, recipeName);
             bundle.putInt(ID_OF_RECIPE_SELECTED, recipeId);
 
             Intent intentToStartDetailPagerActivity = new Intent(this, DetailPagerActivity.class);
             intentToStartDetailPagerActivity.putExtras(bundle);
             startActivity(intentToStartDetailPagerActivity);
-	        
-        } else {
-            Fragment instructionFragment = StepFragment.newInstance(recipeId, position);
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.ingredient_and_instruction_container, instructionFragment)
-                    .commit();
-            }
+        } else {
+            loadStepFragmentForTablet(position);
         }
+    }
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -71,4 +71,12 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 		outState.putString(SAVED_RECIPE_NAME, recipeName);
         outState.putInt(SAVED_RECIPE_ID, recipeId);
 	}
+
+    private void loadStepFragmentForTablet(int position) {
+        Fragment instructionFragment = StepFragment.newInstance(recipeId, position);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ingredient_and_instruction_container, instructionFragment)
+                .commit();
+    }
 }

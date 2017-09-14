@@ -147,8 +147,7 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
         try {
             callbacks = (DetailItemCallbacks) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                                                 + " must implement OnImageClickListener");
+            throw new ClassCastException(context.toString() + " must implement OnImageClickListener");
         }
     }
 

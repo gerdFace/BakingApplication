@@ -63,7 +63,7 @@ public class MainActivityTest {
 	@Test
 	public void openRecipeDetailListOnRecipeCardClick() {
 		onView(withId(R.id.rv_recipe_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-		intended(hasComponent(DetailListActivityTest.class.getName()));
+		intended(hasComponent(DetailListActivity.class.getName()));
 		intended(hasExtraWithKey("id_of_recipe_selected"));
 		intended(hasExtraWithKey("name_of_recipe_selected"));
 	}
