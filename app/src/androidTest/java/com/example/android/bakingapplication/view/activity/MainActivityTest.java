@@ -1,12 +1,12 @@
-package com.example.android.bakingapplication;
+package com.example.android.bakingapplication.view.activity;
 
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.example.android.bakingapplication.view.activity.DetailListActivity;
-import com.example.android.bakingapplication.view.activity.MainActivity;
+import com.example.android.bakingapplication.R;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,11 +27,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
-	
+
 	@Rule
 	public final ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<>(
 			MainActivity.class);
-	
+
 
 	@Test
 	public void whenMainActivityLaunchesFourRecipesAreDisplayed() {
@@ -43,7 +43,7 @@ public class MainActivityTest {
 
 	@Test
 	public void whenMainActivityLaunchesFirstCardDisplaysRecipeOverview() {
-		onView(withId(R.id.rv_recipe_list))
+		onView(ViewMatchers.withId(R.id.rv_recipe_list))
 				.check(matches(hasDescendant(withText("Nutella Pie"))))
 				.check(matches(hasDescendant(withText("Steps: 7"))))
 				.check(matches(hasDescendant(withText("Ingredients: 9"))))
@@ -63,7 +63,7 @@ public class MainActivityTest {
 	@Test
 	public void openRecipeDetailListOnRecipeCardClick() {
 		onView(withId(R.id.rv_recipe_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-		intended(hasComponent(DetailListActivity.class.getName()));
+		intended(hasComponent(DetailListActivityTest.class.getName()));
 		intended(hasExtraWithKey("id_of_recipe_selected"));
 		intended(hasExtraWithKey("name_of_recipe_selected"));
 	}

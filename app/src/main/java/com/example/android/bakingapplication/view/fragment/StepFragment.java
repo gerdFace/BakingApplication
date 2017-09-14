@@ -215,12 +215,12 @@ public class StepFragment extends Fragment implements StepFragmentView {
         }
     }
 
-    private BakingApplication getApplication() {
-        return (BakingApplication)getActivity().getApplication();
-    }
-
     private void setStepDescriptionViewsVisible() {
         shortDescriptionView.setVisibility(View.VISIBLE);
         longDescriptionView.setVisibility(View.VISIBLE);
+    }
+
+    private BakingApplication getApplication() {
+        return (BakingApplication)getActivity().getApplication();
     }
 }

@@ -26,4 +26,8 @@ allprojects {
     }
 }
 
+ext {
+    supportLibVersion = '25.3.1'
+}
+
 
