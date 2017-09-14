@@ -38,6 +38,7 @@ public class DetailListFragmentPresenterImpl implements DetailListFragmentPresen
     @Override
     public void setView(DetailListFragmentView view) {
         this.view = view;
+        Log.d(TAG, "View created in presenter: " + view);
         loadSteps();
     }
 }

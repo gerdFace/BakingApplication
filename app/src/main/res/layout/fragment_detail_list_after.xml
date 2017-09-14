@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_detail_list_constraint_container"
+    android:id="@+id/fragment_detail_list_constraint_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.fragment.DetailListFragment">
 
@@ -39,6 +39,7 @@
         android:id="@+id/ingredient_fragment_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/rv_detail_list"
         app:layout_constraintTop_toBottomOf="@+id/ingredient_card_container"
         app:layout_constraintRight_toRightOf="parent"

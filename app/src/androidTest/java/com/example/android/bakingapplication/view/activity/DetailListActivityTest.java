@@ -55,7 +55,7 @@ public class DetailListActivityTest {
                         childAtPosition(
                                 allOf(withId(R.id.ingredient_card_container),
                                         childAtPosition(
-                                                withId(R.id.fragment_detail_list_constraint_container),
+                                                withId(R.id.fragment_detail_list_constraint_layout),
                                                 0)),
                                 0),
                         isDisplayed()));
@@ -65,7 +65,7 @@ public class DetailListActivityTest {
                 allOf(childAtPosition(
                         allOf(withId(R.id.ingredient_card_container),
                                 childAtPosition(
-                                        withId(R.id.fragment_detail_list_constraint_container),
+                                        withId(R.id.fragment_detail_list_constraint_layout),
                                         0)),
                         1),
                         isDisplayed()));

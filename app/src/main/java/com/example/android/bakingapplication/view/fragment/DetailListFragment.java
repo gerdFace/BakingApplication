@@ -14,33 +14,39 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
 import com.example.android.bakingapplication.BakingApplicationWidget;
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.DetailListAdapter;
 import com.example.android.bakingapplication.model.Step;
 import com.example.android.bakingapplication.presentation.DetailListFragmentPresenter;
 import com.example.android.bakingapplication.view.activity.BakingApplication;
+
 import java.util.List;
+
 import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.bumptech.glide.gifdecoder.GifHeaderParser.TAG;
 
 public class DetailListFragment extends Fragment implements DetailListFragmentView{
 
     private static final String RECIPE_ID_KEY = "recipe_id";
-    private static final String SCROLL_POSITION = "scroll_position";
+    private static final String IS_INGREDIENT_LIST_DISPLAYED = "is_ingredient_list_displayed";
 
     private int recipeId;
-    private int scrollPosition = 0;
-    private boolean isIngredientListDisplayed = false;
-    private RecyclerView.LayoutManager layoutManager;
+    private boolean isIngredientListDisplayed;
     private DetailItemCallbacks callbacks;
 	private DetailListAdapter detailListAdapter;
-    private ConstraintSet constraintSet = new ConstraintSet();
+    private ConstraintSet constraintSetFirst = new ConstraintSet();
+    private ConstraintSet constraintSetSecond = new ConstraintSet();
 
     @Inject
     DetailListFragmentPresenter detailListFragmentPresenter;
@@ -51,7 +57,7 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
     @BindView(R.id.ingredient_card_container)
     CardView ingredientCardContainer;
 
-    @BindView(R.id.fragment_detail_list_constraint_container)
+    @BindView(R.id.fragment_detail_list_constraint_layout)
     ConstraintLayout constraintLayout;
 
     @BindView(R.id.ingredient_fragment_container)
@@ -72,53 +78,56 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
 
 		DetailListFragment detailListFragment = new DetailListFragment();
 		detailListFragment.setArguments(args);
-		return detailListFragment;
+        return detailListFragment;
 	}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
+
         if (savedInstanceState == null) {
             recipeId = getArguments().getInt(RECIPE_ID_KEY, 0);
+            isIngredientListDisplayed = false;
         } else {
-            recipeId = savedInstanceState.getInt(RECIPE_ID_KEY);
+            recipeId = savedInstanceState.getInt(RECIPE_ID_KEY, 0);
+            isIngredientListDisplayed = savedInstanceState.getBoolean(IS_INGREDIENT_LIST_DISPLAYED);
         }
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_list_before, container, false);
 
-        ((BakingApplication)getActivity().getApplication()).getApplicationComponent().inject(this);
-
         ButterKnife.bind(this, view);
 
-        layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
+        return view;
+    }
 
-        if (savedInstanceState != null) {
-            scrollPosition = savedInstanceState.getInt(SCROLL_POSITION);
-        }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this.getActivity(), LinearLayoutManager.VERTICAL, false);
 
         rvDetailList.setLayoutManager(layoutManager);
 
-        updateViewWithConstraintSet();
-
-        return view;
+        updateConstraintLayout();
     }
 
     @Override
     public void showSteps(List<Step> steps) {
         if (detailListAdapter == null) {
             detailListAdapter = new DetailListAdapter(callbacks);
-            detailListAdapter.updateDetailListAdapter(steps);
+            detailListAdapter.addStepsList(steps);
 
             rvDetailList.setAdapter(detailListAdapter);
         } else {
-            detailListAdapter.updateDetailListAdapter(steps);
-            rvDetailList.scrollToPosition(scrollPosition);
+            detailListAdapter.addStepsList(steps);
         }
     }
 
@@ -160,41 +169,48 @@ public class DetailListFragment extends Fragment implements DetailListFragmentVi
 	public void onResume() {
 		super.onResume();
         detailListFragmentPresenter.setView(this);
+        Log.d(TAG, "onResume: " + "app resuming");
     }
-	
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
     @Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-        outState.putInt(RECIPE_ID_KEY, recipeId);
-        outState.putInt(SCROLL_POSITION, layoutManager.getChildCount());
+//        outState.putBoolean(IS_INGREDIENT_LIST_DISPLAYED, isIngredientListDisplayed);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void updateViewWithConstraintSet() {
-        constraintSet.clone(getActivity().getApplicationContext(), R.layout.fragment_detail_list_after);
+    private void updateConstraintLayout() {
+        constraintSetSecond.clone(getContext(), R.layout.fragment_detail_list_after);
+        constraintSetFirst.clone(constraintLayout);
 
         ingredientCardContainer.setOnClickListener(v -> {
             if (!isIngredientListDisplayed) {
                 TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.setVisibility(R.id.ingredient_fragment_container, View.VISIBLE);
-                constraintSet.applyTo(constraintLayout);
+                constraintSetSecond.applyTo(constraintLayout);
 
-                Fragment ingredientsFragment = IngredientsFragment.newInstance(recipeId);
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.ingredient_fragment_container, ingredientsFragment)
-                        .commit();
+                attachIngredientFragment();
 
                 isIngredientListDisplayed = true;
-
             } else {
                 TransitionManager.beginDelayedTransition(constraintLayout);
-                constraintSet.setVisibility(R.id.ingredient_fragment_container, View.GONE);
-                constraintSet.applyTo(constraintLayout);
+                constraintSetFirst.applyTo(constraintLayout);
 
                 isIngredientListDisplayed = false;
             }
         });
+    }
+
+    private void attachIngredientFragment() {
+        Fragment ingredientsFragment = IngredientsFragment.newInstance(recipeId);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.ingredient_fragment_container, ingredientsFragment)
+                .commit();
     }
 }
 

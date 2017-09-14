@@ -17,7 +17,7 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
 	private static final String SAVED_RECIPE_NAME = "saved_recipe_name";
 	private static final String SAVED_RECIPE_ID = "saved_recipe_id";
 
-	private String recipeName;
+    private String recipeName;
     private int recipeId;
     private boolean twoPane;
 
@@ -32,13 +32,13 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         } else {
             recipeName = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
             recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 1);
-        }
 
-        Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
+            Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_list_container, detailListFragment)
                     .commit();
+        }
 
 	    twoPane = getResources().getBoolean(R.bool.isTablet);
 

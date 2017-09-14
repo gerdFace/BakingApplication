@@ -23,7 +23,7 @@ public class DetailListAdapter extends RecyclerView.Adapter<DetailListAdapter.De
         this.callback = callback;
     }
 
-    public void updateDetailListAdapter(List<Step> steps) {
+    public void addStepsList(List<Step> steps) {
         this.stepsList = steps;
         notifyDataSetChanged();
     }

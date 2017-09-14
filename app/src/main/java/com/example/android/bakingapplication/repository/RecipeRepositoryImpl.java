@@ -71,10 +71,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public void getSteps(int recipeId, @NonNull final GetStepsCallback callback) {
 
-        if (cachedRecipes != null) {
-            //noinspection ConstantConditions
-            List<Step> cachedSteps = getRecipeWithId(recipeId).getSteps();
-            callback.onStepsLoaded(cachedSteps);
+        if (getStepsFromCache(recipeId) != null) {
+            callback.onStepsLoaded(getStepsFromCache(recipeId));
             return;
         }
 
@@ -93,10 +91,8 @@ public class RecipeRepositoryImpl implements RecipeRepository {
 
     @Override
     public void getStep(int recipeId, int stepIndex, @NonNull GetStepCallback callback) {
-        if (cachedRecipes != null) {
-            //noinspection ConstantConditions
-            Step cachedStep = getRecipeWithId(recipeId).getSteps().get(stepIndex);
-            callback.onStepLoaded(cachedStep);
+        if (getStepFromCache(recipeId, stepIndex) != null) {
+            callback.onStepLoaded(getStepFromCache(recipeId, stepIndex));
             return;
         }
 
@@ -116,10 +112,9 @@ public class RecipeRepositoryImpl implements RecipeRepository {
     @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
 
-        if (cachedRecipes != null) {
-            //noinspection ConstantConditions
-            List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
-            callback.onIngredientsLoaded(cachedIngredients);
+        if (getIngredientsFromCache(recipeId) != null) {
+            callback.onIngredientsLoaded(getIngredientsFromCache(recipeId));
+            return;
         }
 
         recipeDatabaseSource.getIngredients(recipeId, new GetIngredientsCallback() {
@@ -174,6 +169,30 @@ public class RecipeRepositoryImpl implements RecipeRepository {
             return null;
         } else {
             return cachedRecipes.get(id);
+        }
+    }
+
+    private Step getStepFromCache(int id, int stepIndex) {
+        if (cachedRecipes == null || cachedRecipes.isEmpty()) {
+            return null;
+        } else {
+            return cachedRecipes.get(id).getSteps().get(stepIndex);
+        }
+    }
+
+    private List<Step> getStepsFromCache(int id) {
+        if (cachedRecipes == null || cachedRecipes.isEmpty()) {
+            return null;
+        } else {
+            return cachedRecipes.get(id).getSteps();
+        }
+    }
+
+    private List<Ingredient> getIngredientsFromCache(int id){
+        if (cachedRecipes == null || cachedRecipes.isEmpty()) {
+            return null;
+        } else {
+            return cachedRecipes.get(id).getIngredients();
         }
     }
 }

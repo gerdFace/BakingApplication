@@ -71,12 +71,13 @@ public class LocalDataSource implements RecipeRepository {
     @Override
     public void getIngredients(int recipeId, @NonNull GetIngredientsCallback callback) {
         List<Ingredient> ingredients;
-        ingredients = realm.where(RecipeData.class)
+        RecipeData recipeData = realm.where(RecipeData.class)
                 .equalTo("id", recipeId)
-                .findFirst()
-                .getIngredients();
+                .findFirst();
 
-        if (ingredients == null) {
+        ingredients = recipeData.getIngredients();
+
+        if (ingredients.isEmpty()) {
             callback.onDataNotAvailable("Could not load ingredient list from database");
         } else {
             callback.onIngredientsLoaded(ingredients);
