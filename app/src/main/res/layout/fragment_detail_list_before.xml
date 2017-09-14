@@ -38,6 +38,7 @@
     <FrameLayout
         android:id="@+id/ingredient_fragment_container"
         android:layout_width="0dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         />
 

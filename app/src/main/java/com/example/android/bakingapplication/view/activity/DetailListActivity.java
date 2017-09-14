@@ -32,13 +32,12 @@ public class DetailListActivity extends AppCompatActivity implements DetailListF
         } else {
             recipeName = getIntent().getStringExtra(NAME_OF_FOOD_SELECTED);
             recipeId = getIntent().getIntExtra(ID_OF_RECIPE_SELECTED, 1);
-        }
-
-        Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
+            Fragment detailListFragment = DetailListFragment.newInstance(recipeId);
 
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.detail_list_container, detailListFragment)
                     .commit();
+        }
 
 	    twoPane = getResources().getBoolean(R.bool.isTablet);
 

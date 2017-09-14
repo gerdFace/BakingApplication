@@ -120,6 +120,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
             //noinspection ConstantConditions
             List<Ingredient> cachedIngredients = getRecipeWithId(recipeId).getIngredients();
             callback.onIngredientsLoaded(cachedIngredients);
+            return;
         }
 
         recipeDatabaseSource.getIngredients(recipeId, new GetIngredientsCallback() {
