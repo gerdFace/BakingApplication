@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.android.bakingapplication.R;
 import com.example.android.bakingapplication.adapter.RecipeCardAdapter;
@@ -28,6 +30,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @BindView(R.id.rv_recipe_list)
     RecyclerView recipeCardRecyclerView;
+
+    @BindView(R.id.connectivity_error_message)
+    TextView connectivityErrorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
 
     @Override
     public void showErrorMessage(String errorMessage) {
-
+        if (!mainActivityPresenter.isDeviceOnline(this)) {
+            connectivityErrorMessage.setVisibility(View.VISIBLE);
+            recipeCardRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -75,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements RecipeCardAdapter
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("saved_layout", recipeCardRecyclerView.getLayoutManager().onSaveInstanceState());
+        if (layoutManagerSavedState != null) {
+            outState.putParcelable("saved_layout", recipeCardRecyclerView.getLayoutManager().onSaveInstanceState());
+        }
     }
 
     @Override

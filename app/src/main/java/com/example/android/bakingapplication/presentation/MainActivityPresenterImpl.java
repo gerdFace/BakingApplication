@@ -1,5 +1,9 @@
 package com.example.android.bakingapplication.presentation;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.example.android.bakingapplication.model.RecipeData;
 import com.example.android.bakingapplication.repository.RecipeRepository;
 import com.example.android.bakingapplication.view.activity.MainActivityView;
@@ -28,6 +32,14 @@ public class MainActivityPresenterImpl implements MainActivityPresenter{
                 view.showErrorMessage(failureMessage);
             }
         });
+    }
+
+    @Override
+    public boolean isDeviceOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
