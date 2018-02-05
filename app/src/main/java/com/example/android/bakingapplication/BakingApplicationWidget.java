@@ -10,7 +10,6 @@ import android.widget.RemoteViews;
 
 import com.example.android.bakingapplication.model.Ingredient;
 import com.example.android.bakingapplication.model.RecipeData;
-import com.example.android.bakingapplication.view.activity.BakingApplication;
 import com.example.android.bakingapplication.view.activity.DetailListActivity;
 
 import javax.inject.Inject;

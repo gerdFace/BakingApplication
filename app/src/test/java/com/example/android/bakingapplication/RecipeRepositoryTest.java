@@ -1,8 +1,6 @@
 package com.example.android.bakingapplication;
 
 import com.example.android.bakingapplication.model.RecipeData;
-import com.example.android.bakingapplication.repository.RecipeRepository;
-import com.example.android.bakingapplication.repository.RecipeRepositoryImpl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +73,7 @@ public class RecipeRepositoryTest {
     public void checkRepositoryCachesAfterFirstApiCall() {
         setRecipesNotAvailable(localDataSource);
 
-        recipeRepositoryImpl.cachedRecipes = null;
+        recipeRepositoryImpl.setCachedRecipes(null);
 
         recipeRepositoryImpl.getRecipes(loadRecipesCallback);
 
@@ -86,7 +84,7 @@ public class RecipeRepositoryTest {
         verify(networkDataSource).getRecipes(any(RecipeRepository.LoadRecipesCallback.class));
 
         // Verify cached data is accurate
-        assertThat(recipeList, is(new ArrayList<>(recipeRepositoryImpl.cachedRecipes.values())));
+        assertThat(recipeList, is(new ArrayList<>(recipeRepositoryImpl.getCachedRecipes().values())));
     }
 
     @Test
@@ -126,7 +124,7 @@ public class RecipeRepositoryTest {
         verify(localDataSource, never()).getRecipe(anyInt(), any(RecipeRepository.GetRecipeCallback.class));
 
         // Get cached recipes
-        List<RecipeData> recipe = new ArrayList<>(recipeRepositoryImpl.cachedRecipes.values());
+        List<RecipeData> recipe = new ArrayList<>(recipeRepositoryImpl.getCachedRecipes().values());
 
         // Verify cached recipe has expected data
         assertThat((recipeList.get(0)), is(recipe.get(0)));
@@ -135,7 +133,7 @@ public class RecipeRepositoryTest {
     @Test
     public void shouldGetStepsFromDatabaseIfCacheIsEmpty() {
         // Nullify cached recipes
-        recipeRepositoryImpl.cachedRecipes = null;
+        recipeRepositoryImpl.setCachedRecipes(null);
 
         recipeRepositoryImpl.getSteps(0, getStepsCallback);
 
@@ -155,7 +153,7 @@ public class RecipeRepositoryTest {
     @Test
     public void shouldGetIngredientsFromDatabaseIfCacheIsEmpty() {
         // Nullify cached recipes
-        recipeRepositoryImpl.cachedRecipes = null;
+        recipeRepositoryImpl.setCachedRecipes(null);
 
         // Load ingredients from repository
         recipeRepositoryImpl.getIngredients(0, getIngredientsCallback);
